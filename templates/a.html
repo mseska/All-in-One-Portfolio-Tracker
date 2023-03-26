@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<h1>Welcome to {{feature.name}} </h1>
+<html>
+<head>
+	<title>Welcome {{name}} </title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<style>
+		.container {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
+			align-items: center;
+			margin: 0 auto;
+			max-width: 1000px;
+		}
+
+		.chart-container {
+			flex-basis: 45%;
+			max-width: 45%;
+			margin-bottom: 20px;
+			padding: 10px;
+			background-color: #fff;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+
+		.chart-title {
+			margin-bottom: 10px;
+			font-size: 18px;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.chart {
+			max-width: 100%;
+		}
+
+		.assets-container {
+			flex-basis: 45%;
+			max-width: 45%;
+			margin-bottom: 20px;
+			padding: 10px;
+			background-color: #fff;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+
+		.assets-title {
+			margin-bottom: 10px;
+			font-size: 18px;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.asset-list {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			text-align: center;
+		}
+
+		.asset-list li {
+			margin-bottom: 10px;
+			font-size: 16px;
+			font-weight: bold;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		.asset-list li span {
+			font-weight: normal;
+		}
+
+		.pie-chart-container {
+			flex-basis: 45%;
+			max-width: 45%;
+			margin-bottom: 20px;
+			padding: 10px;
+			background-color: #fff;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+
+		.pie-chart-title {
+			margin-bottom: 10px;
+			font-size: 18px;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.news-container {
+			flex-basis: 30%;
+			max-width: 30%;
+			margin-bottom: 20px;
+			padding: 10px;
+			background-color: #fff;
+			box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+		}
+
+		.news-title {
+			margin-bottom: 10px;
+			font-size: 18px;
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.news-item {
+			margin-bottom: 10px;
+			font-size: 16px;
+			text-align: left;
+		}
+
+		.news-item h3 {
+			font-size: 16px;
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+
+		.news-item p {
+			margin: 0;
+			font-size: 14px;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="chart-container">
+			<h2 class="chart-title">Historical Asset Values</h2>
+		
+			<canvas class="chart" id="historicalChart"></canvas>
+		</div>
+		<div class="assets-container">
+			<h2 class="assets-title">Your Financial Assets, {{name}}</h2>
+			<ul class="asset-list">
+				<li><span>Cash:</span> $10,000</li>
+				<li><span>Stocks:</span> $25,000</li>
+				<li><span>Bonds:</span> $15,000</li>
+			</ul>
+			<div class="pie-chart-container">
+				<h2 class="pie-chart-title">Asset Allocation</h2>
+				<canvas class="chart" id="pieChart"></canvas>
+			</div>
+		</div>
+		<div class="news-container">
+			<h2 class="news-title">Financial News</h2>
+			<div class="news-item">
+				<h3>Stock market reaches all-time high</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vestibulum velit quis molestie dapibus. Sed vitae sagittis libero.</p>
+			</div>
+			<div class="news-item">
+				<h3>Inflation rates expected to rise</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vestibulum velit quis molestie dapibus. Sed vitae sagittis libero.</p>
+			</div>
+			<div class="news-item">
+				<h3>Federal Reserve hints at interest rate hike</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vestibulum velit quis molestie dapibus. Sed vitae sagittis libero.</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Historical Chart
+		var ctx = document.getElementById('historicalChart').getContext('2d');
+		var historicalChart = new Chart(ctx, {
+			type: 'line',
+			data: {
+				labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+				datasets: [{
+					label: 'Stocks',
+					data: [15000, 16000, 17000, 17500, 18000, 19000, 20000],
+					borderColor: 'rgba(255, 99, 132, 1)',
+					backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					fill: true
+				}, {
+					label: 'Bonds',
+					data: [12000, 12500, 13000, 13500, 14000, 14500, 15000],
+					borderColor: 'rgba(54, 162, 235, 1)',
+					backgroundColor: 'rgba(54, 162, 235, 0.2)',
+					fill: true
+				}]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Historical Asset Values'
+				},
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero: true
+						}
+					}]
+				}
+			}
+		});
+
+		// Pie Chart
+		var ctx = document.getElementById('pieChart').getContext('2d');
+		var pieChart = new Chart(ctx, {
+			type: 'pie',
+			data: {
+				labels: ['Cash', 'Stocks', 'Bonds'],
+				datasets: [{
+				
+				backgroundColor: [
+					'rgba(255, 99, 132, 0.2)',
+					'rgba(54, 162, 235, 0.2)',
+					'rgba(255, 206, 86, 0.2)'
+				],
+				borderColor: [
+					'rgba(255, 99, 132, 1)',
+					'rgba(54, 162, 235, 1)',
+					'rgba(255, 206, 86, 1)'
+				],
+				borderWidth: 1,
+				data: [10000 , 25000, 15000],
+			}]
+		},
+		options: {
+			responsive: true,
+			title: {
+				display: true,
+				text: 'Asset Allocation'
+			}
+		}
+	});
+</script>
+</body>
+</html>
