@@ -1,0 +1,117 @@
+.signUpLogo {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100px;
+}
+/* 
+.button {
+  cursor: pointer;
+  border: 1px #dddfe2;
+  width: 375px;
+  border-radius: 6px;
+  font-size: large;
+  color: aliceblue;
+  background-color: #cc5fe2;
+  height: 50px;
+} */
+
+.subTitle {
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.signUpPanel {
+  background-color: rgba(226, 222, 222, 0.89);
+  margin: auto;
+  width: 450px;
+  padding-top: 10px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.emailInput {
+  border: 1px #dddfe2;
+  margin: auto;
+  margin-bottom: 10px;
+  width: 375px;
+  border-width: 10px;
+  display: block;
+  border-radius: 6px;
+  padding: 10px 12px;
+  height: 50px;
+  font-size: large;
+}
+
+.passwordInput {
+  border: 1px #dddfe2;
+  width: 350px;
+  margin: auto;
+  display: block;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  height: 25px;
+  font-size: large;
+}
+
+/* .signUpButton {
+  border: 1px #dddfe2;
+  /* width: 365px; 
+  border-radius: 6px;
+  font-size: large;
+  color: aliceblue;
+  background-color: #f2182a;
+  height: 50px;
+} 
+*/
+
+.button:hover {
+  background-color: #2d10af;
+}
+.signUpButton:hover {
+  background-color: rgb(41, 177, 41);
+}
+
+.signUpTextBlock {
+  padding: 18px 0 16px 0;
+  font-size: 23px;
+}
+
+.signUpText {
+  margin-top: 0px;
+  margin-bottom: 25px;
+  /* font-size: 15px; */
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.signUp {
+  /* background-image: url("./images/a.jpeg"); */
+  /* background-size: cover; */
+  border-width: 0;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 80px;
+  background: linear-gradient(90deg, #336699 0%, #6699cc 43%, #99ccff 100%);
+
+  /* background: rgba(116, 65, 199, 0.664); */
+  /* background: linear-gradient(90deg, rgb(56, 146, 197) 0%, rgb(99, 241, 211) 43%, rgba(0,212,255,1) 100%); */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.goToLoginPage {
+  font-weight: 700;
+  color: #1877f2;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.goToLoginPage:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Financial Assets</title>
+  </head>
+  <body>
+    <h1>My Financial Assets</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Asset</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for asset in list %}
+        <tr>
+          <td>{{asset.AssetName}}</td>
+          <td>${{asset.value}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

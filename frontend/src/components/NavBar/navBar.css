@@ -1,0 +1,87 @@
+.NavBar {
+  display: block;
+  height: 170px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(203, 209, 209);
+  box-shadow: 0 14px 28px rgba(49, 117, 218, 0.25),
+    0 10px 10px rgba(33, 89, 209, 0.22);
+}
+
+.NavBarLogo {
+  padding-top: 10px;
+  margin-top: 10px;
+  margin-left: 25px;
+  height: 80px;
+  margin-right: 130px;
+  margin-bottom: 15px;
+}
+
+.NavBarLogo:hover {
+  cursor: pointer;
+}
+
+.NavBarIcon {
+  margin-right: 25px;
+  height: 30px;
+  width: 30px;
+  color: rgb(66, 73, 73);
+}
+
+.NavBar1 {
+  display: flex;
+  box-shadow: 0 14px 28px rgba(114, 56, 56, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+  height: 100;
+}
+
+.NavBar1_Icons {
+  width: 150px;
+  margin-right: 70px;
+  height: 35px;
+  margin-left: 55px;
+  display: inline;
+}
+
+.NavBarIcon:hover {
+  /* height: 35px;
+  width: 35px; */
+  color: aqua;
+  cursor: pointer;
+}
+
+.NavBar2 {
+  height: 100px;
+}
+
+.searchField {
+  border-radius: 15px;
+  width: 750px;
+  display: inline;
+  margin-right: 10px;
+  height: 43px;
+}
+
+.searchButton {
+  border-radius: 15px;
+  border-width: 2px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.navBarButtons:hover {
+  border-color: rgb(102, 149, 238);
+  background-color: rgb(102, 149, 238);
+  color: black;
+}
+
+.navBarButtons {
+  color: black;
+  font-weight: bold;
+  border-color: rgb(203, 209, 209);
+  background-color: rgb(203, 209, 209);
+  margin-left: 50px;
+  margin-right: 15px;
+  height: 35px;
+}

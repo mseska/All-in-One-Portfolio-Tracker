@@ -1,0 +1,157 @@
+.image1 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  height: 130px;
+  padding-top: 20px;
+  margin-bottom: 30px;
+  
+}
+
+
+.button {
+  cursor: pointer;
+  border: 1px #dddfe2;
+  width: 375px;
+  border-radius: 6px;
+  font-size: large;
+  color: aliceblue;
+  background-color: #1877f2;
+  height: 50px;
+}
+
+.subTitle {
+  /* justify-content: space-evenly;
+  font-family: fantasy;
+  font-weight: 600;
+  font-size: 40px; */
+
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-top: 35px;
+  margin-bottom: 35px;
+  text-align: center; 
+  
+}
+
+
+@keyframes subTitle {
+  0% {
+    color: red
+  }
+  25% {
+    color: green
+  }
+  50% {
+    color: orange
+  }
+  75% {
+    color: blue
+  }
+}
+
+.loginPanel {
+  background-color: rgba(226, 222, 222, 0.89);
+  margin: auto;
+  margin-top: 55px;
+  width: 450px;
+  padding-bottom: 20px;
+  padding-top: 10px;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.emailInputLogin {
+  border: 1px #dddfe2;
+  margin: auto;
+  margin-bottom: 10px;
+  width: 375px;
+  border-width: 10px;
+  display: block;
+  border-radius: 6px;
+  height: 50px;
+  padding: 10px 12px;
+  font-size: large;
+}
+
+.passwordInputLogin {
+  border: 1px #dddfe2;
+  width: 375px;
+  margin: auto;
+  display: block;
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  height: 50px;
+  font-size: large;
+}
+.signUpButton {
+  margin-top: 5px;
+  background-color: palevioletred;
+  margin-bottom: 35px;
+}
+
+.loginButton {
+  border: 1px #dddfe2;
+  /* width: 365px; */
+  border-radius: 6px;
+  font-size: large;
+  color: aliceblue;
+  background-color: #1877f2;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.button:hover {
+  background-color: #2d10af;
+}
+.signUpButton:hover {
+  background-color: rgb(41, 177, 41);
+}
+
+.loginToSpan {
+  padding: 24px 0 16px 0;
+}
+
+.loginToBlock {
+  padding: 18px 0 16px 0;
+  font-size: 23px;
+}
+
+.loginToText {
+  margin-bottom: 20px;
+  /* font-size: 15px; */
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.Login {
+  /* background-image: url("./images/a.jpeg"); */
+  /* background-size: cover; */
+  border-width: 0;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 100px;
+  background: linear-gradient(90deg, #336699 0%, #6699CC 43%, #99CCFF 100%);
+
+  /* background: rgba(116, 65, 199, 0.664); */
+  /* background: linear-gradient(90deg, rgb(56, 146, 197) 0%, rgb(99, 241, 211) 43%, rgba(0,212,255,1) 100%); */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.belowLoginButton {
+  margin-top: 7px;
+  margin-bottom: 16px;
+}
+
+.forgetPasswordText {
+  margin-top: 20px;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.forgetPasswordText:hover {
+  text-decoration: underline;
+}
