@@ -27,7 +27,7 @@ class NavBar extends Component {
           <img
             class="NavBarLogo"
             src={logo}
-            style={{ height: 100, width: 100 }}
+            // style={{ height: 100, width: 100 }}
             alt="website logo"
             onClick={this.logoFunc}
           />
