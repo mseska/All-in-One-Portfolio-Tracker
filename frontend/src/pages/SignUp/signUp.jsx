@@ -95,7 +95,7 @@ class signUp extends Component {
                   Already have an account?
                 </p>
 
-                <a className="goToLoginPage" href="">
+                <a className="goToLoginPage" href="/">
                   Log in
                 </a>
               </div>

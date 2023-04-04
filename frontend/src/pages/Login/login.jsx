@@ -107,7 +107,7 @@ class Login extends Component {
                       value="Sign Up"
                     />
                   </div>
-                  <a class="forgetPasswordText" href="">
+                  <a class="forgetPasswordText" href="/register">
                     Forget Password?
                   </a>
                 </div>
