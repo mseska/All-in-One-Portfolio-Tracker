@@ -3,9 +3,33 @@ import image from "../images/1-cropped.svg";
 import "./login.css";
 import { Component } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 
 export default function Login2() {
+  // const [fields, handleFieldChange] = useFormFields({
+  //   email: "",
+  //   password: ""
+  // });
+  const [message, setMessage] = useState("");
+
+  const handleMessageChange = (event) => {
+    // 👇️ access textarea value
+    setMessage(event.target.value);
+    console.log(event.target.value);
+    axios
+      .post("http://localhost:8000/api/items/", message)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  function handleSubmit(event) {
+    event.preventDefault();
+  }
+
   const navigate = useNavigate();
 
   function handleLogin() {
@@ -53,7 +77,7 @@ export default function Login2() {
                   class="emailInputLogin"
                   placeholder="Email"
                   name="message"
-                  // onChange={handleChange}
+                  onChange={handleMessageChange}
                   // value={message}
                 />
                 <input
