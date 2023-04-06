@@ -5,19 +5,26 @@ import { Component } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 export default function Login2() {
   // const [fields, handleFieldChange] = useFormFields({
   //   email: "",
   //   password: ""
   // });
   const [message, setMessage] = useState("");
+  
 
   const handleMessageChange = (event) => {
     // 👇️ access textarea value
+    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    // axios.defaults.xsrfCookieName = 'csrftoken';
+    // axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
     setMessage(event.target.value);
     console.log(event.target.value);
     axios
-      .post("http://localhost:8000/api/items/", message)
+      .get("http://localhost:8000/api/items/")
       .then((response) => {
         console.log(response.data);
       })
@@ -33,8 +40,9 @@ export default function Login2() {
   const navigate = useNavigate();
 
   function handleLogin() {
+    
+    
     navigate("home");
-
     // alert("You clicked Log in.");
   }
 

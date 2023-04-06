@@ -3,11 +3,15 @@ from django.http import HttpResponse
 from .models import Assets
 from django.db import connection
 import json
+from . serializer import ItemSerializer
 
 from rest_framework.views import APIView
 from . models import *
 from rest_framework.response import Response
 from . serializer import *
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
  
 class ReactView(APIView):
     def get(self,request):
@@ -22,6 +26,7 @@ class ReactView(APIView):
 
 # Create your views here.
 def index(request):
+    print("deneöe")
     #return HttpResponse('<h1>Hey, Welcome</h1>')
     name = 'Mert'
     #feature1 = Feature()
@@ -32,6 +37,7 @@ def index(request):
     return render(request,'a.html',{'name':name})
 
 def input(request):
+    print("deneöe")
     return render(request,'input.html')
 
 def inputCheck(request):
@@ -87,3 +93,28 @@ def list(request):
 
     
     return render(request,'list.html',{'list':returnList})
+
+@api_view(['GET'])
+def add_item(request):
+    print("jbsdbjksdkfsdkfsd")
+    
+    #serializer = ItemSerializer(data=request.data)
+    #if serializer.is_valid():
+    #    serializer.save()
+    #    print(serializer.data)
+    #
+    print(request)
+    print(request.method)
+
+    # Print the request path
+    print(request.path)
+
+    # Print the request headers
+    print(request.headers)
+
+    # Print the request body
+    print(request.body)    
+    return Response(request.data, status=201)
+
+    
+    return Response(serializer.errors, status=400)
