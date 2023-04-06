@@ -1,52 +1,14 @@
-.toolbar {
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    color: #fff;
-  }
-  
-  .toolbar img {
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .toolbar-left,
-  .toolbar-right {
-    width: 10%;
-    height: 100%;
-  }
-  
-  .toolbar-middle {
-    width: 80%;
-    display: flex;
-    /* justify-content: space-evenly; */
-  }
-  
-  .homePageButton {
-    margin-right: 15px;
-    border: none;
-    border-radius: 0.25rem;
-    background-color: #fff;
-    color: #333;
-    font-weight: bold;
-    height: 25px;
-  }
-  .homePageButton:hover {
-      background-color: rgb(57, 107, 214);
-  }
+.HomePageTables {
+  display: block;
+  width: 30vw;
+}
 
-  .homeImageButton {
-    height: 25px;
+.BelowNavBar {
+  display: flex;
+}
 
-  }
-  
-  .toolbar-right{
-    border-radius: 50%;
-    height: 80%;
-    padding-top: 12px;
-    padding-left: 230px;
-    /* object-fit: cover; */
-  }
-  
+.NewsDiv{
+  width: 70vw;
+}
+
+

@@ -12,10 +12,11 @@
 .NavBarLogo {
   height: 7.5vw;
   width: 7.5vw;
-  padding-top: 2vh;
+  /* padding-top: 2vh; */
   margin-top: 2.3vh;
   /* margin-left: 25px; */
   /* height: 10vh; */
+  margin-left: 2.4vw;
   margin-right: 10vw;
   margin-bottom: 1.5vh;
 }

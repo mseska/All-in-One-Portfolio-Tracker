@@ -1,9 +1,10 @@
 .signUpLogo {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  display: block;
   margin-left: auto;
   margin-right: auto;
-  height: 100px;
+  height: 130px;
+  padding-top: 20px;
+  margin-bottom: 30px;
 }
 /* 
 .button {

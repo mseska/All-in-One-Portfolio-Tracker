@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import image from "../images/1-cropped.svg";
 import "./login.css";
 import { Component } from "react";
+import { useNavigate } from "react-router-dom";
 
 class Login extends Component {
   // constructor() {
   //   super();
   // }
+
+  //  navigate = useNavigate();
 
   handleLogin(e) {
     e.preventDefault();
@@ -15,7 +18,7 @@ class Login extends Component {
   }
 
   handleSignUpClick() {
-    alert("You clicked Sign Up");
+    // this.navigate("register");
   }
 
   render() {
@@ -107,7 +110,7 @@ class Login extends Component {
                       value="Sign Up"
                     />
                   </div>
-                  <a class="forgetPasswordText" href="/register">
+                  <a class="forgetPasswordText" href="">
                     Forget Password?
                   </a>
                 </div>
