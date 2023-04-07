@@ -94,27 +94,33 @@ def list(request):
     
     return render(request,'list.html',{'list':returnList})
 
-@api_view(['GET'])
+@api_view(['POST'])
+#@api_view(['GET'])
 def add_item(request):
-    print("jbsdbjksdkfsdkfsd")
+    print("POST METHOD WORKS")
+    print(request.data.get('name'))
+    
+    # print("GET METHOD WORKS")
+    # print(request.GET.get('name'))
     
     #serializer = ItemSerializer(data=request.data)
     #if serializer.is_valid():
     #    serializer.save()
     #    print(serializer.data)
     #
-    print(request)
-    print(request.method)
+    #print(request)
+    # print(request.method)
 
-    # Print the request path
-    print(request.path)
+    # # Print the request path
+    # print(request.path)
 
-    # Print the request headers
-    print(request.headers)
+    # # Print the request headers
+    # print(request.headers)
 
-    # Print the request body
-    print(request.body)    
-    return Response(request.data, status=201)
-
+    # # Print the request body
+    # print(request.body)    
+    #return Response(request.GET.get('name'), status=201)
+    return Response(request.data.get('name'), status=201) #POST İÇİN
     
-    return Response(serializer.errors, status=400)
+    
+    

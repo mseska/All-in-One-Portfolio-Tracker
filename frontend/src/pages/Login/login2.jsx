@@ -22,15 +22,29 @@ export default function Login2() {
     // axios.defaults.xsrfCookieName = 'csrftoken';
     // axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
     setMessage(event.target.value);
-    console.log(event.target.value);
+    console.log("console log:",event.target.value);
     axios
-      .get("http://localhost:8000/api/items/")
+      .post("http://localhost:8000/api/items/",{
+          name: message
+        })
       .then((response) => {
-        console.log(response.data);
+        console.log("response get as",response.data);
       })
       .catch((error) => {
         console.log(error);
       });
+    // axios
+    //   .get("http://localhost:8000/api/items/",{
+    //     params: {
+    //       name: message
+    //     }})
+    //   .then((response) => {
+    //     console.log("response get as",response.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+      
   };
 
   function handleSubmit(event) {
@@ -41,9 +55,10 @@ export default function Login2() {
 
   function handleLogin() {
     
-    
+    //alert("after navigation message get in this page is",message);
     navigate("home");
     // alert("You clicked Log in.");
+    
   }
 
   function handleSignUpClick() {
