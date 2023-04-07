@@ -12,4 +12,6 @@ urlpatterns = [
     
     #path('react',views.ReactView.as_view(),name='anything')
     path('api/items/', views.add_item, name='add_item'),
+    path('api/stock-price', views.get_list, name='get_list'),
+    
 ]

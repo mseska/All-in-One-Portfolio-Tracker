@@ -25,6 +25,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/items/', add_item, name='add_item'),
+    path('api/stock-price', get_list, name='get_list'),
     #path('',include('myapp.urls')),
     #re_path(".*",TemplateView.as_view(template_name="index.html")),
     path('input', include('myapp.urls')),

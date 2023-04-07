@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Assets
+from .models import Assets, Product, Stock2
 from django.db import connection
 import json
 from . serializer import ItemSerializer
+from django.http import JsonResponse
 
 from rest_framework.views import APIView
 from . models import *
@@ -121,6 +122,40 @@ def add_item(request):
     # print(request.body)    
     #return Response(request.GET.get('name'), status=201)
     return Response(request.data.get('name'), status=201) #POST İÇİN
+
+@api_view(['GET'])
+def get_list(request):
+    print("GET METHOD WORKS")
+    print(request.GET)
+
+    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    returnList = []
+    print(list,"databaseden gelen veri")
+    
+    for stock in list:
+        #print(type(asset))
+        newAsset = Stock2()
+        print(newAsset,"newAsset daha oluştu")
+        newAsset.symbol = stock[2]
+        newAsset.price = stock[3]
+        newAsset.currency = stock[1]
+        # print(stock[1])
+        # print(stock[2])
+        # print(stock[3])
+        print(newAsset.symbol,"newAsset.symbol")
+        print(newAsset.price,"newAsset.price")
+        print(newAsset.currency,"newAsset.currency")
+        print(newAsset,"newAsset")
+        returnList.append(newAsset)
+    print(returnList,"liste databaseden alındı")
+    # serializer = StockSerializer(data=returnList)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     print(serializer.data)
+    #returnListDict = {returnList}
+    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    return JsonResponse(serialized_objects, safe=False)
+    #return JsonResponse(json.dumps(returnListDict), safe=False)
     
     
     

@@ -7,12 +7,14 @@ import NavBar from "../components/NavBar/navBar";
 
 function Home() {
   const [stockData, setStockData] = useState([]);
-
+  //"http://localhost:8000/api"
   useEffect(() => {
     axios
-      .get("/api/stock-price")
+      .get("http://localhost:8000/api/stock-price")
       .then((response) => {
+        console.log("response get as", response.data);
         setStockData(response.data);
+        console.log("stockData", stockData)
       })
       .catch((error) => {
         console.log(error);

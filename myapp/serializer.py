@@ -11,3 +11,8 @@ class ReactSerializer(serializers.ModelSerializer):
     class Meta:
         model = React
         fields = ['employee','department']
+
+class StockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stock2
+        fields = ['symbol','price','currency']
