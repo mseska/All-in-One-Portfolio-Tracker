@@ -1,19 +1,24 @@
-import * as React from "react";
-
-// import IconButton from "@mui/material/IconButton";
-// import Typography from "@mui/material/Typography";
-
-// import Container from "@mui/material/Container";
-// import Avatar from "@mui/material/Avatar";
-// import Button from "@mui/material/Button";
+// import * as React from "react";
+import { React, useState, useEffect } from "react";
+import axios from "axios";
 
 import "./home.css";
 import NavBar from "../components/NavBar/navBar";
 
-const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+function Home() {
+  const [stockData, setStockData] = useState([]);
 
-function ResponsiveAppBar() {
+  useEffect(() => {
+    axios
+      .get("/api/stock-price")
+      .then((response) => {
+        setStockData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div>
       <NavBar></NavBar>
@@ -25,25 +30,18 @@ function ResponsiveAppBar() {
               <thead>
                 <tr>
                   <th scope="col">Symbol</th>
-                  <th scope="col">Last Price</th>
-                  <th scope="col">Change</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Currency</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                {stockData.map((stock, index) => (
+                  <tr key={index}>
+                    <td>{stock.symbol}</td>
+                    <td>{stock.price}</td>
+                    <td>{stock.currency}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </section>
@@ -53,4 +51,4 @@ function ResponsiveAppBar() {
   );
 }
 
-export default ResponsiveAppBar;
+export default Home;
