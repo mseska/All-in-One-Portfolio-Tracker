@@ -3,7 +3,7 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 
 import "./home.css";
-import NavBar from "../components/NavBar/navBar";
+import NavBar from "../components/NavBar/navBar2";
 
 function Home() {
   const [stockData, setStockData] = useState([]);

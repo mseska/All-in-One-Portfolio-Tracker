@@ -12,6 +12,8 @@ export default function Login2() {
   //   password: ""
   // });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
   
 
   const handleMessageChange = (event) => {
@@ -51,8 +53,7 @@ export default function Login2() {
     event.preventDefault();
   }
 
-  const navigate = useNavigate();
-
+  
   function handleLogin() {
     
     //alert("after navigation message get in this page is",message);
