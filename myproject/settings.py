@@ -54,7 +54,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']}
+REST_FRAMEWORK = {'DEFAULT_PERMISSION_CLASSES': [
+    'rest_framework.permissions.AllowAny']}
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'myproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR,'templates',os.path.join(BASE_DIR,'frontend','build')],
+        'DIRS': [BASE_DIR, 'templates', os.path.join(BASE_DIR, 'frontend', 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -83,12 +84,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.sqlite3',
 #        'NAME': BASE_DIR / 'db.sqlite3',
 #    }
-#}
+# }
 
 # Database
 
@@ -96,10 +97,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'comp491',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
         'USER': 'root',
-        'PASSWORD': 'M.rt6378',
+        'PASSWORD': '123456654321q',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 
@@ -139,7 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),os.path.join(BASE_DIR,'frontend/build/static'))
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),
+                    os.path.join(BASE_DIR, 'frontend/build/static'))
 
 CORS_ALLOW_ORIGINS = [
     "http://localhost:3000",

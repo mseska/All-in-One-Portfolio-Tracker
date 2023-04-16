@@ -5,7 +5,6 @@ import { Component } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 export default function Login2() {
   // const [fields, handleFieldChange] = useFormFields({
   //   email: "",
@@ -13,8 +12,8 @@ export default function Login2() {
   // });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-
-  
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleMessageChange = (event) => {
     // 👇️ access textarea value
@@ -24,13 +23,13 @@ export default function Login2() {
     // axios.defaults.xsrfCookieName = 'csrftoken';
     // axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
     setMessage(event.target.value);
-    console.log("console log:",event.target.value);
+    console.log("console log:", event.target.value);
     axios
-      .post("http://localhost:8000/api/items/",{
-          name: message
-        })
+      .post("http://localhost:8000/api/items/", {
+        name: message,
+      })
       .then((response) => {
-        console.log("response get as",response.data);
+        console.log("response get as", response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -46,20 +45,25 @@ export default function Login2() {
     //   .catch((error) => {
     //     console.log(error);
     //   });
-      
   };
 
   function handleSubmit(event) {
     event.preventDefault();
   }
 
-  
   function handleLogin() {
-    
-    //alert("after navigation message get in this page is",message);
-    navigate("home");
+    axios
+      .post("/api/login/", { username, password })
+      .then((response) => {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        navigate("/home");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      navigate("home");
     // alert("You clicked Log in.");
-    
   }
 
   function handleSignUpClick() {

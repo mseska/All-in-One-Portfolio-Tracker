@@ -1,0 +1,13 @@
+# Ignore the virtual environment
+venv/
+
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore database files
+*.sqlite3
+
+settings.py
+myproject/settings.py
+myproject/__init__.py
