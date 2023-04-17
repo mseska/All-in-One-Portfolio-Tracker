@@ -91,8 +91,6 @@ def list(request):
         newAsset.value = asset[3]
         returnList.append(newAsset)
     
-
-    
     return render(request,'list.html',{'list':returnList})
 
 @api_view(['POST'])
@@ -124,30 +122,30 @@ def add_item(request):
     return Response(request.data.get('name'), status=201) #POST İÇİN
 
 @api_view(['GET'])
-def get_list(request):
+def get_stock_list(request):
     print("GET METHOD WORKS")
     print(request.GET)
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
     returnList = []
-    print(list,"databaseden gelen veri")
+    # print(list,"databaseden gelen veri")
     
     for stock in list:
         #print(type(asset))
         newAsset = Stock2()
-        print(newAsset,"newAsset daha oluştu")
+        # print(newAsset,"newAsset daha oluştu")
         newAsset.symbol = stock[2]
         newAsset.price = stock[3]
         newAsset.currency = stock[1]
         # print(stock[1])
         # print(stock[2])
         # print(stock[3])
-        print(newAsset.symbol,"newAsset.symbol")
-        print(newAsset.price,"newAsset.price")
-        print(newAsset.currency,"newAsset.currency")
-        print(newAsset,"newAsset")
+        # print(newAsset.symbol,"newAsset.symbol")
+        # print(newAsset.price,"newAsset.price")
+        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset,"newAsset")
         returnList.append(newAsset)
-    print(returnList,"liste databaseden alındı")
+    #print(returnList,"liste databaseden alındı")
     # serializer = StockSerializer(data=returnList)
     # if serializer.is_valid():
     #     serializer.save()
@@ -157,5 +155,103 @@ def get_list(request):
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
     
+
+@api_view(['GET'])
+def get_crypto_list(request):
+    print("GET METHOD WORKS")
+    print(request.GET)
+
+    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) #table will be changed
+  
+    returnList = []
+    # print(list,"databaseden gelen veri")
     
+    for stock in list:
+        #print(type(asset))
+        newAsset = Stock2()
+        # print(newAsset,"newAsset daha oluştu")
+        newAsset.symbol = stock[2]
+        newAsset.price = stock[3]
+        newAsset.currency = stock[1]
+        print(newAsset.symbol,"newAsset.symbol")
+        print(newAsset.price,"newAsset.price")
+        print(newAsset.currency,"newAsset.currency")
+        print(newAsset,"newAsset")
+        returnList.append(newAsset)
+    #print(returnList,"liste databaseden alındı")
+    # serializer = StockSerializer(data=returnList)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     print(serializer.data)
+    #returnListDict = {returnList}
+    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    return JsonResponse(serialized_objects, safe=False)
+    #return JsonResponse(json.dumps(returnListDict), safe=False)
+    
+
+@api_view(['GET'])
+def get_currency_list(request):
+    print("GET METHOD WORKS")
+    print(request.GET)
+
+    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+  
+    returnList = []
+    # print(list,"databaseden gelen veri")
+    
+    for stock in list:
+        #print(type(asset))
+        newAsset = Stock2()
+        # print(newAsset,"newAsset daha oluştu")
+        newAsset.symbol = stock[2]
+        newAsset.price = stock[3]
+        newAsset.currency = stock[1]
+        print(newAsset.symbol,"newAsset.symbol")
+        print(newAsset.price,"newAsset.price")
+        print(newAsset.currency,"newAsset.currency")
+        print(newAsset,"newAsset")
+        returnList.append(newAsset)
+    #print(returnList,"liste databaseden alındı")
+    # serializer = StockSerializer(data=returnList)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     print(serializer.data)
+    #returnListDict = {returnList}
+    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    return JsonResponse(serialized_objects, safe=False)
+    #return JsonResponse(json.dumps(returnListDict), safe=False)
+
+@api_view(['GET'])
+def get_commodity_list(request):
+    print("GET METHOD WORKS")
+    print(request.GET)
+
+    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) 
+  
+    returnList = []
+    # print(list,"databaseden gelen veri")
+    
+    for stock in list:
+        #print(type(asset))
+        newAsset = Stock2()
+        # print(newAsset,"newAsset daha oluştu")
+        newAsset.symbol = stock[2]
+        newAsset.price = stock[3]
+        newAsset.currency = stock[1]
+        print(newAsset.symbol,"newAsset.symbol")
+        print(newAsset.price,"newAsset.price")
+        print(newAsset.currency,"newAsset.currency")
+        print(newAsset,"newAsset")
+        returnList.append(newAsset)
+    #print(returnList,"liste databaseden alındı")
+    # serializer = StockSerializer(data=returnList)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     print(serializer.data)
+    #returnListDict = {returnList}
+    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    return JsonResponse(serialized_objects, safe=False)
+    #return JsonResponse(json.dumps(returnListDict), safe=False)
+    
+     
     
