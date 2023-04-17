@@ -1,6 +1,6 @@
 .NavBar {
   display: block;
-  height: 22vh;
+  height: 24vh;
   /* width: 100vw; */
   justify-content: space-between;
   align-items: center;
@@ -82,7 +82,10 @@
   font-weight: bold;
   border-color: rgb(203, 209, 209);
   background-color: rgb(203, 209, 209);
-  margin-left: 4vw;
+  margin-left: 8vw;
   margin-right: 4vw;
-  /* height: 35px; */
+  font-size: 20px;
+  color: rgb(43, 18, 133);
+  margin-top: -0.6vh;
+  /* height: 2vh; */
 }
