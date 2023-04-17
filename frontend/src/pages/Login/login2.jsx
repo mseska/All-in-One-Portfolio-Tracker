@@ -10,60 +10,61 @@ export default function Login2() {
   //   email: "",
   //   password: ""
   // });
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleMessageChange = (event) => {
-    // 👇️ access textarea value
-    // const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const navigate = useNavigate();
 
-    // axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-    // axios.defaults.xsrfCookieName = 'csrftoken';
-    // axios.defaults.headers.common['X-CSRFToken'] = csrftoken;
-    setMessage(event.target.value);
-    console.log("console log:", event.target.value);
-    axios
-      .post("http://localhost:8000/api/items/", {
-        name: message,
-      })
-      .then((response) => {
-        console.log("response get as", response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const handleEmailChange = (event) => {
+    // setMessage(event.target.value);
+    // console.log("console log:", event.target.value);
     // axios
-    //   .get("http://localhost:8000/api/items/",{
-    //     params: {
-    //       name: message
-    //     }})
+    //   .post("http://localhost:8000/api/items/", {
+    //     name: message,
+    //   })
     //   .then((response) => {
-    //     console.log("response get as",response.data);
+    //     console.log("response get as", response.data);
     //   })
     //   .catch((error) => {
     //     console.log(error);
     //   });
+
+    setEmail(event.target.value);
   };
 
-  function handleSubmit(event) {
-    event.preventDefault();
-  }
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
 
-  function handleLogin() {
+  async function handleLogin(event) {
+    event.preventDefault();
+    setIsLoading(true);
+
     axios
-      .post("/api/login/", { username, password })
+      .post("http://localhost:8000/api/login/", {
+        eMail: email,
+        PassWord: password,
+      })
       .then((response) => {
         const token = response.data.token;
-        localStorage.setItem("token", token);
-        navigate("/home");
+        // local storageta userId ve userToken tutarsak diğer sayfalarda
+        // bunları requestlere ekleyerek o userın datasını getleyebiliriz
+        localStorage.setItem("userId", response.data.user_id);
+        localStorage.setItem("userToken", response.data.token);
+        console.log(response.data.user_id);
+        console.log(response.data.token);
+        navigate("home");
       })
-      .catch((error) => {
-        console.log(error);
-      });
-      navigate("home");
-    // alert("You clicked Log in.");
+      .catch(function (error) {
+        alert("The email address you entered could not be validated.");
+        navigate("/home");
+        // console.log(email);
+        // console.log(password);
+        setIsLoading(false);
+      })
+      .finally((response) => {});
   }
 
   function handleSignUpClick() {
@@ -105,13 +106,14 @@ export default function Login2() {
                   class="emailInputLogin"
                   placeholder="Email"
                   name="message"
-                  onChange={handleMessageChange}
+                  onChange={handleEmailChange}
                   // value={message}
                 />
                 <input
                   placeholder="Password"
                   class="passwordInputLogin"
                   type="password"
+                  onChange={handlePasswordChange}
                 />
 
                 <input
