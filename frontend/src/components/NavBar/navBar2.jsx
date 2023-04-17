@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import "./navBar.css";
 
 export default function NavBar2() {
-  const [stockData, setStockData] = useState([]);
   const navigate = useNavigate();
 
   function searchFunc() {
@@ -22,6 +21,22 @@ export default function NavBar2() {
 
   function newsFunc() {
     navigate("/news");
+  }
+
+  function myPortfolioButtonFunc() {
+    navigate("/myPortfolio");
+  }
+
+  function homeButtonFunc() {
+    navigate("/home");
+  }
+
+  function cryptoButtonFunc() {
+    navigate("/crypto");
+  }
+
+  function forecastButtonFunc() {
+    navigate("/forecast");
   }
 
   <link
@@ -90,7 +105,11 @@ export default function NavBar2() {
         </div>
       </div>
       <div className="NavBar2">
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={homeButtonFunc}
+        >
           Home
         </button>
         <button
@@ -100,13 +119,25 @@ export default function NavBar2() {
         >
           News
         </button>
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={myPortfolioButtonFunc}
+        >
           MyPortfolio
         </button>
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={cryptoButtonFunc}
+        >
           Crypto
         </button>
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={forecastButtonFunc}
+        >
           Forecast
         </button>
       </div>
