@@ -1,0 +1,26 @@
+.user-icon-menu {
+    display: block;
+    position: absolute;
+    top: 90px;
+    right: 0;
+    background-color: white;
+    border: 1px solid grey;
+    padding: 10px;
+    height: 11vh;
+    width: 20vw;
+    border-radius: 10px;
+  }
+
+  .nameDiv {
+
+    height: 4vh;
+
+  }
+
+  .userIconMenuButton {
+    margin-top: 1vh;
+    border-radius: 5px;
+
+  }
+
+  

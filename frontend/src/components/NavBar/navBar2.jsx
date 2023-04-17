@@ -3,10 +3,21 @@ import logo from "./navBarLogo.svg";
 import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router-dom";
 import "./navBar.css";
+import UserIcon from "./userIcon";
+// import "./userIcon.css";
 
 export default function NavBar2() {
-  const [stockData, setStockData] = useState([]);
   const navigate = useNavigate();
+
+  const [showUserPopUp, setShowUserPopUp] = useState(false);
+
+  function handleMouseEnterUserIcon() {
+    setShowUserPopUp(true);
+  }
+
+  function handleMouseLeave() {
+    setShowUserPopUp(false);
+  }
 
   function searchFunc() {
     alert("You searched for something");
@@ -24,13 +35,31 @@ export default function NavBar2() {
     navigate("/news");
   }
 
+  function myPortfolioButtonFunc() {
+    navigate("/myPortfolio");
+  }
+
+  function homeButtonFunc() {
+    navigate("/home");
+  }
+
+  function cryptoButtonFunc() {
+    navigate("/crypto");
+  }
+
+  function forecastButtonFunc() {
+    navigate("/forecast");
+  }
+
+ 
+
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
   ></link>;
 
   return (
-    <div className="NavBar">
+    <div className="NavBar" onMouseLeave={handleMouseLeave}>
       <div className="Navbar1">
         <img
           class="NavBarLogo"
@@ -59,6 +88,8 @@ export default function NavBar2() {
             fill="currentColor"
             class="bi bi-person-circle NavBarIcon"
             viewBox="0 0 16 16"
+            onMouseEnter={handleMouseEnterUserIcon}
+            // onMouseLeave={handleMouseLeave}
           >
             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
             <path
@@ -66,6 +97,11 @@ export default function NavBar2() {
               d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"
             />
           </svg>
+          {showUserPopUp && (
+            <UserIcon  >
+              
+            </UserIcon>
+          )}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="25"
@@ -90,7 +126,11 @@ export default function NavBar2() {
         </div>
       </div>
       <div className="NavBar2">
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={homeButtonFunc}
+        >
           Home
         </button>
         <button
@@ -100,13 +140,25 @@ export default function NavBar2() {
         >
           News
         </button>
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={myPortfolioButtonFunc}
+        >
           MyPortfolio
         </button>
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={cryptoButtonFunc}
+        >
           Crypto
         </button>
-        <button type="button" class="btn btn-primary navBarButtons">
+        <button
+          type="button"
+          class="btn btn-primary navBarButtons"
+          onClick={forecastButtonFunc}
+        >
           Forecast
         </button>
       </div>
