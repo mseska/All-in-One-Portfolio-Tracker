@@ -108,7 +108,7 @@ function Home() {
                 </tr>
               </thead>
               <tbody>
-                {stockData.map((stock, index) => (
+                {cryptoData.map((stock, index) => (
                   <tr key={index}>
                     <td>{stock.symbol}</td>
                     <td>{stock.price}</td>
