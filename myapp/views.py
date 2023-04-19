@@ -253,5 +253,12 @@ def get_commodity_list(request):
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
     
-     
+
+@api_view(['GET'])
+def news_api(request):
+    with open('news_data.json') as f:
+        data = json.load(f)
+    print(data)
+    return JsonResponse(data, safe=False)
+
     
