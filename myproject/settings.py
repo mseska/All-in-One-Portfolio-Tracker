@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
 ]
 
@@ -100,7 +101,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '3306',
         'USER': 'root',
-        'PASSWORD': '123456654321q',
+        'PASSWORD': '5380741424Yy',
     }
 }
 
@@ -123,6 +124,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (  #authenticate() returns none o yuzden ekledim ama ise yarıyor mu bilmiyorum
+        'django.contrib.auth.backends.ModelBackend',
+    )
+
+# AUTH_USER_MODEL = 'myapp.User'
+# AUTH_USER_MODEL = 'auth_user'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
