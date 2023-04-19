@@ -40,7 +40,7 @@ function Home() {
       .get("http://localhost:8000/api/currency-price")
       .then((response) => {
         console.log("response get as", response.data);
-        setCryptoData(response.data);
+        setCryptoData(response.data);    //HATA VAR SANIRIM, COPY PASTE SETCRYPTODATA DİYOR BU SATIRDA SETCURRENCYDATA DİYE DEĞİŞTİR
         console.log("currencyData", currencyData);
       })
       .catch((error) => {
@@ -50,7 +50,7 @@ function Home() {
       .get("http://localhost:8000/api/commodity-price")
       .then((response) => {
         console.log("response get as", response.data);
-        setCryptoData(response.data);
+        setCryptoData(response.data);  //HATA VAR SANIRIM, COPY PASTE SETCRYPTODATA DİYOR BU SATIRDA SETCOMMODITYDATA DİYE DEĞİŞTİR
         console.log("commodityData", commodityData);
       })
       .catch((error) => {
