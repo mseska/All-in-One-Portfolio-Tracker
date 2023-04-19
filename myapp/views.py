@@ -13,6 +13,12 @@ from . serializer import *
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from django.contrib.auth import authenticate, login
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
+
+#from django.http import JsonResponse
  
 class ReactView(APIView):
     def get(self,request):
@@ -173,10 +179,10 @@ def get_crypto_list(request):
         newAsset.symbol = stock[2]
         newAsset.price = stock[3]
         newAsset.currency = stock[1]
-        print(newAsset.symbol,"newAsset.symbol")
-        print(newAsset.price,"newAsset.price")
-        print(newAsset.currency,"newAsset.currency")
-        print(newAsset,"newAsset")
+        # print(newAsset.symbol,"newAsset.symbol")
+        # print(newAsset.price,"newAsset.price")
+        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
     # serializer = StockSerializer(data=returnList)
@@ -206,10 +212,10 @@ def get_currency_list(request):
         newAsset.symbol = stock[2]
         newAsset.price = stock[3]
         newAsset.currency = stock[1]
-        print(newAsset.symbol,"newAsset.symbol")
-        print(newAsset.price,"newAsset.price")
-        print(newAsset.currency,"newAsset.currency")
-        print(newAsset,"newAsset")
+        # print(newAsset.symbol,"newAsset.symbol")
+        # print(newAsset.price,"newAsset.price")
+        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
     # serializer = StockSerializer(data=returnList)
@@ -238,9 +244,9 @@ def get_commodity_list(request):
         newAsset.symbol = stock[2]
         newAsset.price = stock[3]
         newAsset.currency = stock[1]
-        print(newAsset.symbol,"newAsset.symbol")
-        print(newAsset.price,"newAsset.price")
-        print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.symbol,"newAsset.symbol")
+        # print(newAsset.price,"newAsset.price")
+        # print(newAsset.currency,"newAsset.currency")
         print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
@@ -258,7 +264,68 @@ def get_commodity_list(request):
 def news_api(request):
     with open('news_data.json') as f:
         data = json.load(f)
-    print(data)
+    #print(data)
     return JsonResponse(data, safe=False)
 
+
+@api_view(['POST'])           
+def login_generate_token(request):
+    print("POST METHOD WORKS - in login generate token")
+    email = request.data.get('eMail') 
+    password = request.data.get('PassWord')
+
+    print(email, "- email")
+    print(password, "- password")
     
+    user = authenticate(request, username=email, password=password)
+
+    if user is not None:
+        token, created = Token.objects.get_or_create(user=user)
+        print(token)
+        print("this user exist, return the token")
+        return JsonResponse({'token': token.key}, status = 200)
+    else:
+        print("user does not exist:(")
+        return JsonResponse({'error': 'Invalid credentials'}, status=401)
+
+@api_view(['POST'])           
+def signup_generate_token(request):
+    print("POST METHOD WORKS - in signup generate token")
+    name = request.data.get('name')
+    surname = request.data.get('surname')
+    email = request.data.get('email') #uppercase falan degisebilir
+    password = request.data.get('password')
+
+    print(name, "- name")
+    print(surname, "- surname")
+    print(email, "- email")
+    print(password, "- password")
+
+    #email must be unique, check the emails:
+    if User.objects.filter(email=email).exists():
+        return JsonResponse({'error': 'User with this email already exists'})
+
+    #create a user:
+    user = User.objects.create_user(username=email, password=password)
+    user.save()
+
+    #to check whether the user is empty or not:
+    print(user.email)
+    print(user.password)
+
+    user = authenticate(request, username=email, password=password)
+
+    print(user, "after authenticate")
+
+    # print(user.email, "After authenticate()")
+    # print(user.password)
+   
+    if user is not None:
+        print("user created")
+        #login(request, user)
+        token, created = Token.objects.get_or_create(user=user)
+        print(token)
+        return JsonResponse({'token': token.key}, status=201)
+    else:
+        print("user is not created sorry")
+        return JsonResponse({'error': 'Invalid credentials'}, status = 401)
