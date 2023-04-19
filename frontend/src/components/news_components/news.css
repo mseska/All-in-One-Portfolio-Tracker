@@ -1,0 +1,31 @@
+.news-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    
+  }
+  
+  .news-image {
+    margin-left:  3vw;
+    width: 120px;
+    height: 120px;
+    margin-right: 1rem;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .news-image img {
+    cursor: pointer;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .news-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+  }
+  

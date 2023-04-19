@@ -5,6 +5,8 @@ import axios from "axios";
 
 import "./home.css";
 import NavBar from "../components/NavBar/navBar2";
+import News from "../components/news_components/news";
+import HomePageNewsHolder from "../components/news_components/newsHolder_home";
 
 function Home() {
   const [stockData, setStockData] = useState([]);
@@ -60,7 +62,9 @@ function Home() {
     <div>
       <NavBar></NavBar>
       <div className="BelowNavBar">
-        <div className="NewsDiv">{/* <button>hello</button> */}</div>
+        <div className="NewsDiv">
+          <HomePageNewsHolder></HomePageNewsHolder>
+        </div>
         <div className="HomePageTables scrollable-area">
           <section>
             <p className="HomePageTableNames"> Top Rated Stocks:</p>
@@ -77,13 +81,12 @@ function Home() {
                   <tr key={index}>
                     <td>
                       <a
-                      className="HomePageStockNames"
+                        className="HomePageStockNames"
                         href=""
                         onClick={() =>
                           window.open(
                             `https://www.google.com/search?q=${stock.symbol}+stock`,
-                            "_blank",
-                            
+                            "_blank"
                           )
                         }
                       >
