@@ -10,7 +10,7 @@ class NewsHolderHomePage extends Component {
 
   render() {
     return (
-      <div className="article-card-container">{this.state.newsArticles}</div>
+      <div className="">{this.state.newsArticles}</div>
     );
   }
 
