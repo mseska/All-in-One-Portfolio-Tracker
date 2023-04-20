@@ -11,6 +11,7 @@
 }
 
 .NewsDiv{
+  margin-top: 5vh;
   width: 70vw;
   
 }
@@ -35,6 +36,12 @@
 .HomePageStockNames:hover{
   font-weight: 600;
 }
+
+.scrollable-area-news {
+  height: 100vh;
+  overflow-y: scroll;
+}
+
 
 
 

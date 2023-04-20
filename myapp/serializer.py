@@ -16,3 +16,8 @@ class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stock2
         fields = ['symbol','price','currency']
+
+# class SampleUserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = SampleUser
+#         fields = ['name', 'surname', 'email', 'password', 'last_login']

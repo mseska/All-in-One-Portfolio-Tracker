@@ -29,6 +29,11 @@ urlpatterns = [
     path('api/crypto-price',get_crypto_list, name='get_crypto_list'),
     path('api/currency-price', get_currency_list, name='get_currency_list'),
     path('api/commodity-price',get_commodity_list, name='get_commodity_list'),
+    path('api/news_mainpage', news_api, name='news_api'),
+    path('api/login/', login_generate_token, name='login_generate_token'),
+    path('api/signUp/', signup_generate_token, name='signup_generate_token'),
+
+    
     #path('',include('myapp.urls')),
     #re_path(".*",TemplateView.as_view(template_name="index.html")),
     path('input', include('myapp.urls')),
