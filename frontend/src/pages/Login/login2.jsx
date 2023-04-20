@@ -51,15 +51,18 @@ export default function Login2() {
         const token = response.data.token;
         // local storageta userId ve userToken tutarsak diğer sayfalarda
         // bunları requestlere ekleyerek o userın datasını getleyebiliriz
-        localStorage.setItem("userId", response.data.user_id);
-        localStorage.setItem("userToken", response.data.token);
-        console.log(response.data.user_id);
-        console.log(response.data.token);
-        navigate("home");
+
+        if (response.status === 200) {
+          localStorage.setItem("userId", response.data.user_id);
+          localStorage.setItem("userToken", response.data.token);
+          console.log(response.data.user_id);
+          console.log(response.data.token);
+          navigate("home");
+        }
       })
       .catch(function (error) {
         alert("The email address you entered could not be validated.");
-        navigate("/home");
+        // navigate("/home");
         // console.log(email);
         // console.log(password);
         setIsLoading(false);

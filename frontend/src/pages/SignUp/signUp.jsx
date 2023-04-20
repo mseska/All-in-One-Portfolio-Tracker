@@ -40,12 +40,15 @@ export default function SignUp() {
         password: password,
       })
       .then(function (response) {
-        alert("sign-up successful");
-        navigate("/");
+        if(response.status === 201) {
+
+          alert("sign-up successful");
+          navigate("/");
+        }
       })
       .catch(function (error) {
         alert("Could not signUp");
-        navigate("/");
+        // navigate("/");
         console.log(name);
         console.log(surname);
         console.log(email);
