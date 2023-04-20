@@ -1,3 +1,5 @@
+import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Assets, Product, Stock2
@@ -13,6 +15,13 @@ from . serializer import *
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+
+import yfinance as yf
+import json
+import schedule
+import time
+import threading
  
 class ReactView(APIView):
     def get(self,request):
@@ -34,11 +43,14 @@ def index(request):
     #feature1.id = 0
     #feature1.name = 'Fast'
     #feature1.description = 'Our service is fast'
-    
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
+
     return render(request,'a.html',{'name':name})
 
 def input(request):
     print("deneöe")
+
     return render(request,'input.html')
 
 def inputCheck(request):
@@ -90,6 +102,7 @@ def list(request):
         newAsset.AssetName = asset[2]
         newAsset.value = asset[3]
         returnList.append(newAsset)
+
     
     return render(request,'list.html',{'list':returnList})
 
@@ -125,6 +138,9 @@ def add_item(request):
 def get_stock_list(request):
     print("GET METHOD WORKS")
     print(request.GET)
+
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
     returnList = []
@@ -252,6 +268,45 @@ def get_commodity_list(request):
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
-    
-     
-    
+
+def update_news_data():
+    print("json is being updated\n\n\n\n")
+    # Define the list of stock tickers to retrieve news for
+    tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD"]
+
+    news_dict = {}
+
+    # Loop through the tickers and retrieve news data from Yahoo Finance API
+    for ticker in tickers:
+        # Retrieve the news data for the current ticker
+        stock = yf.Ticker(ticker)
+        news = stock.news
+
+        news_list = []
+        for article in news:
+            news_dict2 = {"title": "", "publisher": "", "link": "", "thumbnail": ""}
+            if "title" in article:
+                news_dict2["title"] = article["title"]
+            if "publisher" in article:
+                news_dict2["publisher"] = article["publisher"]
+            if "link" in article:
+                news_dict2["link"] = article["link"]
+            if "thumbnail" in article:
+                if "resolutions" in article["thumbnail"] and article["thumbnail"]["resolutions"]:
+                    news_dict2["thumbnail"] = article["thumbnail"]["resolutions"][0]["url"]
+            news_list.append(news_dict2)
+
+        # Add the news data to the dictionary
+        news_dict[ticker] = news_list
+
+    with open("news_data.json", "w") as f:
+        json.dump(news_dict, f)
+    print("jsonupdated\n\n\n\n")
+    pass
+
+def update_news_periodically():
+    while True:
+        now = datetime.datetime.now()
+        if now.second == 0 and now.minute ==0 :  # Run update_news_data() once per hour at the start of the hour
+            update_news_data()
+        time.sleep(1)
