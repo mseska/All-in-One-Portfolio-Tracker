@@ -396,26 +396,36 @@ def signup_generate_token(request):
 
 @api_view(['GET'])
 def get_user_info(request):
-    user = User.objects.get(username='ysm1') 
+    #user = User.objects.get(username='ysm1') 
+    data = request.GET
+    #print("thsi is the data", data)
+    id = request.GET.get("id")
+    print( "this is the id: ", id)
+    if id is not None:
+        user = User.objects.get(id=id)
+        if user is not None and user.is_active: #if request.user.is_authenticated:
+            print("user exists!")
+            #print(user.username)
+            #print(user.first_name, "- here is the first name")
 
-    #id = request.GET('id')
-    #user = User.objects.get(id=id)
+            #user = authenticate(request, username=user.username, password=user.password) -> returns None??????
 
-    if user is not None and user.is_active: #if request.user.is_authenticated:
-        print("user exists!")
-        print(user.username)
-        print(user.first_name, "- here is the first name")
-        #user = authenticate(request, username=user.username, password=user.password) -> returns None??????
-        login(request, user)
-        print(user, "after login")
-        serializer = UserSerializer(user)
-        print(serializer.data, "- serializer data")
-        print("found the user, sending the name field...")
+            login(request, user)
+            #print(user, "after login")
 
-        return JsonResponse(serializer.data)
+            serializer = UserSerializer(user)
+            #print(serializer.data, "- serializer data")
+            print("found the user, sending the name field...")
+
+            return JsonResponse(serializer.data)
+        else:
+            print("sorry could not find the user")
+            #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
     else:
-        print("sorry could not find the user")
+        print("id returns none")
         #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
+
+ 
 
         
         
