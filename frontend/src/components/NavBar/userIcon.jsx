@@ -12,14 +12,16 @@ export default function UserIcon() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/getUserInfoUserIcon")
+      .get("http://localhost:8000/api/get-user-info-user-icon", {
+      id: localStorage.getItem("userId"),
+      })
       .then((res) => {
         // Update name and email state with the response data
         setName(res.data.name);
         setEmail(res.data.email);
       })
       .catch((err) => {
-        setName("Tuna Önal");
+        // setName("error");
         console.error(err);
       });
   }, []);
