@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/commodity-price', views.get_commodity_list, name='get_commodity_list'),
     path('api/news_mainpage', views.news_api, name='news_api'),
     path('api/login/', views.login_generate_token, name='login_generate_token'),
-    path('api/signUp/', views.signup_generate_token, name='signup_generate_token')
+    path('api/signUp/', views.signup_generate_token, name='signup_generate_token'),
+    path('api/get-user-info-user-icon', views.get_user_info, name='get_user_info')
 ]
