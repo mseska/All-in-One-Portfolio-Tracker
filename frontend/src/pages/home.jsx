@@ -1,11 +1,11 @@
 // import * as React from "react";
 import { React, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import axios from "axios";
 
 import "./home.css";
 import NavBar from "../components/NavBar/navBar2";
-import News from "../components/news_components/news";
+// import News from "../components/news_components/news";
 import HomePageNewsHolder from "../components/news_components/newsHolder_home";
 
 function Home() {
@@ -14,7 +14,6 @@ function Home() {
   const [currencyData, setCurrencyData] = useState([]);
   const [commodityData, setCommodityData] = useState([]);
 
-  //"http://localhost:8000/api"
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/stock-price")
@@ -40,7 +39,7 @@ function Home() {
       .get("http://localhost:8000/api/currency-price")
       .then((response) => {
         console.log("response get as", response.data);
-        setCryptoData(response.data);    //HATA VAR SANIRIM, COPY PASTE SETCRYPTODATA DİYOR BU SATIRDA SETCURRENCYDATA DİYE DEĞİŞTİR
+        setCurrencyData(response.data);    
         console.log("currencyData", currencyData);
       })
       .catch((error) => {
@@ -50,7 +49,7 @@ function Home() {
       .get("http://localhost:8000/api/commodity-price")
       .then((response) => {
         console.log("response get as", response.data);
-        setCryptoData(response.data);  //HATA VAR SANIRIM, COPY PASTE SETCRYPTODATA DİYOR BU SATIRDA SETCOMMODITYDATA DİYE DEĞİŞTİR
+        setCommodityData(response.data);  
         console.log("commodityData", commodityData);
       })
       .catch((error) => {
