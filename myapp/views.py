@@ -401,13 +401,13 @@ def get_user_info(request):
     #id = request.GET('id')
     #user = User.objects.get(id=id)
 
-    if user is not None: #if request.user.is_authenticated:
+    if user is not None and user.is_active: #if request.user.is_authenticated:
         print("user exists!")
-        print(user)
-        #user = authenticate(request, username=user.username)
+        print(user.username)
         print(user.first_name, "- here is the first name")
-        #login(request, user)
-
+        #user = authenticate(request, username=user.username, password=user.password) -> returns None??????
+        login(request, user)
+        print(user, "after login")
         serializer = UserSerializer(user)
         print(serializer.data, "- serializer data")
         print("found the user, sending the name field...")

@@ -129,7 +129,7 @@ AUTHENTICATION_BACKENDS = (  #authenticate() returns none o yuzden ekledim ama i
     )
 
 # AUTH_USER_MODEL = 'myapp.User'
-# AUTH_USER_MODEL = 'auth_user'
+AUTH_USER_MODEL = 'auth.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
