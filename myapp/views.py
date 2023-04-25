@@ -22,6 +22,8 @@ import json
 import schedule
 import time
 import threading
+import requests
+import json
 
 from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
@@ -53,6 +55,8 @@ def index(request):
     news_update_thread = threading.Thread(target=update_news_periodically)
     news_update_thread.start()
 
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
     return render(request,'a.html',{'name':name})
 
 def input(request):
@@ -97,6 +101,13 @@ def my_custom_sql(query,connection):
         row = cursor.fetchall()
 
     return row
+
+
+def my_custom_news_sql(query, params=None):
+    with connection.cursor() as cursor:
+        cursor.execute(query, params)
+        result = cursor.fetchall()
+    return result
 
 def list(request):
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
@@ -146,8 +157,14 @@ def get_stock_list(request):
     print("GET METHOD WORKS")
     print(request.GET)
 
+    #TODO delete after development phase of news data retrieval
+    update_news_data()
+    update_prices()
+
     news_update_thread = threading.Thread(target=update_news_periodically)
     news_update_thread.start()
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
     returnList = []
@@ -310,16 +327,131 @@ def update_news_data():
     with open("news_data.json", "w") as f:
         json.dump(news_dict, f)
     print("jsonupdated\n\n\n\n")
+
+    print("dbupdating\n\n\n\n")
+    delete_query = "DELETE FROM `comp491`.`news` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
+    my_custom_news_sql(delete_query)
+
+    with open('news_data.json') as f2:
+        news_data = json.load(f2)
+
+
+    # Loop through the news items and insert them into the MySQL database if they don't already exist
+    for ticker, news_items in news_data.items():
+
+
+
+        for news_item in news_items:
+            title = news_item['title']
+            publisher = news_item['publisher']
+            link = news_item['link']
+            thumbnail = news_item['thumbnail']
+            asset = ticker
+
+            # Check if the news already exists in the database
+            query = "SELECT * FROM `comp491`.`news` WHERE title=%s AND publisher=%s AND link=%s"
+            result = my_custom_news_sql(query, (title, publisher, link))
+
+            if len(result) > 0:
+                # The news already exists in the database, so skip inserting it
+                print(f"News '{title}' already exists in the database")
+            else:
+                # Insert the news into the database
+                query = "INSERT INTO `comp491`.`news` (title, publisher, link, thumbnail, asset, addDate) VALUES (%s, %s, %s, %s, %s, NOW())"
+                my_custom_news_sql(query, (title, publisher, link, thumbnail, asset))
+                print(f"Inserted news '{title}' into the database")
+
+
+
+
+
+
+
+    print("dbupdated\n\n\n\n")
+
     pass
+def update_prices():
+    tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD", "CEEK-USD"]
+
+    start_date = "2022-04-02"
+    end_date = "2022-04-04"
+
+    url = f"https://query1.finance.yahoo.com/v7/finance/chart/{{}}?range=1d&interval=1d&indicators=quote&includeTimestamps=true"
+
+    data_dict = {}
+
+    # Loop through the tickers and retrieve data from Yahoo Finance API
+    for ticker in tickers:
+        current_url = url.format(ticker)
+
+        response = requests.get(current_url, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'})
+
+        data = response.json()
+
+        # Extract the data for the specified date range
+        timestamps = data["chart"]["result"][0]["timestamp"]
+        prices = data["chart"]["result"][0]["indicators"]["quote"][0]
+        data_dict[ticker] = {"Timestamp": timestamps, "Open": prices["open"], "High": prices["high"],
+                             "Low": prices["low"],
+                             "Close": prices["close"], "Volume": prices["volume"]}
+
+    with open("price_data.json", "w") as f:
+        json.dump(data_dict, f)
+
+    print("dbupdating\n\n\n\n")
+    delete_query = "DELETE FROM `comp491`.`prices` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
+    my_custom_news_sql(delete_query)
+
+    with open('price_data.json') as f2:
+        price_data = json.load(f2)
+
+    # Loop through the news items and insert them into the MySQL database if they don't already exist
+    for ticker, price_item in price_data.items():
+
+
+        timestamp = price_item['Timestamp'][0]
+        openn = price_item['Open'][0]
+        high = price_item['High'][0]
+        low = price_item['Low'][0]
+        close = price_item['Close'][0]
+        volume = price_item['Volume'][0]
+        asset = ticker
+
+        # Check if the news already exists in the database
+        query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
+        result = my_custom_news_sql(query, (asset))
+
+        if len(result) > 0:
+            # The news already exists in the database, so skip inserting it
+            print(f"already exists in the database")
+        else:
+            # Insert the news into the database
+            query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+            my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+            print(f"Inserted prices  into the database")
+
+    print("dbupdated\n\n\n\n")
+
+    pass
+
+
 
 def update_news_periodically():
     while True:
         now = datetime.datetime.now()
-        if now.second == 0 and now.minute ==0 :  # Run update_news_data() once per hour at the start of the hour
+        if now.second == 0 and now.minute== 0:  # Run update_news_data() once per hour at the start of the hour
             update_news_data()
         time.sleep(1)
 
-    
+
+def update_prices_periodically():
+    while True:
+        now = datetime.datetime.now()
+        if now.second == 0 and now.minute == 0:  # Run update_news_data() once per hour at the start of the hour
+            update_prices()
+        time.sleep(1)
+
 
 @api_view(['GET'])
 def news_api(request):
