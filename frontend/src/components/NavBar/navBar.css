@@ -48,9 +48,14 @@
 }
 
 .NavBarIcon:hover {
+  border-radius: 10px;
   /* height: 35px;
   width: 35px; */
-  color: aqua;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22),
+  0 14px 28px rgba(0, 0, 0, 0.22),
+  0 14px 28px rgba(0, 0, 0, 0.22),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+ 
   cursor: pointer;
 }
 
