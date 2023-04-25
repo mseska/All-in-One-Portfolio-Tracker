@@ -363,7 +363,8 @@ def signup_generate_token(request):
 
     #email must be unique, check the emails:
     if User.objects.filter(email=email).exists():
-        return JsonResponse({'error': 'User with this email already exists'})
+        print("invalid email address:(((")
+        return JsonResponse({'error': 'User with this email already exists'}, status=409)
 
     #create a user:
     user = User.objects.create_user(username=email, email=email, password=password)
