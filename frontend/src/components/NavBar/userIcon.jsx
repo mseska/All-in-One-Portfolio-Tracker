@@ -8,20 +8,25 @@ import axios from "axios";
 export default function UserIcon() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
 
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/get-user-info-user-icon", {
-      id: localStorage.getItem("userId"),
+        params: { id: localStorage.getItem("userId") },
       })
       .then((res) => {
         // Update name and email state with the response data
-        setName(res.data.name);
+        setName(res.data.first_name);
+        setSurname(res.data.last_name);
         setEmail(res.data.email);
+        console.log(res);
+        localStorage.setItem("userName",res.data.name);
+        localStorage.setItem("email", res.data.email);
       })
       .catch((err) => {
-        // setName("error");
+        setName("error");
         console.error(err);
       });
   }, []);
@@ -32,7 +37,7 @@ export default function UserIcon() {
 
   return (
     <div className="user-icon-menu">
-      <div className="nameDiv">{name}</div>
+      <div className="nameDiv">{name}  {surname} {email}</div>
       {/* <div className="signOutButtonDiv"> </div> */}
       <div
         style={{
