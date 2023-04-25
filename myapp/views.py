@@ -154,8 +154,8 @@ def add_item(request):
 
 @api_view(['GET'])
 def get_stock_list(request):
-    print("GET METHOD WORKS")
-    print(request.GET)
+    # print("GET METHOD WORKS")
+    # print(request.GET)
 
     #TODO delete after development phase of news data retrieval
     update_news_data()
@@ -198,8 +198,8 @@ def get_stock_list(request):
 
 @api_view(['GET'])
 def get_crypto_list(request):
-    print("GET METHOD WORKS")
-    print(request.GET)
+    # print("GET METHOD WORKS")
+    # print(request.GET)
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) #table will be changed
   
@@ -231,8 +231,8 @@ def get_crypto_list(request):
 
 @api_view(['GET'])
 def get_currency_list(request):
-    print("GET METHOD WORKS")
-    print(request.GET)
+    # print("GET METHOD WORKS")
+    # print(request.GET)
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
   
@@ -263,8 +263,8 @@ def get_currency_list(request):
 
 @api_view(['GET'])
 def get_commodity_list(request):
-    print("GET METHOD WORKS")
-    print(request.GET)
+    # print("GET METHOD WORKS")
+    # print(request.GET)
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) 
   
@@ -445,6 +445,7 @@ def update_news_periodically():
         time.sleep(1)
 
 
+
 def update_prices_periodically():
     while True:
         now = datetime.datetime.now()
@@ -476,7 +477,8 @@ def login_generate_token(request):
         token, created = Token.objects.get_or_create(user=user)
         print(token)
         print("this user exist, return the token")
-        return JsonResponse({'token': token.key}, status = 200)
+        print(user.id, "this si the user id")
+        return JsonResponse({'token': token.key,  'id' : user.id}, status = 200)
     else:
         print("user does not exist:(")
         return JsonResponse({'error': 'Invalid credentials'}, status=401)
@@ -499,7 +501,9 @@ def signup_generate_token(request):
         return JsonResponse({'error': 'User with this email already exists'})
 
     #create a user:
-    user = User.objects.create_user(username=email, password=password)
+    user = User.objects.create_user(username=email, email=email, password=password)
+    user.first_name = name
+    user.last_name = surname
     user.save()
 
     #to check whether the user is empty or not:
@@ -518,7 +522,44 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
-        return JsonResponse({'token': token.key}, status=201)
+
+        return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
         return JsonResponse({'error': 'Invalid credentials'}, status = 401)
+
+
+@api_view(['GET'])
+def get_user_info(request):
+    #user = User.objects.get(username='ysm1')
+    data = request.GET
+    #print("thsi is the data", data)
+    id = request.GET.get("id")
+    print( "this is the id: ", id)
+    if id is not None:
+        user = User.objects.get(id=id)
+        if user is not None and user.is_active: #if request.user.is_authenticated:
+            print("user exists!")
+            #print(user.username)
+            #print(user.first_name, "- here is the first name")
+
+            #user = authenticate(request, username=user.username, password=user.password) -> returns None??????
+
+            login(request, user)
+            #print(user, "after login")
+
+            serializer = UserSerializer(user)
+            #print(serializer.data, "- serializer data")
+            print("found the user, sending the name field...")
+
+            return JsonResponse(serializer.data)
+        else:
+            print("sorry could not find the user")
+            #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
+    else:
+        print("id returns none")
+        #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
+
+
+
+

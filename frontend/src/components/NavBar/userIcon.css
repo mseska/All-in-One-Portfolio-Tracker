@@ -1,26 +1,48 @@
 .user-icon-menu {
     display: block;
     position: absolute;
-    top: 90px;
+    top: 100px;
     right: 0;
     background-color: white;
-    border: 1px solid grey;
+    border: 1px solid rgb(203, 209, 209);
     padding: 10px;
     height: 11vh;
     width: 20vw;
-    border-radius: 10px;
+    border-radius: 20px;
+    
   }
 
   .nameDiv {
+    font-weight: 500;
 
     height: 4vh;
 
   }
 
-  .userIconMenuButton {
-    margin-top: 1vh;
-    border-radius: 5px;
+  .userIconMenuButtonDiv:hover {
+    color: aqua;
+    
+  }
 
+  .userIconMenuButton:hover {
+    background-color: rgb(172, 199, 249);
+  }
+
+  .userIconMenuButton {
+    height: 4vh;
+    border-width: 0px;
+    width: 18.5vw;
+    margin-top: 0.7vh;
+    border-radius: 15px;
+    background-color: white;
+    font-weight: 600;
+
+  }
+
+  .aa {
+    font-size: 3rem;
+    margin-right: 5vw;
+    font-weight: 600;
   }
 
   

@@ -53,7 +53,7 @@ export default function Login2() {
         // bunları requestlere ekleyerek o userın datasını getleyebiliriz
 
         if (response.status === 200) {
-          localStorage.setItem("userId", response.data.user_id);
+          localStorage.setItem("userId", response.data.id);
           localStorage.setItem("userToken", response.data.token);
           console.log(response.data.user_id);
           console.log(response.data.token);
