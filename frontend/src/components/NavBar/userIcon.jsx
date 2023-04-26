@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router-dom";
-import NavBar from "../../components/NavBar/navBar2.jsx";
 import "./userIcon.css";
 import axios from "axios";
 
@@ -10,6 +9,7 @@ export default function UserIcon() {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
+
 
   useEffect(() => {
     axios
@@ -32,6 +32,7 @@ export default function UserIcon() {
   }, []);
 
   function signOut() {
+    localStorage.clear();
     navigate("/");
   }
 
