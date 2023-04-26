@@ -14,6 +14,16 @@ function Home() {
   const [currencyData, setCurrencyData] = useState([]);
   const [commodityData, setCommodityData] = useState([]);
 
+  function getClassNameForPrice(price) {
+    if (price > 420) {
+      return "green";
+    } else if (price < 420) {
+      return "red";
+    } else {
+      return "";
+    }
+  }
+
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/stock-price")
@@ -92,7 +102,7 @@ function Home() {
                         {stock.symbol}
                       </a>
                     </td>
-                    <td>{stock.price}</td>
+                    <td className={getClassNameForPrice(stock.price)}>{stock.price}</td>
                     <td>{stock.currency}</td>
                   </tr>
                 ))}

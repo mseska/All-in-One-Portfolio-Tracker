@@ -42,6 +42,18 @@
   overflow-y: scroll;
 }
 
+.green {
+  font-weight: 650;
+
+  color: green;
+}
+
+.red {
+  font-weight: 650;
+  color: red;
+}
+
+
 
 
 
