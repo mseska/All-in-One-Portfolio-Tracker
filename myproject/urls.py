@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/login/', login_generate_token, name='login_generate_token'),
     path('api/signUp/', signup_generate_token, name='signup_generate_token'),
     path('api/get-user-info-user-icon', get_user_info, name='get_user_info'),
+    path('activate/<uidb64>/<token>', activate, name='activate'),
     
     #path('',include('myapp.urls')),
     #re_path(".*",TemplateView.as_view(template_name="index.html")),

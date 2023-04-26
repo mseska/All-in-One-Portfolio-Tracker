@@ -31,6 +31,21 @@ from django.contrib.auth.models import User
 
 #from django.http import JsonResponse
 
+# email verification
+
+
+from django.contrib import messages #email confirmation - is not used
+
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+from django.shortcuts import redirect
+from .tokens import account_activation_token
+
+
+
  
 class ReactView(APIView):
     def get(self,request):
@@ -157,14 +172,14 @@ def get_stock_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    #TODO delete after development phase of news data retrieval
-    update_news_data()
-    update_prices()
+    # #TODO delete after development phase of news data retrieval
+    # update_news_data()
+    # update_prices()
 
-    news_update_thread = threading.Thread(target=update_news_periodically)
-    news_update_thread.start()
-    prices_update_thread = threading.Thread(target=update_prices_periodically)
-    prices_update_thread.start()
+    # news_update_thread = threading.Thread(target=update_news_periodically)
+    # news_update_thread.start()
+    # prices_update_thread = threading.Thread(target=update_prices_periodically)
+    # prices_update_thread.start()
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
     returnList = []
@@ -177,9 +192,9 @@ def get_stock_list(request):
         newAsset.symbol = stock[2]
         newAsset.price = stock[3]
         newAsset.currency = stock[1]
-        # print(stock[1])
-        # print(stock[2])
-        # print(stock[3])
+        print(stock[1])
+        print(stock[2])
+        print(stock[3])
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.currency,"newAsset.currency")
@@ -192,6 +207,7 @@ def get_stock_list(request):
     #     print(serializer.data)
     #returnListDict = {returnList}
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    print(serialized_objects, "serialized")
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
     
@@ -266,6 +282,14 @@ def get_commodity_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
+    #TODO delete after development phase of news data retrieval
+    update_news_data()
+    update_prices()
+
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) 
   
     returnList = []
@@ -319,6 +343,9 @@ def update_news_data():
             if "thumbnail" in article:
                 if "resolutions" in article["thumbnail"] and article["thumbnail"]["resolutions"]:
                     news_dict2["thumbnail"] = article["thumbnail"]["resolutions"][0]["url"]
+            else:
+                    news_dict2["thumbnail"] ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSriG88tNG1fjZY9tjMkWpziGZDukdu_2i2Cg&usqp=CAU"
+            
             news_list.append(news_dict2)
 
         # Add the news data to the dictionary
@@ -483,6 +510,41 @@ def login_generate_token(request):
         print("user does not exist:(")
         return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
+def activate(request, uidb64, token):
+    print("entered activate(), confirming the email...")
+    #User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        print("email confirmed!")
+        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('http://localhost:3000') #TODO
+        #return JsonResponse({'token': token.key}, status=201)
+    else:
+        print("sorry could not confirmed the email")
+        messages.error(request, 'Activation link is invalid!')
+
+
+def send_verification_email(request, user, name):
+    print("activating the email confirmation...") 
+
+    mail_subject = 'Activate Your Account'
+    print(user.username, "this is the username to be printed to the email")
+    message = render_to_string('template_activate_account.html', {
+        'user': name, 
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'protocol': 'https' if request.is_secure() else 'http'
+    })
+    return EmailMessage(mail_subject, message, to=[user.username])
+
 @api_view(['POST'])           
 def signup_generate_token(request):
     print("POST METHOD WORKS - in signup generate token")
@@ -498,7 +560,8 @@ def signup_generate_token(request):
 
     #email must be unique, check the emails:
     if User.objects.filter(email=email).exists():
-        return JsonResponse({'error': 'User with this email already exists'})
+        print("invalid email address:(((")
+        return JsonResponse({'error': 'User with this email already exists'}, status=409)
 
     #create a user:
     user = User.objects.create_user(username=email, email=email, password=password)
@@ -507,7 +570,7 @@ def signup_generate_token(request):
     user.save()
 
     #to check whether the user is empty or not:
-    print(user.email)
+    print(user.email, "hello")
     print(user.password)
 
     user = authenticate(request, username=email, password=password)
@@ -522,8 +585,13 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
-
-        return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
+        #activate(request, uidb64, token)
+        verification_mail = send_verification_email(request, user, name)
+        if verification_mail.send():
+            # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
+            # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
+            print("email sent!!!!!!!")
+            return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
         return JsonResponse({'error': 'Invalid credentials'}, status = 401)
@@ -559,6 +627,8 @@ def get_user_info(request):
     else:
         print("id returns none")
         #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
+
+
 
 
 
