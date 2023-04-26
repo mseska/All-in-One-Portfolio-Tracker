@@ -41,7 +41,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
-
+from django.shortcuts import redirect
 from .tokens import account_activation_token
 
 
@@ -570,7 +570,7 @@ def signup_generate_token(request):
     user.save()
 
     #to check whether the user is empty or not:
-    print(user.email)
+    print(user.email, "hello")
     print(user.password)
 
     user = authenticate(request, username=email, password=password)
@@ -586,8 +586,8 @@ def signup_generate_token(request):
         token, created = Token.objects.get_or_create(user=user)
         print(token)
         #activate(request, uidb64, token)
-        send_verification_email(request, user, name)
-        if email.send():
+        verification_mail = send_verification_email(request, user, name)
+        if verification_mail.send():
             # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
             # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
             print("email sent!!!!!!!")
