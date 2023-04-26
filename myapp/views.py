@@ -32,6 +32,10 @@ from django.contrib.auth.models import User
 #from django.http import JsonResponse
 
 # email verification
+
+
+from django.contrib import messages #email confirmation - is not used
+
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -39,6 +43,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 
 from .tokens import account_activation_token
+
+
 
  
 class ReactView(APIView):
@@ -579,10 +585,13 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
-        send_verification_email(request, user, user.first_name)
         #activate(request, uidb64, token)
-
-        return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
+        send_verification_email(request, user, name)
+        if email.send():
+            # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
+            # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
+            print("email sent!!!!!!!")
+            return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
         return JsonResponse({'error': 'Invalid credentials'}, status = 401)
