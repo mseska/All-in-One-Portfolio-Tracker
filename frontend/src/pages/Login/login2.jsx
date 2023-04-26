@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import image from "../images/1-cropped.svg";
 import "./login.css";
 import { Component } from "react";
@@ -10,6 +10,18 @@ export default function Login2() {
   //   email: "",
   //   password: ""
   // });
+
+
+  const clearLocalStorage = () => {
+    localStorage.clear();
+  };
+
+  useEffect(() => {
+    // Call the function when the Login page is opened
+    clearLocalStorage();
+  }, []);
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
