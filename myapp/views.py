@@ -157,14 +157,14 @@ def get_stock_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    #TODO delete after development phase of news data retrieval
-    update_news_data()
-    update_prices()
+    # #TODO delete after development phase of news data retrieval
+    # update_news_data()
+    # update_prices()
 
-    news_update_thread = threading.Thread(target=update_news_periodically)
-    news_update_thread.start()
-    prices_update_thread = threading.Thread(target=update_prices_periodically)
-    prices_update_thread.start()
+    # news_update_thread = threading.Thread(target=update_news_periodically)
+    # news_update_thread.start()
+    # prices_update_thread = threading.Thread(target=update_prices_periodically)
+    # prices_update_thread.start()
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
     returnList = []
@@ -177,9 +177,9 @@ def get_stock_list(request):
         newAsset.symbol = stock[2]
         newAsset.price = stock[3]
         newAsset.currency = stock[1]
-        # print(stock[1])
-        # print(stock[2])
-        # print(stock[3])
+        print(stock[1])
+        print(stock[2])
+        print(stock[3])
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.currency,"newAsset.currency")
@@ -192,6 +192,7 @@ def get_stock_list(request):
     #     print(serializer.data)
     #returnListDict = {returnList}
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    print(serialized_objects, "serialized")
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
     
@@ -266,6 +267,14 @@ def get_commodity_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
+    #TODO delete after development phase of news data retrieval
+    update_news_data()
+    update_prices()
+
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) 
   
     returnList = []
@@ -319,6 +328,9 @@ def update_news_data():
             if "thumbnail" in article:
                 if "resolutions" in article["thumbnail"] and article["thumbnail"]["resolutions"]:
                     news_dict2["thumbnail"] = article["thumbnail"]["resolutions"][0]["url"]
+            else:
+                    news_dict2["thumbnail"] ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSriG88tNG1fjZY9tjMkWpziGZDukdu_2i2Cg&usqp=CAU"
+            
             news_list.append(news_dict2)
 
         # Add the news data to the dictionary
