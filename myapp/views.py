@@ -31,6 +31,15 @@ from django.contrib.auth.models import User
 
 #from django.http import JsonResponse
 
+# email verification
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+
+from .tokens import account_activation_token
+
  
 class ReactView(APIView):
     def get(self,request):
@@ -495,6 +504,41 @@ def login_generate_token(request):
         print("user does not exist:(")
         return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
+def activate(request, uidb64, token):
+    print("entered activate(), confirming the email...")
+    #User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        print("email confirmed!")
+        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('http://localhost:3000') #TODO
+        #return JsonResponse({'token': token.key}, status=201)
+    else:
+        print("sorry could not confirmed the email")
+        messages.error(request, 'Activation link is invalid!')
+
+
+def send_verification_email(request, user, name):
+    print("activating the email confirmation...") 
+
+    mail_subject = 'Activate Your Account'
+    print(user.username, "this is the username to be printed to the email")
+    message = render_to_string('template_activate_account.html', {
+        'user': name, 
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'protocol': 'https' if request.is_secure() else 'http'
+    })
+    return EmailMessage(mail_subject, message, to=[user.username])
+
 @api_view(['POST'])           
 def signup_generate_token(request):
     print("POST METHOD WORKS - in signup generate token")
@@ -535,6 +579,8 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
+        send_verification_email(request, user, user.first_name)
+        #activate(request, uidb64, token)
 
         return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
@@ -572,6 +618,8 @@ def get_user_info(request):
     else:
         print("id returns none")
         #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
+
+
 
 
 
