@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.urls import re_path 
 from myapp.views import *
-from myapp.views import ReactView
+
 from django.urls import path, re_path
 
 from django.views.generic import TemplateView
@@ -34,13 +34,5 @@ urlpatterns = [
     path('api/signUp/', signup_generate_token, name='signup_generate_token'),
     path('api/get-user-info-user-icon', get_user_info, name='get_user_info'),
     path('activate/<uidb64>/<token>', activate, name='activate'),
-    
-    #path('',include('myapp.urls')),
-    #re_path(".*",TemplateView.as_view(template_name="index.html")),
-    path('input', include('myapp.urls')),
-    path('static', include('myapp.urls')),
-    path('inputCheck', include('myapp.urls')),
-    path('list', include('myapp.urls')),
-    path('react', ReactView.as_view(), name='anything')
 
 ]
