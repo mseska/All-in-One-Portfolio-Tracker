@@ -93,7 +93,15 @@ def add_item(request):
 def get_stock_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
-
+    token = request.META.get('HTTP_AUTHORIZATION')
+    print(token,"hop alo token")
+    id =  my_custom_sql("SELECT user_id FROM comp491.authtoken_token WHERE authtoken_token.key ='{}';".format(token),connection)
+    print(id[0][0],"IDDD")
+    userAssetIds =  my_custom_sql("SELECT asset_id FROM comp491.user_asset_ownership WHERE user_asset_ownership.user_id ={};".format(id[0][0]),connection)
+    userAssetIds = [row[0] for row in userAssetIds]
+    print(userAssetIds,"userAssetIds")
+    Assets = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.asset_id IN (" + ",".join(str(id) for id in userAssetIds) + ")",connection)
+    print(Assets)
     # #TODO delete after development phase of news data retrieval
     # update_news_data()
     # update_prices()
@@ -107,13 +115,17 @@ def get_stock_list(request):
     returnList = []
     # print(list,"databaseden gelen veri")
     
+     #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
+    # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
+    # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
+    #for stock in Assets:
     for stock in list:
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.currency = stock[3]
         print(stock[1])
         print(stock[2])
         print(stock[3])

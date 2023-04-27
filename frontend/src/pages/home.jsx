@@ -25,8 +25,13 @@ function Home() {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem('userToken');
     axios
-      .get("http://localhost:8000/api/stock-price")
+      .get("http://localhost:8000/api/stock-price",{
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
       .then((response) => {
         console.log("response get as", response.data);
         setStockData(response.data);
