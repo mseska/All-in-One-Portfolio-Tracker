@@ -4,7 +4,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import   Stock2
 from django.db import connection
+from .dbFunctions import * 
 import json
+import random
 
 from django.http import JsonResponse
 
@@ -44,21 +46,6 @@ from django.core.mail import EmailMessage
 from django.shortcuts import redirect
 from .tokens import account_activation_token
 
-def my_custom_sql(query,connection):
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-        
-        row = cursor.fetchall()
-
-    return row
-
-
-def my_custom_news_sql(query, params=None):
-    with connection.cursor() as cursor:
-        cursor.execute(query, params)
-        result = cursor.fetchall()
-    return result
-
 
 
 @api_view(['POST'])
@@ -95,13 +82,12 @@ def get_stock_list(request):
     # print(request.GET)
     token = request.META.get('HTTP_AUTHORIZATION')
     print(token,"hop alo token")
-    id =  my_custom_sql("SELECT user_id FROM comp491.authtoken_token WHERE authtoken_token.key ='{}';".format(token),connection)
-    print(id[0][0],"IDDD")
-    userAssetIds =  my_custom_sql("SELECT asset_id FROM comp491.user_asset_ownership WHERE user_asset_ownership.user_id ={};".format(id[0][0]),connection)
-    userAssetIds = [row[0] for row in userAssetIds]
-    print(userAssetIds,"userAssetIds")
-    Assets = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.asset_id IN (" + ",".join(str(id) for id in userAssetIds) + ")",connection)
+    id = get_id_with_token(token)
+    print(id,"hop alo id")
+    user_asset_ids =  get_user_asset_ids_with_user_id(id)
+    Assets = get_asset_information_with_ids(user_asset_ids)    
     print(Assets)
+    
     # #TODO delete after development phase of news data retrieval
     # update_news_data()
     # update_prices()
@@ -115,7 +101,7 @@ def get_stock_list(request):
     returnList = []
     # print(list,"databaseden gelen veri")
     
-     #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
+    #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
     # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
     # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
     #for stock in Assets:
@@ -205,7 +191,8 @@ def get_commodity_list(request):
     # print(request.GET)
 
     #TODO delete after development phase of news data retrieval
-    update_news_data()
+    tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
+    update_news_data(tickersList)
     update_prices()
 
     news_update_thread = threading.Thread(target=update_news_periodically)
@@ -236,13 +223,13 @@ def get_commodity_list(request):
     #return JsonResponse(json.dumps(returnListDict), safe=False)
 
 
-def update_news_data():
+def update_news_data(tickersList):
     print("json is being updated\n\n\n\n")
     # Define the list of stock tickers to retrieve news for
-    tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD"]
-
+    tickers = tickersList
+    
     news_dict = {}
-
+    news_dict["news"] = []
     # Loop through the tickers and retrieve news data from Yahoo Finance API
     for ticker in tickers:
         # Retrieve the news data for the current ticker
@@ -267,7 +254,8 @@ def update_news_data():
             news_list.append(news_dict2)
 
         # Add the news data to the dictionary
-        news_dict[ticker] = news_list
+        news_dict["news"].extend(news_list)
+    random.shuffle(news_dict["news"])
 
     with open("news_data.json", "w") as f:
         json.dump(news_dict, f)
@@ -386,7 +374,8 @@ def update_news_periodically():
     while True:
         now = datetime.datetime.now()
         if now.second == 0 and now.minute== 0:  # Run update_news_data() once per hour at the start of the hour
-            update_news_data()
+            tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
+            update_news_data(tickersList)
         time.sleep(1)
 
 
