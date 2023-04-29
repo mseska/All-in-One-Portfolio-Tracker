@@ -16,4 +16,8 @@
 .PiechartName:hover {
     cursor: pointer;
 }
+
+.HighlightedContainer{
+    background-color: aquamarine;
+}
   

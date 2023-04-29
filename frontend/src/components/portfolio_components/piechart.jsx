@@ -4,6 +4,7 @@ import "./piechart.css";
 
 class Piechart extends Component {
   state = {
+    isHighlighted: false,
     name: "Deneme",
     data: [
       { name: "North", value: 100 },
@@ -17,8 +18,65 @@ class Piechart extends Component {
     ],
   };
 
+  handleClick = () => {
+    this.setState((prevState) => ({
+      isHighlighted: !prevState.isHighlighted,
+    }));
+  };
+
   generateColors = (length) => {
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#3D9970", "#85144b", "#7FDBFF", "#FFDC00", "#F012BE", "#FF851B", "#B10DC9", "#2ECC40", "#FF4136", "#39CCCC", "#2E2E2E", "#01FF70", "#7FDBFF", "#001f3f", "#F012BE", "#FFDC00", "#3D9970", "#85144b", "#7FDBFF", "#FFDC00", "#F012BE", "#FF851B", "#B10DC9", "#2ECC40", "#FF4136", "#39CCCC", "#2E2E2E", "#01FF70", "#7FDBFF", "#001f3f", "#F012BE", "#FFDC00", "#3D9970", "#85144b", "#7FDBFF", "#FFDC00", "#F012BE", "#FF851B", "#B10DC9", "#2ECC40", "#FF4136", "#39CCCC", "#2E2E2E", "#01FF70", "#7FDBFF", "#001f3f"];
+    const COLORS = [
+      "#0088FE",
+      "#00C49F",
+      "#FFBB28",
+      "#FF8042",
+      "#3D9970",
+      "#85144b",
+      "#7FDBFF",
+      "#FFDC00",
+      "#F012BE",
+      "#FF851B",
+      "#B10DC9",
+      "#2ECC40",
+      "#FF4136",
+      "#39CCCC",
+      "#2E2E2E",
+      "#01FF70",
+      "#7FDBFF",
+      "#001f3f",
+      "#F012BE",
+      "#FFDC00",
+      "#3D9970",
+      "#85144b",
+      "#7FDBFF",
+      "#FFDC00",
+      "#F012BE",
+      "#FF851B",
+      "#B10DC9",
+      "#2ECC40",
+      "#FF4136",
+      "#39CCCC",
+      "#2E2E2E",
+      "#01FF70",
+      "#7FDBFF",
+      "#001f3f",
+      "#F012BE",
+      "#FFDC00",
+      "#3D9970",
+      "#85144b",
+      "#7FDBFF",
+      "#FFDC00",
+      "#F012BE",
+      "#FF851B",
+      "#B10DC9",
+      "#2ECC40",
+      "#FF4136",
+      "#39CCCC",
+      "#2E2E2E",
+      "#01FF70",
+      "#7FDBFF",
+      "#001f3f",
+    ];
     const colors = [];
     for (let i = 0; i < length; i++) {
       colors.push(COLORS[i % COLORS.length]);
@@ -28,12 +86,18 @@ class Piechart extends Component {
 
   render() {
     const colors = this.generateColors(this.state.data.length);
+    const containerClass = this.state.isHighlighted ? "HighlightedContainer" : "PiechartContainer";
 
     return (
-      <div className="PiechartContainer">
-        <h3 className="PiechartName">{this.state.name}</h3>
+      <div
+        className={`PiechartContainer ${containerClass}`}
+        style={{ width: "400px" }}
+      >
+        <h3 className="PiechartName" onClick={this.handleClick}>
+          {this.state.name}
+        </h3>
         <PieChart width={250} height={250}>
-        <Pie
+          <Pie
             data={this.state.data}
             dataKey="value"
             nameKey="name"

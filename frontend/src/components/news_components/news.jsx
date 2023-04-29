@@ -12,7 +12,7 @@ class News extends Component {
   };
 
   handleClick = () => {
-    // alert("You Clicked news image");
+    alert(this.props.newsTitle);
     window.open(
       `https://www.google.com/search?q=${this.props.newsPublisher} + ${this.props.newsTitle}`,
       "_blank"

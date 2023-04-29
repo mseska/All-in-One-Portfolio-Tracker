@@ -8,6 +8,8 @@ class PiechartHolder extends Component {
     count: 0,
   };
 
+  
+
   render() {
     return (
       <div style={{display: "flex",}}>
@@ -25,27 +27,11 @@ class PiechartHolder extends Component {
   }
   componentWillMount() {
     axios.get("http://localhost:8000/api/get_portfolios").then((res) => {
-      var articleList2 = res.data.news;
-      localStorage.setItem("articleList", JSON.stringify(articleList2));
-      let articleList = JSON.parse(localStorage.getItem("articleList"));
+        params: { id: localStorage.getItem("userToken") }
 
-      let finalList = [];
-
-      for (var i = 0; i < articleList.length; i++) {
-        finalList.push(
-          <Piechart
-            newsTitle={articleList[i].title}
-            newsPublisher={articleList[i].publisher}
-            newsImage={articleList[i].thumbnail}
-            newsLink={articleList[i].link}
-          />
-        );
-      }
-      this.setState({ newsArticles: finalList });
     });
 
     
-    // this.setState({ newsArticles: finalList });
   }
   
 }
