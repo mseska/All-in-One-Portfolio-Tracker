@@ -1,0 +1,19 @@
+.PiechartContainer {
+    display: block;
+    text-align: center;
+    margin-left: 3vw;
+  }
+
+
+  
+  .PiechartName {
+    color: purple;
+    font-size: 3.5vh;
+    font-weight: 500;
+    /* margin-left: 2vh; */
+  }
+
+.PiechartName:hover {
+    cursor: pointer;
+}
+  
