@@ -138,7 +138,7 @@ export default function NavBar2() {
           class="btn btn-primary navBarButtons"
           onClick={newsFunc}
         >
-          News
+          MyNews
         </button>
         <button
           type="button"
