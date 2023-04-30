@@ -22,7 +22,7 @@ export default function UserIcon() {
         setSurname(res.data.last_name);
         setEmail(res.data.email);
         console.log(res);
-        localStorage.setItem("userName", res.data.name);
+        localStorage.setItem("userName", res.data.first_name);
         localStorage.setItem("email", res.data.email);
       })
       .catch((err) => {
@@ -39,7 +39,7 @@ export default function UserIcon() {
   return (
     <div className="user-icon-menu">
       <div className="nameDiv">
-        {name} {surname} {email}
+         {localStorage.getItem("userName")} {localStorage.getItem("email")} 
       </div>
       {/* <div className="signOutButtonDiv"> </div> */}
       <div
