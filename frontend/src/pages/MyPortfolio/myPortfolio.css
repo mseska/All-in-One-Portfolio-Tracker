@@ -1,0 +1,71 @@
+.First {
+    border-width: 3px;
+    border-color: blue;
+    margin-top: 3vh;
+    height: 50vh;
+    border-bottom: 4px solid rgb(58, 66, 178);
+    
+}
+
+.AddModifyButtonDiv {
+    display: flex;
+    text-align: center;
+    height: 7vh;
+    /* border-bottom: 1px solid black; */
+}
+
+.MyPortfoliosText {
+    margin-left: 5vw;
+    width: 18vw;
+    font-size: 4vh;
+    font-weight: 500;
+    color: rgb(56, 56, 200);
+}
+.MyPortfolioIconsDiv {
+    display: flex;
+}
+
+.MyPortfolioIcons {
+    width: 4vh;
+    height: 4vh;
+    margin-top: 1vh;
+    margin-right: 1vw;
+
+  }
+  .MyPortfolioIcons:hover {
+    border-radius: 10px;
+  /* height: 35px;
+  width: 35px; */
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22),
+  0 14px 28px rgba(0, 0, 0, 0.22),
+  0 14px 28px rgba(0, 0, 0, 0.22),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+ 
+  cursor: pointer;
+
+  }
+
+  .scrollable-areaPie {
+    margin-top: 4vh;
+    flex: 1;
+    overflow-x: scroll;
+  }
+
+  .Second {
+    margin-top: 1vh;
+  }
+
+  .TableDiv {
+    margin-top: 5vh;
+  }
+
+  .Darken {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+    
+  }
