@@ -5,11 +5,22 @@ import NavBar from "../../components/NavBar/navBar2.jsx";
 import "./myPortfolio.css";
 import PiechartHolder from "../../components/portfolio_components/piechartHolder.jsx";
 import axios from "axios";
-
+import AddPortfolio from "../../components/portfolio_components/addPortfolio";
+import styled from "styled-components";
 
 export default function MyPortfolio() {
   const [selectedPortfolio, setselectedPortfolio] = useState([]);
   const [portfolioData, setportfolioData] = useState([]);
+  const [showAddPortfolio, setshowAddPortfolio] = useState(false);
+
+  function handleClickAddPortfolio() {
+    setshowAddPortfolio(true);
+    // window.body.classList.add("darken");
+  }
+
+  function removeAddPortfolio() {
+    setshowAddPortfolio(false);
+  }
 
   useEffect(() => {
     const token = localStorage.getItem("userToken");
@@ -23,7 +34,6 @@ export default function MyPortfolio() {
       })
       .then((response) => {
         setportfolioData(response.data);
-        
       })
       .catch((error) => {
         console.log(error);
@@ -33,11 +43,15 @@ export default function MyPortfolio() {
   return (
     <div>
       <NavBar></NavBar>
-      <div className="MainPortfolioDiv">
-        <div className="First">
+      <div className="MainPortfolioDiv" >
+        <div className="First" >
           <div className="AddModifyButtonDiv">
+            {showAddPortfolio && <AddPortfolio></AddPortfolio>}
             <div className="MyPortfoliosText">My Portfolios</div>
-            <div className="MyPortfolioIconsDiv">
+            <div
+              className="MyPortfolioIconsDiv"
+              onClick={handleClickAddPortfolio}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
@@ -65,30 +79,30 @@ export default function MyPortfolio() {
               </svg>
             </div>
           </div>
-          <div className="Second scrollable-areaPie">
+          <div className="Second scrollable-areaPie" onClick={removeAddPortfolio}>
             <PiechartHolder></PiechartHolder>
           </div>
         </div>
         <div className="OtherPortfolioDataDiv"></div>
         <div className="TableDiv">
-        <table class="table table-hover table-bordered">
-              <thead>
-                <tr>
-                  <th scope="col">Symbol</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Currency</th>
+          <table class="table table-hover table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Symbol</th>
+                <th scope="col">Price</th>
+                <th scope="col">Currency</th>
+              </tr>
+            </thead>
+            <tbody>
+              {portfolioData.map((stock, index) => (
+                <tr key={index}>
+                  <td>{stock.symbol}</td>
+                  <td>{stock.price}</td>
+                  <td>{stock.currency}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {portfolioData.map((stock, index) => (
-                  <tr key={index}>
-                    <td>{stock.symbol}</td>
-                    <td>{stock.price}</td>
-                    <td>{stock.currency}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
