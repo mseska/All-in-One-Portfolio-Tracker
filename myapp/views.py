@@ -104,8 +104,8 @@ def get_stock_list(request):
     #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
     # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
     # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
-    #for stock in Assets:
-    for stock in list:
+    for stock in Assets:
+    #for stock in list:
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
@@ -493,12 +493,12 @@ def signup_generate_token(request):
         token, created = Token.objects.get_or_create(user=user)
         print(token)
         #activate(request, uidb64, token)
-        verification_mail = send_verification_email(request, user, name)
-        if verification_mail.send():
+        # verification_mail = send_verification_email(request, user, name)
+        # if verification_mail.send():
             # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
             # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
-            print("email sent!!!!!!!")
-            return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
+        print("email sent değil!!!!!!!")
+        return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
         return JsonResponse({'error': 'Invalid credentials'}, status = 401)

@@ -98,10 +98,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'comp491',
-        'HOST': 'localhost',
+        'HOST': 'comp491aws.cjl8caypcbij.eu-north-1.rds.amazonaws.com',
         'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': 'M.rt6378',
+        'USER': 'admin',
+        'PASSWORD': 'aiop491COMP',
     }
 }
 
