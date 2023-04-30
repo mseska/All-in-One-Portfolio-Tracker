@@ -535,6 +535,43 @@ def get_user_info(request):
         print("id returns none")
         #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
 
+@api_view(['GET'])
+def get_portfolios(request):
+    print("GET METHOD WORKS - in get portfolios")
+    
+    token  = request.GET.get("token")
+    id = get_id_with_token(token)
+    get_portfolios = get_portfolios_with_user_id(id)
+    print(get_portfolios)
+    returnList = []
+    # print(list,"databaseden gelen veri")
+    
+    #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
+    # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
+    # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
+    for stock in get_portfolios:
+    #for stock in list:
+        #print(type(asset))
+        newAsset = Stock2()
+        # print(newAsset,"newAsset daha oluştu")
+        newAsset.symbol = stock[0]
+        newAsset.price = stock[1]*stock[4]
+        newAsset.currency = "deneme"
+        print(stock[1])
+        print(stock[2])
+        print(stock[3])
+        # print(newAsset.symbol,"newAsset.symbol")
+        # print(newAsset.price,"newAsset.price")
+        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset,"newAsset")
+        returnList.append(newAsset)
+    #print(returnList,"liste databaseden alındı")
+    
+    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    print(serialized_objects, "serialized")
+    return JsonResponse(serialized_objects, safe=False)
+
+
 
 
 

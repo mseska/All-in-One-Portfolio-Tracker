@@ -37,10 +37,10 @@ class PiechartHolder extends Component {
     );
   }
   componentWillMount() {
-    // axios.get("http://localhost:8000/api/get_portfolios").then((res) => {
-    //     params: { id: localStorage.getItem("userToken") }
+     axios.get("http://localhost:8000/api/get_portfolios/",{
+      params: { token: localStorage.getItem("userToken") }
 
-    // });
+  }).then((res) => {console.log(res.data)});
     let finalList = [];
     const data = [
       { name: "North", value: 100 },
