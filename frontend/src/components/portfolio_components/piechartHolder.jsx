@@ -22,6 +22,7 @@ class PiechartHolder extends Component {
     this.state.selectedChart = chartId;
     this.setState({ piecharts: newPiecharts});
     console.log(this.state.selectedChart);
+    localStorage.setItem("selectedPortfolio",this.state.selectedChart);
   };
   
   
@@ -82,6 +83,15 @@ class PiechartHolder extends Component {
         name={"Deneme3"}
         data={data2}
         onClick={() => this.handlePiechartClick(3)}
+      />
+    );
+    finalList.push(
+      <Piechart
+        chartID={4}
+        // isSelected={2 === this.selectedChart}
+        name={"Deneme4"}
+        data={data3}
+        onClick={() => this.handlePiechartClick(4)}
       />
     );
 

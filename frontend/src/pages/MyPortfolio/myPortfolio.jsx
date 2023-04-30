@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import { React, useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/navBar2.jsx";
 import "./myPortfolio.css";
 import PiechartHolder from "../../components/portfolio_components/piechartHolder.jsx";
+import axios from "axios";
+
 
 export default function MyPortfolio() {
-  const navigate = useNavigate();
+  const [selectedPortfolio, setselectedPortfolio] = useState([]);
+  const [portfolioData, setportfolioData] = useState([]);
 
-  <link></link>;
+  useEffect(() => {
+    const token = localStorage.getItem("userToken");
+    const selectedPortfolio = localStorage.getItem("selectedPortfolio");
+    axios
+      .get("http://localhost:8000/api/crypto-price", {
+        headers: {
+          Authorization: `${token}`,
+          // portfolio: `${selectedPortfolio}`,
+        },
+      })
+      .then((response) => {
+        setportfolioData(response.data);
+        
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <div>
@@ -45,12 +65,31 @@ export default function MyPortfolio() {
               </svg>
             </div>
           </div>
-        <div className="Second scrollable-areaPie" >
-        <PiechartHolder></PiechartHolder>
-        </div>
+          <div className="Second scrollable-areaPie">
+            <PiechartHolder></PiechartHolder>
+          </div>
         </div>
         <div className="OtherPortfolioDataDiv"></div>
-        <div className="TableDiv"></div>
+        <div className="TableDiv">
+        <table class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Symbol</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Currency</th>
+                </tr>
+              </thead>
+              <tbody>
+                {portfolioData.map((stock, index) => (
+                  <tr key={index}>
+                    <td>{stock.symbol}</td>
+                    <td>{stock.price}</td>
+                    <td>{stock.currency}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
     border-color: blue;
     margin-top: 3vh;
     height: 50vh;
-    border-bottom: 1px solid black;
+    border-bottom: 4px solid rgb(58, 66, 178);
     
 }
 
@@ -11,7 +11,7 @@
     display: flex;
     text-align: center;
     height: 7vh;
-    border-bottom: 1px solid black;
+    /* border-bottom: 1px solid black; */
 }
 
 .MyPortfoliosText {
@@ -53,4 +53,8 @@
 
   .Second {
     margin-top: 1vh;
+  }
+
+  .TableDiv {
+    margin-top: 5vh;
   }

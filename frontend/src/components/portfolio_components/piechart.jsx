@@ -4,22 +4,17 @@ import "./piechart.css";
 
 class Piechart extends Component {
   state = {
-    chartID:"",
+    chartID: "",
     isSelected: "",
     name: "",
     data: [],
   };
 
-  
-
-
   handleClick = () => {
     alert(this.props.isSelected);
     // this.props.isSelected = true;
     this.props.onClick(this.props.chartID);
-    
   };
-
 
   generateColors = (length) => {
     const COLORS = [
@@ -92,13 +87,20 @@ class Piechart extends Component {
         className={`PiechartContainer ${containerClass}`}
         style={{ width: "400px" }}
       >
-        <h3 className="PiechartName" onClick={() => {
-          this.props.onClick(this.props.chartID);
-          
-        }}>
+        <h3
+          className="PiechartName"
+          onClick={() => {
+            this.props.onClick(this.props.chartID);
+          }}
+        >
           {this.props.name}
         </h3>
-        <PieChart width={250} height={250}>
+        <PieChart
+          className="Piechart"
+          width={250}
+          height={250}
+          
+        >
           <Pie
             data={this.props.data}
             dataKey="value"
