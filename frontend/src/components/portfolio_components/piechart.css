@@ -1,23 +1,27 @@
 .PiechartContainer {
-    display: block;
-    text-align: center;
-    margin-left: 3vw;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 19px;
+  margin-bottom: 4vh;
+}
 
 
-  
-  .PiechartName {
-    color: purple;
-    font-size: 3.5vh;
-    font-weight: 500;
-    /* margin-left: 2vh; */
-  }
+
+.PiechartName {
+  color: purple;
+  font-size: 3.5vh;
+  font-weight: 500;
+  text-decoration: underline;
+  /* margin-left: 2vh; */
+
+}
 
 .PiechartName:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-.HighlightedContainer{
-    background-color: aquamarine;
+.HighlightedContainer {
+  background-color: rgb(162, 180, 223);
 }
-  
+

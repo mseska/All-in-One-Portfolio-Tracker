@@ -34,22 +34,6 @@ class NewsHolderHomePage extends Component {
       }
       this.setState({ newsArticles: finalList });
     });
-
-    // finalList.push(
-    //   <News
-    //     newsTitle="Title of news 1"
-    //     newsImage="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-    //     newsLink="https://www.google.com/search?q=images&sxsrf=APwXEdf-oHAC3cd8cDTejaej2a7GSJe5dw:1681901376891&source=lnms&tbm=isch&sa=X&ved=2ahUKEwifk_fw4rX-AhUtQ_EDHW54DVAQ_AUoAXoECAEQAw&biw=1440&bih=821&dpr=2#imgrc=9SPhZ2nyEGps3M"
-    //   />
-    // );
-    // finalList.push(
-    //   <News
-    //     newsTitle="Title of news 1"
-    //     newsImage="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-    //     newsLink="https://www.google.com/search?q=images&sxsrf=APwXEdf-oHAC3cd8cDTejaej2a7GSJe5dw:1681901376891&source=lnms&tbm=isch&sa=X&ved=2ahUKEwifk_fw4rX-AhUtQ_EDHW54DVAQ_AUoAXoECAEQAw&biw=1440&bih=821&dpr=2#imgrc=9SPhZ2nyEGps3M"
-    //   />
-    // );
-    // this.setState({ newsArticles: finalList });
   }
 }
 
