@@ -43,16 +43,14 @@ export default function MyPortfolio() {
   return (
     <div>
       <NavBar></NavBar>
-      <div className="MainPortfolioDiv" >
-        <div className="First" >
+      <div className="MainPortfolioDiv">
+        <div className="First">
           <div className="AddModifyButtonDiv">
             {showAddPortfolio && <AddPortfolio></AddPortfolio>}
             <div className="MyPortfoliosText">My Portfolios</div>
-            <div
-              className="MyPortfolioIconsDiv"
-              onClick={handleClickAddPortfolio}
-            >
+            <div className="MyPortfolioIconsDiv">
               <svg
+                onClick={handleClickAddPortfolio}
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"
@@ -79,7 +77,10 @@ export default function MyPortfolio() {
               </svg>
             </div>
           </div>
-          <div className="Second scrollable-areaPie" onClick={removeAddPortfolio}>
+          <div
+            className="Second scrollable-areaPie"
+            onClick={removeAddPortfolio}
+          >
             <PiechartHolder></PiechartHolder>
           </div>
         </div>
