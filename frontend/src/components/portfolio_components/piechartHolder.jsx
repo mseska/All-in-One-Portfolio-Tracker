@@ -9,7 +9,7 @@ class PiechartHolder extends Component {
     count: 0,
   };
 
-  handlePiechartClick = (chartId) => {
+  handlePiechartClick = (chartId, chartName) => {
     const piecharts = this.state.piecharts;
     const newPiecharts = piecharts.map((piechart) => {
       if (piechart.props.chartID === chartId) {
@@ -23,6 +23,7 @@ class PiechartHolder extends Component {
     this.setState({ piecharts: newPiecharts });
     console.log(this.state.selectedChart);
     localStorage.setItem("selectedPortfolio", this.state.selectedChart);
+    localStorage.setItem("selectedChartName",chartName);
   };
 
   render() {
@@ -81,7 +82,7 @@ class PiechartHolder extends Component {
         // isSelected={1 === this.selectedChart}
         name={"Deneme1"}
         data={data}
-        onClick={() => this.handlePiechartClick(1)}
+        onClick={() => this.handlePiechartClick(1, "Deneme1")}
       />
     );
     finalList.push(
@@ -90,7 +91,7 @@ class PiechartHolder extends Component {
         // isSelected={2 === this.selectedChart}
         name={"Deneme2"}
         data={data2}
-        onClick={() => this.handlePiechartClick(2)}
+        onClick={() => this.handlePiechartClick(2, "Deneme2")}
       />
     );
     finalList.push(
@@ -99,7 +100,7 @@ class PiechartHolder extends Component {
         // isSelected={2 === this.selectedChart}
         name={"Deneme3"}
         data={data2}
-        onClick={() => this.handlePiechartClick(3)}
+        onClick={() => this.handlePiechartClick(3, "Deneme3")}
       />
     );
     finalList.push(
@@ -108,7 +109,7 @@ class PiechartHolder extends Component {
         // isSelected={2 === this.selectedChart}
         name={"Deneme4"}
         data={data3}
-        onClick={() => this.handlePiechartClick(4)}
+        onClick={() => this.handlePiechartClick(4, "Deneme4")}
       />
     );
 
