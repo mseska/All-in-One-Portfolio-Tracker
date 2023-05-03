@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./addPortfolio.css"
+import axios from "axios";
 
 class AddPortfolio extends Component {
   state = {
@@ -17,7 +18,22 @@ class AddPortfolio extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    // call function to handle form submission here
+    axios
+      .post("http://localhost:8000/api/create-portfolio", {
+        name: this.state.name,
+        currency: this.state.currency
+       
+      })
+      .then(function (response) {
+        if(response.status === 201) {
+
+          alert("Portfolio Created");
+        }
+      })
+      .catch(function (error) {
+        alert("Could not create potfolio please check your inputs");
+      })
+      .finally((response) => {});
   };
 
   render() {
