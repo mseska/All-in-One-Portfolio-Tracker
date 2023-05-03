@@ -1,0 +1,118 @@
+.ModifyPortfolioContainer {
+    width: 50vw;
+    height: 40vh;
+    background-color: #ffffff;
+    border: 2px solid #254e9a;
+    border-radius: 10px;
+    box-shadow: 0 0 4px #cccccc;
+    /* padding-left: 20px; */
+    /* padding-right: 20px; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* width: 50%;
+    height: 50%; */
+    background-color: white;
+    z-index: 3;
+    /* display: flex; */
+  }
+
+  .ModifyPortfolio2 {
+    width: 50vw;
+    height: 40vh;
+    display: flex;
+  }
+
+  .SelectSymbolModify {
+    width: 100%;
+  }
+
+  .AmountField {
+    /* margin-left: 1vw; */
+    height: 5vh;
+    width: 100%;
+  }
+
+  .ModifyPortfolioLeft {
+    width: 25vw;
+    margin-right: 2vw;
+    display: block;
+  }
+
+  .ModifPortfolioRight {
+    width: 100%;
+    display: block;
+  }
+
+  .AmountModifyPortfolio {
+    display: flex;
+  }
+
+  .searchFieldModifyPortfolio {
+    width: 100%;
+    margin-bottom: 1vh;
+    border-radius: 4px;
+  }
+
+  .PortfolioNameModifyPortfolio {
+    font-size: 5vh;
+    color: rgb(83, 38, 198);
+    margin-bottom: 1.5vh;
+  }
+
+  .AddSymbolButton {
+    margin-top: 1vh;
+    height: 5vh;
+    width: 100%;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 1.5vh;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .RemoveSymbol {
+    margin-top: 1vh;
+    height: 5vh;
+    width: 20vw;
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-top: 1.5vh;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+  }
+  
+  /* .ModifyPortfolioLeft, .ModifyPortfolioRight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  }
+  
+  .ModifyPortfolioLeft input[type="text"], .ModifyPortfolioLeft button {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .ModifyPortfolioRight select, .ModifyPortfolioRight button {
+    margin: 10px 0;
+    padding: 5px 10px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 16px;
+  } */
+  
