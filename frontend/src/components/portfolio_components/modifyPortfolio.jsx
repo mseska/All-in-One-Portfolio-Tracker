@@ -47,40 +47,26 @@ class ModifyPortfolio extends Component {
             </div>
             <button className="AddSymbolButton">Add</button>
           </div>
+          <div className="separator"></div>
           <div className="ModifyPortfolioRight">
             <h1 style={{ fontSize: "3vh" }}>Remove Symbol:</h1>
             <select className="SelectSymbolModify" name="" id="">
               <option>Hello</option>
             </select>
+            <div className="AmountModifyPortfolio">
+              {/* <h>Amount: </h> */}
+              <input
+                className="AmountField"
+                type="text"
+                placeholder="Amount:"
+              />
+            </div>
+            <button className="ChangeSymbolButton">Change</button>
+            <h1 style={{fontSize: "2vh"}}>or</h1>
             <button className="RemoveSymbol">Remove</button>
+
           </div>
         </div>
-
-        {/* <form onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name-input">Name:</label>
-            <input
-              type="text"
-              id="name-input"
-              value={this.state.name}
-              onChange={this.handleNameChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="currency-input">Currency:</label>
-            <input
-              type="text"
-              id="currency-input"
-              value={this.state.currency}
-              onChange={this.handleCurrencyChange}
-              required
-            />
-          </div>
-          <button type="submit" className="submit-button">
-            Add Portfolio
-          </button>
-        </form> */}
       </div>
     );
   }
