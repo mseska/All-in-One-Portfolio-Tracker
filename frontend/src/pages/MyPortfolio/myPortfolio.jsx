@@ -6,20 +6,31 @@ import "./myPortfolio.css";
 import PiechartHolder from "../../components/portfolio_components/piechartHolder.jsx";
 import axios from "axios";
 import AddPortfolio from "../../components/portfolio_components/addPortfolio";
+import ModifyPortfolio from "../../components/portfolio_components/modifyPortfolio";
 import styled from "styled-components";
 
 export default function MyPortfolio() {
   const [selectedPortfolio, setselectedPortfolio] = useState([]);
   const [portfolioData, setportfolioData] = useState([]);
   const [showAddPortfolio, setshowAddPortfolio] = useState(false);
+  const [showModifyPortfolio, setshowModifyPortfolio] = useState(false);
 
   function handleClickAddPortfolio() {
     setshowAddPortfolio(true);
     // window.body.classList.add("darken");
   }
 
+  function handleClickModifyPortfolio() {
+    setshowModifyPortfolio(true);
+  }
+
   function removeAddPortfolio() {
     setshowAddPortfolio(false);
+    removeModifyPortfolio();
+  }
+
+  function removeModifyPortfolio() {
+    setshowModifyPortfolio(false);
   }
 
   useEffect(() => {
@@ -47,6 +58,7 @@ export default function MyPortfolio() {
         <div className="First">
           <div className="AddModifyButtonDiv">
             {showAddPortfolio && <AddPortfolio></AddPortfolio>}
+            {showModifyPortfolio && <ModifyPortfolio></ModifyPortfolio>}
             <div className="MyPortfoliosText">My Portfolios</div>
             <div className="MyPortfolioIconsDiv">
               <svg
@@ -62,6 +74,7 @@ export default function MyPortfolio() {
               </svg>
 
               <svg
+                onClick={handleClickModifyPortfolio}
                 xmlns="http://www.w3.org/2000/svg"
                 width="16"
                 height="16"

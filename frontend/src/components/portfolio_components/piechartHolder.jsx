@@ -9,9 +9,9 @@ class PiechartHolder extends Component {
     count: 0,
   };
 
-  handlePiechartClick = (chartId) => {
+  handlePiechartClick = (chartId, chartName) => {
     const piecharts = this.state.piecharts;
-    const newPiecharts = piecharts.map(piechart => {
+    const newPiecharts = piecharts.map((piechart) => {
       if (piechart.props.chartID === chartId) {
         return React.cloneElement(piechart, { isSelected: true });
       } else {
@@ -20,12 +20,11 @@ class PiechartHolder extends Component {
     });
     // this.state.piecharts = newPiecharts;
     this.state.selectedChart = chartId;
-    this.setState({ piecharts: newPiecharts});
+    this.setState({ piecharts: newPiecharts });
     console.log(this.state.selectedChart);
-    localStorage.setItem("selectedPortfolio",this.state.selectedChart);
+    localStorage.setItem("selectedPortfolio", this.state.selectedChart);
+    localStorage.setItem("selectedChartName",chartName);
   };
-  
-  
 
   render() {
     return (
@@ -37,10 +36,30 @@ class PiechartHolder extends Component {
     );
   }
   componentWillMount() {
-    // axios.get("http://localhost:8000/api/get_portfolios").then((res) => {
-    //     params: { id: localStorage.getItem("userToken") }
+    axios
+      .get("http://localhost:8000/api/get_portfolios/", {
+        params: { token: localStorage.getItem("userToken") },
+      })
+      .then((res) => {
+        // let piechartList2 = res.data.portfplios;
+        // localStorage.setItem("piecharts", JSON.stringify(piechartList2));
+        // let piechartList = JSON.parse(localStorage.getItem("piechart"));
 
-    // });
+        // let finalList = [];
+
+        // for (var i = 0; i < piechartList.length; i++) {
+        //   finalList.push(
+        //     <Piechart
+        //       chartID={piechartList[i].id}
+        //       name={piechartList[i].name}
+        //       data={piechartList[i].data}
+        //       onClick={() => this.handlePiechartClick(piechartList[i].id)}
+        //     />
+        //   );
+        // }
+
+        // console.log(res.data);
+      });
     let finalList = [];
     const data = [
       { name: "North", value: 100 },
@@ -55,7 +74,6 @@ class PiechartHolder extends Component {
     const data3 = [
       { name: "North", value: 100 },
       { name: "South", value: 200 },
-      
     ];
 
     finalList.push(
@@ -64,7 +82,7 @@ class PiechartHolder extends Component {
         // isSelected={1 === this.selectedChart}
         name={"Deneme1"}
         data={data}
-        onClick={() => this.handlePiechartClick(1)}
+        onClick={() => this.handlePiechartClick(1, "Deneme1")}
       />
     );
     finalList.push(
@@ -73,7 +91,7 @@ class PiechartHolder extends Component {
         // isSelected={2 === this.selectedChart}
         name={"Deneme2"}
         data={data2}
-        onClick={() => this.handlePiechartClick(2)}
+        onClick={() => this.handlePiechartClick(2, "Deneme2")}
       />
     );
     finalList.push(
@@ -82,7 +100,7 @@ class PiechartHolder extends Component {
         // isSelected={2 === this.selectedChart}
         name={"Deneme3"}
         data={data2}
-        onClick={() => this.handlePiechartClick(3)}
+        onClick={() => this.handlePiechartClick(3, "Deneme3")}
       />
     );
     finalList.push(
@@ -91,7 +109,7 @@ class PiechartHolder extends Component {
         // isSelected={2 === this.selectedChart}
         name={"Deneme4"}
         data={data3}
-        onClick={() => this.handlePiechartClick(4)}
+        onClick={() => this.handlePiechartClick(4, "Deneme4")}
       />
     );
 

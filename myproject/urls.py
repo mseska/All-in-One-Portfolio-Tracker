@@ -34,5 +34,6 @@ urlpatterns = [
     path('api/signUp/', signup_generate_token, name='signup_generate_token'),
     path('api/get-user-info-user-icon', get_user_info, name='get_user_info'),
     path('activate/<uidb64>/<token>', activate, name='activate'),
+    path('api/get_portfolios/', get_portfolios, name='get_portfolios'),
 
 ]
