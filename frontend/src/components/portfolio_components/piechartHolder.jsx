@@ -11,7 +11,7 @@ class PiechartHolder extends Component {
 
   handlePiechartClick = (chartId) => {
     const piecharts = this.state.piecharts;
-    const newPiecharts = piecharts.map(piechart => {
+    const newPiecharts = piecharts.map((piechart) => {
       if (piechart.props.chartID === chartId) {
         return React.cloneElement(piechart, { isSelected: true });
       } else {
@@ -20,12 +20,10 @@ class PiechartHolder extends Component {
     });
     // this.state.piecharts = newPiecharts;
     this.state.selectedChart = chartId;
-    this.setState({ piecharts: newPiecharts});
+    this.setState({ piecharts: newPiecharts });
     console.log(this.state.selectedChart);
-    localStorage.setItem("selectedPortfolio",this.state.selectedChart);
+    localStorage.setItem("selectedPortfolio", this.state.selectedChart);
   };
-  
-  
 
   render() {
     return (
@@ -37,10 +35,30 @@ class PiechartHolder extends Component {
     );
   }
   componentWillMount() {
-     axios.get("http://localhost:8000/api/get_portfolios/",{
-      params: { token: localStorage.getItem("userToken") }
+    axios
+      .get("http://localhost:8000/api/get_portfolios/", {
+        params: { token: localStorage.getItem("userToken") },
+      })
+      .then((res) => {
+        // let piechartList2 = res.data.portfplios;
+        // localStorage.setItem("piecharts", JSON.stringify(piechartList2));
+        // let piechartList = JSON.parse(localStorage.getItem("piechart"));
 
-  }).then((res) => {console.log(res.data)});
+        // let finalList = [];
+
+        // for (var i = 0; i < piechartList.length; i++) {
+        //   finalList.push(
+        //     <Piechart
+        //       chartID={piechartList[i].id}
+        //       name={piechartList[i].name}
+        //       data={piechartList[i].data}
+        //       onClick={() => this.handlePiechartClick(piechartList[i].id)}
+        //     />
+        //   );
+        // }
+
+        // console.log(res.data);
+      });
     let finalList = [];
     const data = [
       { name: "North", value: 100 },
@@ -55,7 +73,6 @@ class PiechartHolder extends Component {
     const data3 = [
       { name: "North", value: 100 },
       { name: "South", value: 200 },
-      
     ];
 
     finalList.push(
