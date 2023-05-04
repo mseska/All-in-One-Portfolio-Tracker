@@ -13,6 +13,12 @@ class Stock2:
         return {'symbol': self.symbol, 'price': float(self.price), 'currency': self.currency}
 
 
+class Portfolio(models.Model):
+    name = models.CharField(max_length=255)
+    #id = models.CharField(max_length=255, unique=True)
+    id = models.IntegerField(primary_key=True)
+    data = models.JSONField(default=list)
+
 # class SampleUser(AbstractUser):
 #        def create_user(email, password, last_login):
 #         newUser = SampleUser()
