@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/navBar2.jsx";
 
 
-export default function Crypto() {
+export default function PortfolioTimeline() {
   const navigate = useNavigate();
 
   <link
@@ -14,7 +14,7 @@ export default function Crypto() {
   return (
     <div>
       <NavBar></NavBar>
-      <p>Crypto Page</p>
+      <p>Timeline Page</p>
     </div>
   );
 }
