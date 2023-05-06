@@ -77,7 +77,7 @@ def add_item(request):
     return Response(request.data.get('name'), status=201) #POST İÇİN
 
 @api_view(['GET'])
-def get_stock_list(request):
+def get_myasset_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
     token = request.META.get('HTTP_AUTHORIZATION')
@@ -111,13 +111,13 @@ def get_stock_list(request):
         # print(newAsset,"newAsset daha oluştu")
         newAsset.symbol = stock[0]
         newAsset.price = stock[1]
-        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         #print(stock[1])
         #print(stock[2])
         #print(stock[3])
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
@@ -144,10 +144,10 @@ def get_crypto_list(request):
         # print(newAsset,"newAsset daha oluştu")
         newAsset.symbol = stock[1]
         newAsset.price = stock[2]
-        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
@@ -158,7 +158,7 @@ def get_crypto_list(request):
     
 
 @api_view(['GET'])
-def get_currency_list(request):
+def get_stock_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
@@ -173,10 +173,10 @@ def get_currency_list(request):
         # print(newAsset,"newAsset daha oluştu")
         newAsset.symbol = stock[1]
         newAsset.price = stock[2]
-        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
@@ -210,10 +210,10 @@ def get_commodity_list(request):
         # print(newAsset,"newAsset daha oluştu")
         newAsset.symbol = stock[1]
         newAsset.price = stock[2]
-        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
@@ -556,13 +556,13 @@ def get_portfolios(request):
         # print(newAsset,"newAsset daha oluştu")
         newAsset.symbol = stock[0]
         newAsset.price = stock[1]*stock[4]
-        newAsset.currency = "deneme"
+        newAsset.change = "deneme"
         print(stock[1])
         print(stock[2])
         print(stock[3])
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")

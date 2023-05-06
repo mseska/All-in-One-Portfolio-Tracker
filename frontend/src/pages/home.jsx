@@ -108,7 +108,7 @@ function Home() {
                       </a>
                     </td>
                     <td >{stock.price}</td>
-                    <td className={getClassNameForPrice(stock.change)}>  {stock.change}</td>
+                    <td className={getClassNameForPrice(stock.change)}> % {stock.change}</td>
                   </tr>
                 ))}
               </tbody>

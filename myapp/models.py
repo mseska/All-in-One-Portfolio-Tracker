@@ -7,10 +7,10 @@ from django.contrib.auth.models import User, AbstractUser
 class Stock2:
     symbol: str
     price : float
-    currency : str
+    change : float
     
     def to_dict(self):
-        return {'symbol': self.symbol, 'price': float(self.price), 'currency': self.currency}
+        return {'symbol': self.symbol, 'price': float(self.price), 'change': self.change}
 
 
 class Portfolio(models.Model):
