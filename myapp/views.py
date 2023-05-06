@@ -85,7 +85,7 @@ def get_stock_list(request):
     id = get_id_with_token(token)
     print(id,"hop alo id")
     user_asset_ids =  get_user_asset_ids_with_user_id(id)
-    Assets = get_asset_information_with_ids(user_asset_ids)    
+    Assets = get_assets_with_user_id(id)   
     print(Assets)
     
     # #TODO delete after development phase of news data retrieval
@@ -109,12 +109,12 @@ def get_stock_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[1]
-        newAsset.price = stock[2]
-        newAsset.currency = stock[3]
-        print(stock[1])
-        print(stock[2])
-        print(stock[3])
+        newAsset.symbol = stock[0]
+        newAsset.price = stock[1]
+        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
+        #print(stock[1])
+        #print(stock[2])
+        #print(stock[3])
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.currency,"newAsset.currency")
@@ -133,7 +133,7 @@ def get_crypto_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) #table will be changed
+    list = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.description = 'CRYPTOCURRENCY';",connection) #table will be changed
   
     returnList = []
     # print(list,"databaseden gelen veri")
@@ -142,9 +142,9 @@ def get_crypto_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.currency,"newAsset.currency")
@@ -162,7 +162,7 @@ def get_currency_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    list = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.description = 'EQUITY';",connection) #table will be changed
   
     returnList = []
     # print(list,"databaseden gelen veri")
@@ -171,9 +171,9 @@ def get_currency_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.currency,"newAsset.currency")
@@ -199,8 +199,8 @@ def get_commodity_list(request):
     news_update_thread.start()
     prices_update_thread = threading.Thread(target=update_prices_periodically)
     prices_update_thread.start()
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) 
-  
+    list = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.description = 'ETF';",connection) #table will be changed
+    
     returnList = []
     # print(list,"databaseden gelen veri")
     
@@ -208,13 +208,13 @@ def get_commodity_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.currency = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.currency,"newAsset.currency")
-        print(newAsset,"newAsset")
+        # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
     

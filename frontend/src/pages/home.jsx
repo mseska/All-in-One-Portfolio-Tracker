@@ -81,13 +81,13 @@ function Home() {
         </div>
         <div className="HomePageTables scrollable-area">
           <section>
-            <p className="HomePageTableNames"> Top Rated Stocks:</p>
+            <p className="HomePageTableNames"> My Assets</p>
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Symbol</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Currency</th>
+                  <th scope="col">Change</th>
                 </tr>
               </thead>
               <tbody>
@@ -115,13 +115,13 @@ function Home() {
             </table>
           </section>
           <section>
-            <p className="HomePageTableNames">Crypto:</p>
+            <p className="HomePageTableNames">Crypto</p>
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Symbol</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Currency</th>
+                  <th scope="col">Change</th>
                 </tr>
               </thead>
               <tbody>
@@ -136,13 +136,13 @@ function Home() {
             </table>
           </section>
           <section>
-            <p className="HomePageTableNames">Currency:</p>
+            <p className="HomePageTableNames">Stock</p>
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Symbol</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Currency</th>
+                  <th scope="col">Change</th>
                 </tr>
               </thead>
               <tbody>
@@ -157,13 +157,13 @@ function Home() {
             </table>
           </section>
           <section>
-            <p className="HomePageTableNames">Commodities:</p>
+            <p className="HomePageTableNames">Commodity</p>
             <table class="table table-hover table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Symbol</th>
                   <th scope="col">Price</th>
-                  <th scope="col">Currency</th>
+                  <th scope="col">Change</th>
                 </tr>
               </thead>
               <tbody>
