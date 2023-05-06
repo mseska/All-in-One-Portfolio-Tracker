@@ -152,7 +152,7 @@ export default function NavBar2() {
           class="btn btn-primary navBarButtons"
           onClick={cryptoButtonFunc}
         >
-          Crypto
+          Timeline
         </button>
         <button
           type="button"

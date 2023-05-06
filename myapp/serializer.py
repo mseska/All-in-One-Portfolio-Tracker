@@ -26,3 +26,10 @@ class UserSerializer(serializers.ModelSerializer):
     #         password=validated_data['password']
     #     )
     #     return user
+
+class PortfolioSerializer(serializers.ModelSerializer):
+    data = serializers.ListField(child=serializers.FloatField())
+
+    class Meta:
+        model = Portfolio
+        fields = ['name', 'id', 'data']

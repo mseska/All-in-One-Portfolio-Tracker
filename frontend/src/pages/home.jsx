@@ -11,13 +11,13 @@ import HomePageNewsHolder from "../components/news_components/newsHolder_home";
 function Home() {
   const [stockData, setStockData] = useState([]);
   const [cryptoData, setCryptoData] = useState([]);
-  const [currencyData, setCurrencyData] = useState([]);
+  const [myAssetsData, setmyAssetsData] = useState([]);
   const [commodityData, setCommodityData] = useState([]);
 
-  function getClassNameForPrice(price) {
-    if (price > 420) {
+  function getClassNameForPrice(change) {
+    if (change > 0) {
       return "green";
-    } else if (price < 420) {
+    } else if (change < 0) {
       return "red";
     } else {
       return "";
@@ -27,14 +27,14 @@ function Home() {
   useEffect(() => {
     const token = localStorage.getItem('userToken');
     axios
-      .get("http://localhost:8000/api/stock-price",{
+      .get("http://localhost:8000/api/myasset-price",{
         headers: {
           Authorization: `${token}`,
         },
       })
       .then((response) => {
         console.log("response get as", response.data);
-        setStockData(response.data);
+        setmyAssetsData(response.data);
         console.log("stockData", stockData);
       })
       .catch((error) => {
@@ -51,11 +51,11 @@ function Home() {
         console.log(error);
       });
     axios
-      .get("http://localhost:8000/api/currency-price")
+      .get("http://localhost:8000/api/stock-price")
       .then((response) => {
-        console.log("response get as", response.data);
-        setCurrencyData(response.data);    
-        console.log("currencyData", currencyData);
+        setStockData(response.data);    
+        // console.log("response get as", response.data);
+        // console.log("currencyData", currencyData);
       })
       .catch((error) => {
         console.log(error);
@@ -91,7 +91,7 @@ function Home() {
                 </tr>
               </thead>
               <tbody>
-                {stockData.map((stock, index) => (
+                {myAssetsData.map((stock, index) => (
                   <tr key={index}>
                     <td>
                       <a
@@ -107,8 +107,8 @@ function Home() {
                         {stock.symbol}
                       </a>
                     </td>
-                    <td className={getClassNameForPrice(stock.price)}>{stock.price}</td>
-                    <td>{stock.currency}</td>
+                    <td >{stock.price}</td>
+                    <td className={getClassNameForPrice(stock.change)}>  {stock.change}</td>
                   </tr>
                 ))}
               </tbody>
@@ -125,11 +125,11 @@ function Home() {
                 </tr>
               </thead>
               <tbody>
-                {cryptoData.map((stock, index) => (
+                {cryptoData.map((crypto, index) => (
                   <tr key={index}>
-                    <td>{stock.symbol}</td>
-                    <td>{stock.price}</td>
-                    <td>{stock.currency}</td>
+                    <td>{crypto.symbol}</td>
+                    <td>{crypto.price}</td>
+                    <td className={getClassNameForPrice(crypto.change)}> % {crypto.change}</td>
                   </tr>
                 ))}
               </tbody>
@@ -146,11 +146,11 @@ function Home() {
                 </tr>
               </thead>
               <tbody>
-                {currencyData.map((stock, index) => (
+                {stockData.map((stock, index) => (
                   <tr key={index}>
                     <td>{stock.symbol}</td>
                     <td>{stock.price}</td>
-                    <td>{stock.currency}</td>
+                    <td className={getClassNameForPrice(stock.change)}> % {stock.change}</td>
                   </tr>
                 ))}
               </tbody>
@@ -167,11 +167,11 @@ function Home() {
                 </tr>
               </thead>
               <tbody>
-                {commodityData.map((stock, index) => (
+                {commodityData.map((commodity, index) => (
                   <tr key={index}>
-                    <td>{stock.symbol}</td>
-                    <td>{stock.price}</td>
-                    <td>{stock.currency}</td>
+                    <td>{commodity.symbol}</td>
+                    <td>{commodity.price}</td>
+                    <td className={getClassNameForPrice(commodity.change)}> % {commodity.change}</td>
                   </tr>
                 ))}
               </tbody>
