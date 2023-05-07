@@ -28,7 +28,7 @@ class ModifyPortfolio extends Component {
         </h1>
         <div className="ModifyPortfolio2">
           <div className="ModifyPortfolioLeft">
-            <h1 style={{ fontSize: "3vh" }}>Add Symbol:</h1>
+            <h1 style={{ fontSize: "3vh" }}>Add New Symbol:</h1>
             <form className="searchFieldModifyPortfolio">
               <input
                 class="form-control me-2 searchField searchFieldModifyPortfolio"
@@ -49,7 +49,7 @@ class ModifyPortfolio extends Component {
           </div>
           <div className="separator"></div>
           <div className="ModifyPortfolioRight">
-            <h1 style={{ fontSize: "3vh" }}>Remove Symbol:</h1>
+            <h1 style={{ fontSize: "3vh" }}>+/- Symbol:</h1>
             <select className="SelectSymbolModify" name="" id="">
               <option>Hello</option>
             </select>
@@ -61,9 +61,9 @@ class ModifyPortfolio extends Component {
                 placeholder="Amount:"
               />
             </div>
-            <button className="ChangeSymbolButton">Change</button>
+            <button className="ChangeSymbolButton">+</button>
             <h1 style={{fontSize: "2vh"}}>or</h1>
-            <button className="RemoveSymbol">Remove</button>
+            <button className="RemoveSymbol">-</button>
 
           </div>
         </div>

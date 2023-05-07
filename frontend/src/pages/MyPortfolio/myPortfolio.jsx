@@ -15,6 +15,13 @@ export default function MyPortfolio() {
   const [showAddPortfolio, setshowAddPortfolio] = useState(false);
   const [showModifyPortfolio, setshowModifyPortfolio] = useState(false);
 
+  function handleClick() {
+    
+    setselectedPortfolio(localStorage.getItem("selectedPortfolio"));
+
+    
+  }
+
   function handleClickAddPortfolio() {
     setshowAddPortfolio(true);
     // window.body.classList.add("darken");
@@ -33,18 +40,30 @@ export default function MyPortfolio() {
     setshowModifyPortfolio(false);
   }
 
+  function getClassNameForPrice(change) {
+    if (change > 0) {
+      return "green";
+    } else if (change < 0) {
+      return "red";
+    } else {
+      return "";
+    }
+  }
+
   useEffect(() => {
+    setselectedPortfolio(1);
     const token = localStorage.getItem("userToken");
     const selectedPortfolio = localStorage.getItem("selectedPortfolio");
     axios
-      .get("http://localhost:8000/api/crypto-price", {
+      .get("http://localhost:8000/api/portfolio-data", {
         headers: {
           Authorization: `${token}`,
-          // portfolio: `${selectedPortfolio}`,
+          portfolio: `${selectedPortfolio}`,
         },
       })
       .then((response) => {
         setportfolioData(response.data);
+        localStorage.setItem("portfolioData", response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -54,7 +73,7 @@ export default function MyPortfolio() {
   return (
     <div>
       <NavBar></NavBar>
-      <div className="MainPortfolioDiv">
+      <div className="MainPortfolioDiv" onClick={handleClick}>
         <div className="First">
           <div className="AddModifyButtonDiv">
             {showAddPortfolio && <AddPortfolio></AddPortfolio>}
@@ -104,15 +123,19 @@ export default function MyPortfolio() {
               <tr>
                 <th scope="col">Symbol</th>
                 <th scope="col">Price</th>
-                <th scope="col">Currency</th>
+                <th scope="col">Change</th>
               </tr>
             </thead>
             <tbody>
+              {selectedPortfolio}
               {portfolioData.map((stock, index) => (
                 <tr key={index}>
                   <td>{stock.symbol}</td>
                   <td>{stock.price}</td>
-                  <td>{stock.currency}</td>
+                  <td className={getClassNameForPrice(stock.change)}>
+                    {" "}
+                    %{stock.change}
+                  </td>
                 </tr>
               ))}
             </tbody>

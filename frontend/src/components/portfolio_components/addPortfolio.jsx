@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./addPortfolio.css"
+import "./addPortfolio.css";
 import axios from "axios";
 
 class AddPortfolio extends Component {
@@ -21,12 +21,10 @@ class AddPortfolio extends Component {
     axios
       .post("http://localhost:8000/api/create-portfolio", {
         name: this.state.name,
-        currency: this.state.currency
-       
+        currency: this.state.currency,
       })
       .then(function (response) {
-        if(response.status === 201) {
-
+        if (response.status === 201) {
           alert("Portfolio Created");
         }
       })

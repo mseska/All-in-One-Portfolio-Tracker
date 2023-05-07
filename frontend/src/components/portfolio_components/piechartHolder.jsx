@@ -10,6 +10,8 @@ class PiechartHolder extends Component {
   };
 
   handlePiechartClick = (chartId, chartName) => {
+    const token = localStorage.getItem("userToken");
+    const selectedPortfolio = localStorage.getItem("selectedPortfolio");
     const piecharts = this.state.piecharts;
     const newPiecharts = piecharts.map((piechart) => {
       if (piechart.props.chartID === chartId) {
@@ -23,7 +25,21 @@ class PiechartHolder extends Component {
     this.setState({ piecharts: newPiecharts });
     console.log(this.state.selectedChart);
     localStorage.setItem("selectedPortfolio", this.state.selectedChart);
-    localStorage.setItem("selectedChartName",chartName);
+    localStorage.setItem("selectedChartName", chartName);
+
+    axios
+      .get("http://localhost:8000/api/portfolio-data", {
+        headers: {
+          Authorization: `${token}`,
+          portfolio: `${selectedPortfolio}`,
+        },
+      })
+      .then((response) => {
+        localStorage.setItem("portfolioData", response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -44,9 +60,7 @@ class PiechartHolder extends Component {
         // let piechartList2 = res.data.portfplios;
         // localStorage.setItem("piecharts", JSON.stringify(piechartList2));
         // let piechartList = JSON.parse(localStorage.getItem("piechart"));
-
         // let finalList = [];
-
         // for (var i = 0; i < piechartList.length; i++) {
         //   finalList.push(
         //     <Piechart
@@ -57,7 +71,6 @@ class PiechartHolder extends Component {
         //     />
         //   );
         // }
-
         // console.log(res.data);
       });
     let finalList = [];
