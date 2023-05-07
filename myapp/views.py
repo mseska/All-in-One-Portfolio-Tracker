@@ -2,10 +2,12 @@ import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Assets, Product, Stock2
+from .models import   Stock2
 from django.db import connection
+from .dbFunctions import * 
 import json
-from . serializer import ItemSerializer
+import random
+
 from django.http import JsonResponse
 
 from rest_framework.views import APIView
@@ -31,98 +33,20 @@ from django.contrib.auth.models import User
 
 #from django.http import JsonResponse
 
- 
-class ReactView(APIView):
-    def get(self,request):
-        output = [{'employee':output.employee,'department':output.department} for output in React.objects.all()]
-        return Response(output)
- 
-    def post(self,request):
-        serializer = ReactSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data)
-
-# Create your views here.
-def index(request):
-    print("deneöe")
-    #return HttpResponse('<h1>Hey, Welcome</h1>')
-    name = 'Mert'
-    #feature1 = Feature()
-    #feature1.id = 0
-    #feature1.name = 'Fast'
-    #feature1.description = 'Our service is fast'
-    news_update_thread = threading.Thread(target=update_news_periodically)
-    news_update_thread.start()
-
-    prices_update_thread = threading.Thread(target=update_prices_periodically)
-    prices_update_thread.start()
-    return render(request,'a.html',{'name':name})
-
-def input(request):
-    print("deneöe")
-
-    return render(request,'input.html')
-
-def inputCheck(request):
-    with open('output.json') as json_file:
-        data = json.load(json_file)
- 
-        # Print the type of data variable
-        #print("Type:", type(data))
- 
-        # Print the data of dictionary
-        #print("\nPeople1:", data['people1'])
-        #print("\nPeople2:", data['people2'])
-    
-    inputGet = request.POST['inputText']
-    currency = data["chart"]["result"][0]["meta"]["currency"]
-    symbol = data["chart"]["result"][0]["meta"]["symbol"]
-    #timestamp = data["chart"]["result"][0]["timestamp"]
-    #high = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["high"]
-    #low = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["low"]
-    #open = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["open"]
-    #close = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["close"]
-    #volume = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["volume"]
-
-    #my_custom_sql("INSERT INTO `comp491`.`asset_history` (`keysforassets`, `currency`, `asset_name`) VALUES ('"+inputGet+"', '"+currency+"', '"+symbol+"')",connection)
-    output = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
-    print(output)
-    return render(request,'inputCheck.html',{'inputText':inputGet,'wordCount':output})
-
-def static(request):
-    return render(request,'static.html')
-
-def my_custom_sql(query,connection):
-    with connection.cursor() as cursor:
-        cursor.execute(query)
-        #cursor.execute("SELECT foo FROM bar WHERE baz = %s", [self.baz])
-        
-        row = cursor.fetchall()
-
-    return row
+# email verification
 
 
-def my_custom_news_sql(query, params=None):
-    with connection.cursor() as cursor:
-        cursor.execute(query, params)
-        result = cursor.fetchall()
-    return result
+from django.contrib import messages #email confirmation - is not used
 
-def list(request):
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
-    returnList = []
-    #print(list)
-    
-    for asset in list:
-        #print(type(asset))
-        newAsset = Assets()
-        newAsset.AssetName = asset[2]
-        newAsset.value = asset[3]
-        returnList.append(newAsset)
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import EmailMessage
+from django.shortcuts import redirect
+from .tokens import account_activation_token
 
-    
-    return render(request,'list.html',{'list':returnList})
+
 
 @api_view(['POST'])
 #@api_view(['GET'])
@@ -153,45 +77,53 @@ def add_item(request):
     return Response(request.data.get('name'), status=201) #POST İÇİN
 
 @api_view(['GET'])
-def get_stock_list(request):
+def get_myasset_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
+    token = request.META.get('HTTP_AUTHORIZATION')
+    print(token,"hop alo token")
+    id = get_id_with_token(token)
+    print(id,"hop alo id")
+    user_asset_ids =  get_user_asset_ids_with_user_id(id)
+    Assets = get_assets_with_user_id(id)   
+    print(Assets)
+    
+    # #TODO delete after development phase of news data retrieval
+    # update_news_data()
+    # update_prices()
 
-    #TODO delete after development phase of news data retrieval
-    update_news_data()
-    update_prices()
-
-    news_update_thread = threading.Thread(target=update_news_periodically)
-    news_update_thread.start()
-    prices_update_thread = threading.Thread(target=update_prices_periodically)
-    prices_update_thread.start()
+    # news_update_thread = threading.Thread(target=update_news_periodically)
+    # news_update_thread.start()
+    # prices_update_thread = threading.Thread(target=update_prices_periodically)
+    # prices_update_thread.start()
 
     list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
     returnList = []
     # print(list,"databaseden gelen veri")
     
-    for stock in list:
+    #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
+    # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
+    # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
+    for stock in Assets:
+    #for stock in list:
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
-        # print(stock[1])
-        # print(stock[2])
-        # print(stock[3])
+        newAsset.symbol = stock[0]
+        newAsset.price = stock[1]
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
+        #print(stock[1])
+        #print(stock[2])
+        #print(stock[3])
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
-    # serializer = StockSerializer(data=returnList)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     print(serializer.data)
-    #returnListDict = {returnList}
+    
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    print(serialized_objects, "serialized")
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
     
@@ -201,7 +133,7 @@ def get_crypto_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) #table will be changed
+    list = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.description = 'CRYPTOCURRENCY';",connection) #table will be changed
   
     returnList = []
     # print(list,"databaseden gelen veri")
@@ -210,31 +142,27 @@ def get_crypto_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
-    # serializer = StockSerializer(data=returnList)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     print(serializer.data)
-    #returnListDict = {returnList}
+    
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
     
 
 @api_view(['GET'])
-def get_currency_list(request):
+def get_stock_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    list = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.description = 'EQUITY';",connection) #table will be changed
   
     returnList = []
     # print(list,"databaseden gelen veri")
@@ -243,20 +171,16 @@ def get_currency_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
+        # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
-    # serializer = StockSerializer(data=returnList)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     print(serializer.data)
-    #returnListDict = {returnList}
+    
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
@@ -266,8 +190,17 @@ def get_commodity_list(request):
     # print("GET METHOD WORKS")
     # print(request.GET)
 
-    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection) 
-  
+    #TODO delete after development phase of news data retrieval
+    tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
+    update_news_data(tickersList)
+    update_prices()
+
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
+    list = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.description = 'ETF';",connection) #table will be changed
+    
     returnList = []
     # print(list,"databaseden gelen veri")
     
@@ -275,32 +208,28 @@ def get_commodity_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[2]
-        newAsset.price = stock[3]
-        newAsset.currency = stock[1]
+        newAsset.symbol = stock[1]
+        newAsset.price = stock[2]
+        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         # print(newAsset.symbol,"newAsset.symbol")
         # print(newAsset.price,"newAsset.price")
-        # print(newAsset.currency,"newAsset.currency")
-        print(newAsset,"newAsset")
+        # print(newAsset.change,"newAsset.change")
+        # print(newAsset,"newAsset")
         returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
-    # serializer = StockSerializer(data=returnList)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     print(serializer.data)
-    #returnListDict = {returnList}
+    
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
 
 
-def update_news_data():
+def update_news_data(tickersList):
     print("json is being updated\n\n\n\n")
     # Define the list of stock tickers to retrieve news for
-    tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD"]
-
+    tickers = tickersList
+    
     news_dict = {}
-
+    news_dict["news"] = []
     # Loop through the tickers and retrieve news data from Yahoo Finance API
     for ticker in tickers:
         # Retrieve the news data for the current ticker
@@ -321,11 +250,12 @@ def update_news_data():
                     news_dict2["thumbnail"] = article["thumbnail"]["resolutions"][0]["url"]
             else:
                     news_dict2["thumbnail"] ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSriG88tNG1fjZY9tjMkWpziGZDukdu_2i2Cg&usqp=CAU"
-
+            
             news_list.append(news_dict2)
 
         # Add the news data to the dictionary
-        news_dict[ticker] = news_list
+        news_dict["news"].extend(news_list)
+    random.shuffle(news_dict["news"])
 
     with open("news_data.json", "w") as f:
         json.dump(news_dict, f)
@@ -392,12 +322,10 @@ def update_prices():
 
         data = response.json()
 
-
         # Extract the data for the specified date range
-        typeOfasset=data["chart"]["result"][0]["meta"]["instrumentType"]
         timestamps = data["chart"]["result"][0]["timestamp"]
         prices = data["chart"]["result"][0]["indicators"]["quote"][0]
-        data_dict[ticker] = {"Timestamp": timestamps,"Type":typeOfasset, "Open": prices["open"], "High": prices["high"],
+        data_dict[ticker] = {"Timestamp": timestamps, "Open": prices["open"], "High": prices["high"],
                              "Low": prices["low"],
                              "Close": prices["close"], "Volume": prices["volume"]}
 
@@ -422,25 +350,18 @@ def update_prices():
         close = price_item['Close'][0]
         volume = price_item['Volume'][0]
         asset = ticker
-        description=price_item['Type']
 
         # Check if the news already exists in the database
         query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
         result = my_custom_news_sql(query, (asset))
 
-        if len(result) > 1000:
+        if len(result) > 0:
             # The news already exists in the database, so skip inserting it
             print(f"already exists in the database")
         else:
             # Insert the news into the database
-            #query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
-            #my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
-
-            name=asset
-            current_value=close
-
-            query = "INSERT INTO `comp491`.`asset_infor:imation` (name, current_value,description) VALUES (%s,%s,%s)"
-            my_custom_news_sql(query, (name, current_value,description))
+            query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+            my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
             print(f"Inserted prices  into the database")
 
     print("dbupdated\n\n\n\n")
@@ -453,7 +374,8 @@ def update_news_periodically():
     while True:
         now = datetime.datetime.now()
         if now.second == 0 and now.minute== 0:  # Run update_news_data() once per hour at the start of the hour
-            update_news_data()
+            tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
+            update_news_data(tickersList)
         time.sleep(1)
 
 
@@ -495,6 +417,41 @@ def login_generate_token(request):
         print("user does not exist:(")
         return JsonResponse({'error': 'Invalid credentials'}, status=401)
 
+def activate(request, uidb64, token):
+    print("entered activate(), confirming the email...")
+    #User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        print("email confirmed!")
+        messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
+        return redirect('http://localhost:3000') #TODO
+        #return JsonResponse({'token': token.key}, status=201)
+    else:
+        print("sorry could not confirmed the email")
+        messages.error(request, 'Activation link is invalid!')
+
+
+def send_verification_email(request, user, name):
+    print("activating the email confirmation...") 
+
+    mail_subject = 'Activate Your Account'
+    print(user.username, "this is the username to be printed to the email")
+    message = render_to_string('template_activate_account.html', {
+        'user': name, 
+        'domain': get_current_site(request).domain,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+        'protocol': 'https' if request.is_secure() else 'http'
+    })
+    return EmailMessage(mail_subject, message, to=[user.username])
+
 @api_view(['POST'])           
 def signup_generate_token(request):
     print("POST METHOD WORKS - in signup generate token")
@@ -510,7 +467,8 @@ def signup_generate_token(request):
 
     #email must be unique, check the emails:
     if User.objects.filter(email=email).exists():
-        return JsonResponse({'error': 'User with this email already exists'})
+        print("invalid email address:(((")
+        return JsonResponse({'error': 'User with this email already exists'}, status=409)
 
     #create a user:
     user = User.objects.create_user(username=email, email=email, password=password)
@@ -519,7 +477,7 @@ def signup_generate_token(request):
     user.save()
 
     #to check whether the user is empty or not:
-    print(user.email)
+    print(user.email, "hello")
     print(user.password)
 
     user = authenticate(request, username=email, password=password)
@@ -534,7 +492,12 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
-
+        #activate(request, uidb64, token)
+        # verification_mail = send_verification_email(request, user, name)
+        # if verification_mail.send():
+            # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
+            # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
+        print("email sent değil!!!!!!!")
         return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
@@ -571,6 +534,45 @@ def get_user_info(request):
     else:
         print("id returns none")
         #return JsonResponse({'error': 'Invalid'}, status = 401) #bu dogru mu burda
+
+@api_view(['GET'])
+def get_portfolios(request):
+    print("GET METHOD WORKS - in get portfolios")
+    
+    token  = request.GET.get("token")
+    id = get_id_with_token(token)
+    get_portfolios = get_portfolios_with_user_id(id)
+    print(get_portfolios)
+    returnList = []
+    # print(list,"databaseden gelen veri")
+    
+    #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
+    # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
+    # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
+    for stock in get_portfolios:
+    #for stock in list:
+        #print(type(asset))
+        newAsset = Stock2()
+        # print(newAsset,"newAsset daha oluştu")
+        newAsset.symbol = stock[0]
+        newAsset.price = stock[1]*stock[4]
+        newAsset.change = "deneme"
+        print(stock[1])
+        print(stock[2])
+        print(stock[3])
+        # print(newAsset.symbol,"newAsset.symbol")
+        # print(newAsset.price,"newAsset.price")
+        # print(newAsset.change,"newAsset.change")
+        # print(newAsset,"newAsset")
+        returnList.append(newAsset)
+    #print(returnList,"liste databaseden alındı")
+    
+    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    print(serialized_objects, "serialized")
+    return JsonResponse(serialized_objects, safe=False)
+
+
+
 
 
 

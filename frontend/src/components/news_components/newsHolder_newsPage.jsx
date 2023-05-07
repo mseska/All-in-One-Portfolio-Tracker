@@ -19,7 +19,7 @@ class NewsHolderNewsPage extends Component {
   componentWillMount() {
     //this request will changed with "news_newspage"
     axios.get("http://localhost:8000/api/news_mainpage").then((res) => {
-      var articleList2 = res.data.TSLA;
+      var articleList2 = res.data.news;
       console.log(articleList2);
       localStorage.setItem("articleList", JSON.stringify(articleList2));
       let articleList = JSON.parse(localStorage.getItem("articleList"));

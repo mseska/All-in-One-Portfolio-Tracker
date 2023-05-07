@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import image from "../images/1-cropped.svg";
 import "./login.css";
-import { Component } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -10,8 +9,19 @@ export default function Login2() {
   //   email: "",
   //   password: ""
   // });
+
+
+  const clearLocalStorage = () => {
+    localStorage.clear();
+  };
+
+  useEffect(() => {
+    // Call the function when the Login page is opened
+    clearLocalStorage();
+  }, []);
+
+
   const [isLoading, setIsLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -48,7 +58,6 @@ export default function Login2() {
         PassWord: password,
       })
       .then((response) => {
-        const token = response.data.token;
         // local storageta userId ve userToken tutarsak diğer sayfalarda
         // bunları requestlere ekleyerek o userın datasını getleyebiliriz
 
