@@ -319,6 +319,9 @@ def update_news_data():
             if "thumbnail" in article:
                 if "resolutions" in article["thumbnail"] and article["thumbnail"]["resolutions"]:
                     news_dict2["thumbnail"] = article["thumbnail"]["resolutions"][0]["url"]
+            else:
+                    news_dict2["thumbnail"] ="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSriG88tNG1fjZY9tjMkWpziGZDukdu_2i2Cg&usqp=CAU"
+
             news_list.append(news_dict2)
 
         # Add the news data to the dictionary
@@ -389,10 +392,12 @@ def update_prices():
 
         data = response.json()
 
+
         # Extract the data for the specified date range
+        typeOfasset=data["chart"]["result"][0]["meta"]["instrumentType"]
         timestamps = data["chart"]["result"][0]["timestamp"]
         prices = data["chart"]["result"][0]["indicators"]["quote"][0]
-        data_dict[ticker] = {"Timestamp": timestamps, "Open": prices["open"], "High": prices["high"],
+        data_dict[ticker] = {"Timestamp": timestamps,"Type":typeOfasset, "Open": prices["open"], "High": prices["high"],
                              "Low": prices["low"],
                              "Close": prices["close"], "Volume": prices["volume"]}
 
@@ -417,18 +422,25 @@ def update_prices():
         close = price_item['Close'][0]
         volume = price_item['Volume'][0]
         asset = ticker
+        description=price_item['Type']
 
         # Check if the news already exists in the database
         query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
         result = my_custom_news_sql(query, (asset))
 
-        if len(result) > 0:
+        if len(result) > 1000:
             # The news already exists in the database, so skip inserting it
             print(f"already exists in the database")
         else:
             # Insert the news into the database
-            query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
-            my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+            #query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+            #my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+
+            name=asset
+            current_value=close
+
+            query = "INSERT INTO `comp491`.`asset_infor:imation` (name, current_value,description) VALUES (%s,%s,%s)"
+            my_custom_news_sql(query, (name, current_value,description))
             print(f"Inserted prices  into the database")
 
     print("dbupdated\n\n\n\n")
