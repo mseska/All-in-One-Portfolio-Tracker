@@ -304,7 +304,29 @@ def update_news_data(tickersList):
 
     pass
 def update_prices():
-    tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD", "CEEK-USD"]
+    #tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD", "CEEK-USD"]
+    tickers =  [
+
+  "GARAN.IS", "AKBNK.IS", "KCHOL.IS", "SISE.IS", "ULKER.IS",
+  "ISCTR.IS", "TCELL.IS", "BIMAS.IS", "YKBNK.IS", "VAKBN.IS",
+
+
+  "AAPL", "MSFT", "AMZN", "GOOGL", "FB",
+  "BRK-B", "V", "JNJ", "WMT", "NVDA",
+
+
+  "GLD", "SLV", "USO", "UNG", "DBC",
+  "DBA", "DBB", "DBE", "DBP", "DBS",
+
+
+  "BTC-USD", "ETH-USD", "BNB-USD", "ADA-USD", "XRP-USD",
+  "SOL1-USD", "DOT1-USD", "DOGE-USD", "LUNA1-USD", "AVAX-USD",
+
+
+  "KO", "PEP", "MCD", "INTC", "DIS",
+  "ENJSA.IS", "VESTL.IS", "ARCLK.IS", "CRFSA.IS", "TUPRS.IS"
+]
+
 
     start_date = "2022-04-02"
     end_date = "2022-04-04"
@@ -333,8 +355,8 @@ def update_prices():
         json.dump(data_dict, f)
 
     print("dbupdating\n\n\n\n")
-    delete_query = "DELETE FROM `comp491`.`prices` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
-    my_custom_news_sql(delete_query)
+    #delete_query = "DELETE FROM `comp491`.`prices` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
+    #my_custom_news_sql(delete_query)
 
     with open('price_data.json') as f2:
         price_data = json.load(f2)
@@ -352,17 +374,17 @@ def update_prices():
         asset = ticker
 
         # Check if the news already exists in the database
-        query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
-        result = my_custom_news_sql(query, (asset))
+        #query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
+        #result = my_custom_news_sql(query, (asset))
 
-        if len(result) > 0:
+        #if len(result) > 0:
             # The news already exists in the database, so skip inserting it
-            print(f"already exists in the database")
-        else:
+         #   print(f"already exists in the database")
+        #:else:
             # Insert the news into the database
-            query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
-            my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
-            print(f"Inserted prices  into the database")
+            #query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+            #my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+            #print(f"Inserted prices  into the database")
 
     print("dbupdated\n\n\n\n")
 
