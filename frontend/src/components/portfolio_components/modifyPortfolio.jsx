@@ -9,6 +9,8 @@ class ModifyPortfolio extends Component {
     amount2: "",
     searchResults: [],
     selectedSymbol: "",
+    selectedSymbol2: "",
+    portfolioSymbols: [],
   };
 
   handleNameChange = (event) => {
@@ -18,11 +20,74 @@ class ModifyPortfolio extends Component {
   handleAmount1Change = (event) => {
     this.setState({ amount1: event.target.value });
   };
+  handleAmount2Change = (event) => {
+    this.setState({ amount2: event.target.value });
+  };
+
+  handleSymbol2Change = (event) => {
+    this.setState({ selectedSymbol2: event.target.value });
+  };
+
+  handlePlusClick = (event) => {
+    event.preventDefault();
+    const selectedSymbolToAdjust = this.state.selectedSymbol2;
+    const amountToAdjust = this.state.amount2;
+    const token = localStorage.getItem("userToken");
+    const portfolioId = localStorage.getItem("selectedPortfolio");
+
+    axios
+      .post("http://localhost:8000/api/increase-in-portfolio", {
+        Token: token,
+        PortfolioId: portfolioId,
+        amount: amountToAdjust,
+        Symbol: selectedSymbolToAdjust,
+      })
+      .then(function (response) {
+        if (response.status === 201) {
+          alert(selectedSymbolToAdjust + "added" + amountToAdjust);
+        }
+      })
+      .catch(function (error) {
+        alert(selectedSymbolToAdjust + "added" + amountToAdjust);
+        // alert("Could not create potfolio please check your inputs");
+      })
+      .finally((response) => {});
+  };
+
+  handleMinusClick = (event) => {
+    event.preventDefault();
+    const selectedSymbolToAdjust = this.state.selectedSymbol2;
+    const amountToAdjust = this.state.amount2;
+    const token = localStorage.getItem("userToken");
+    const portfolioId = localStorage.getItem("selectedPortfolio");
+
+    axios
+      .post("http://localhost:8000/api/decrease-in-portfolio", {
+        Token: token,
+        PortfolioId: portfolioId,
+        amount: amountToAdjust,
+        Symbol: selectedSymbolToAdjust,
+      })
+      .then(function (response) {
+        if (response.status === 201) {
+          alert(selectedSymbolToAdjust + "decreased" + amountToAdjust);
+        }
+      })
+      .catch(function (error) {
+        alert(selectedSymbolToAdjust + "decreased" + amountToAdjust);
+        // alert("Could not create potfolio please check your inputs");
+      })
+      .finally((response) => {});
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
+    const token = localStorage.getItem("userToken");
+    const portfolioId = localStorage.getItem("selectedPortfolio");
     axios
       .post("http://localhost:8000/api/add-to-portfolio", {
+        Token: token,
+        PortfolioId: portfolioId,
         symbol: this.state.selectedSymbol,
         amount: this.state.amount1,
       })
@@ -46,6 +111,7 @@ class ModifyPortfolio extends Component {
       { name: "TSLB" },
       { name: "TSGA" },
     ];
+
     let filteredItems = possibleItems;
     if (this.state.searchTerm) {
       filteredItems = possibleItems.filter((item) =>
@@ -74,6 +140,8 @@ class ModifyPortfolio extends Component {
                 filteredItems.map((item) => (
                   <button
                     style={{
+                      border: "1px",
+                      marginRight: "1px",
                       borderRadius: "10px",
                       color: "white",
                       backgroundColor: "#7498da",
@@ -105,8 +173,17 @@ class ModifyPortfolio extends Component {
           <div className="separator"></div>
           <div className="ModifyPortfolioRight">
             <h1 style={{ fontSize: "3vh" }}>+/- Symbol:</h1>
-            <select className="SelectSymbolModify" name="" id="">
-              <option>Hello</option>
+            <select
+              className="SelectSymbolModify"
+              name=""
+              id=""
+              onChange={this.handleSymbol2Change}
+            >
+              {this.state.portfolioSymbols.map((item) => (
+                <option key={item.name} value={item.name}>
+                  {item.name}
+                </option>
+              ))}
             </select>
             <div className="AmountModifyPortfolio">
               {/* <h>Amount: </h> */}
@@ -114,22 +191,49 @@ class ModifyPortfolio extends Component {
                 className="AmountField"
                 type="text"
                 placeholder="Amount:"
+                onChange={this.handleAmount2Change}
               />
             </div>
-            <button className="ChangeSymbolButton">+</button>
+            <button
+              onClick={this.handlePlusClick}
+              className="ChangeSymbolButton"
+            >
+              +
+            </button>
             <h1 style={{ fontSize: "2vh" }}>or</h1>
-            <button className="RemoveSymbol">-</button>
+            <button className="RemoveSymbol" onClick={this.handleMinusClick}>
+              -
+            </button>
           </div>
         </div>
       </div>
     );
   }
   componentWillMount() {
+    const selectedPortfolio = localStorage.getItem("selectedPortfolio");
+    const token = localStorage.getItem("userToken");
     axios
       .get("http://localhost:8000/api/all-symbols", {})
       .then((response) => {
         localStorage.setItem("allSymbols", response.data);
-        this.searchResults = response.data;
+        this.setState({ searchResults: response.data });
+        // this.searchResults = response.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    axios
+      .get("http://localhost:8000/api/symbols-of-portfolio", {
+        headers: {
+          Authorization: `${token}`,
+          Portfolio: `${selectedPortfolio}`,
+        },
+      })
+      .then((response) => {
+        if (response.status === 201) {
+          this.setState({ portfolioSymbols: response.data });
+          localStorage.setItem("portfolioSymbols", response.data);
+        }
       })
       .catch((error) => {
         console.log(error);
