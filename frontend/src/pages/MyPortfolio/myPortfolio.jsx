@@ -52,6 +52,7 @@ export default function MyPortfolio() {
 
   useEffect(() => {
     setselectedPortfolio(1);
+    // localStorage.setItem("selectedPortfolio", 1);
     const token = localStorage.getItem("userToken");
     const selectedPortfolio = localStorage.getItem("selectedPortfolio");
     axios
