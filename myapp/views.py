@@ -561,7 +561,7 @@ def get_portfolios(request):
             #print(name,amount,get_portfolios[index])
             currentAsset = {}
             currentAsset["name"] = asset_name
-            currentAsset ["value"] = amount*float(current_value)
+            currentAsset ["value"] = round(amount*float(current_value),2)
             data.append(currentAsset)
 
         returnDict[index]["name"] = name
