@@ -33,20 +33,98 @@ from django.contrib.auth.models import User
 
 #from django.http import JsonResponse
 
-# email verification
+
+class ReactView(APIView):
+    def get(self,request):
+        output = [{'employee':output.employee,'department':output.department} for output in React.objects.all()]
+        return Response(output)
+
+    def post(self,request):
+        serializer = ReactSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+# Create your views here.
+def index(request):
+    print("deneöe")
+    #return HttpResponse('<h1>Hey, Welcome</h1>')
+    name = 'Mert'
+    #feature1 = Feature()
+    #feature1.id = 0
+    #feature1.name = 'Fast'
+    #feature1.description = 'Our service is fast'
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
+
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
+    return render(request,'a.html',{'name':name})
+
+def input(request):
+    print("deneöe")
+
+    return render(request,'input.html')
+
+def inputCheck(request):
+    with open('output.json') as json_file:
+        data = json.load(json_file)
+
+        # Print the type of data variable
+        #print("Type:", type(data))
+
+        # Print the data of dictionary
+        #print("\nPeople1:", data['people1'])
+        #print("\nPeople2:", data['people2'])
+
+    inputGet = request.POST['inputText']
+    currency = data["chart"]["result"][0]["meta"]["currency"]
+    symbol = data["chart"]["result"][0]["meta"]["symbol"]
+    #timestamp = data["chart"]["result"][0]["timestamp"]
+    #high = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["high"]
+    #low = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["low"]
+    #open = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["open"]
+    #close = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["close"]
+    #volume = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["volume"]
+
+    #my_custom_sql("INSERT INTO `comp491`.`asset_history` (`keysforassets`, `currency`, `asset_name`) VALUES ('"+inputGet+"', '"+currency+"', '"+symbol+"')",connection)
+    output = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    print(output)
+    return render(request,'inputCheck.html',{'inputText':inputGet,'wordCount':output})
+
+def static(request):
+    return render(request,'static.html')
+
+def my_custom_sql(query,connection):
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        #cursor.execute("SELECT foo FROM bar WHERE baz = %s", [self.baz])
+
+        row = cursor.fetchall()
+
+    return row
 
 
-from django.contrib import messages #email confirmation - is not used
+def my_custom_news_sql(query, params=None):
+    with connection.cursor() as cursor:
+        cursor.execute(query, params)
+        result = cursor.fetchall()
+    return result
 
-from django.template.loader import render_to_string
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
-from django.shortcuts import redirect
-from .tokens import account_activation_token
+def list(request):
+    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    returnList = []
+    #print(list)
+
+    for asset in list:
+        #print(type(asset))
+        newAsset = Assets()
+        newAsset.AssetName = asset[2]
+        newAsset.value = asset[3]
+        returnList.append(newAsset)
 
 
+    return render(request,'list.html',{'list':returnList})
 
 @api_view(['POST'])
 #@api_view(['GET'])
