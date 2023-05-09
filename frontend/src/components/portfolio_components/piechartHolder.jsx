@@ -57,81 +57,85 @@ class PiechartHolder extends Component {
         params: { token: localStorage.getItem("userToken") },
       })
       .then((res) => {
-        // let piechartList2 = res.data.portfolios;
-        // localStorage.setItem("piecharts", JSON.stringify(piechartList2));
-        // let piechartList = JSON.parse(localStorage.getItem("piechart"));
-        // let finalList = [];
-        // for (var i = 0; i < piechartList.length; i++) {
-        //   finalList.push(
-        //     <Piechart
-        //       chartID={piechartList[i].id}
-        //       name={piechartList[i].name}
-        //       data={piechartList[i].data}
-        //       onClick={() => this.handlePiechartClick(piechartList[i].id)}
-        //     />
-        //   );
-        // }
+        let piechartList2 = res.data;
+        let length = res.data.length;
+        localStorage.setItem("piecharts", JSON.stringify(piechartList2));
+        let piechartList = JSON.parse(localStorage.getItem("piecharts"));
+        let finalList = [];
+        for (var i = 0; i < length; i++) {
+          console.log(piechartList[i].id);
+          let id = piechartList[i].id;
+          finalList.push(
+            <Piechart
+              chartID={piechartList[i].id}
+              name={piechartList[i].name}
+              data={piechartList[i].data}
+              onClick={() => this.handlePiechartClick(id)}
+            />
+          );
+        }
+        this.setState({ piecharts: finalList });
+
         // console.log(res.data);
       });
     let finalList = [];
-    const data = [
-      { name: "North", value: 100 },
-      { name: "South", value: 200 },
-      { name: "East", value: 300 },
-    ];
-    const data2 = [
-      { name: "North", value: 100 },
-      { name: "South", value: 200 },
-      { name: "East", value: 900 },
-    ];
-    const data3 = [
-      { name: "North", value: 100 },
-      { name: "South", value: 200 },
-    ];
+    // const data = [
+    //   { name: "North", value: 100 },
+    //   { name: "South", value: 200 },
+    //   { name: "East", value: 300 },
+    // ];
+    // const data2 = [
+    //   { name: "North", value: 100 },
+    //   { name: "South", value: 200 },
+    //   { name: "East", value: 900 },
+    // ];
+    // const data3 = [
+    //   { name: "North", value: 100 },
+    //   { name: "South", value: 200 },
+    // ];
 
-    finalList.push(
-      <Piechart
-        chartID={1}
-        // isSelected={1 === this.selectedChart}
-        name={"Deneme1"}
-        data={data}
-        onClick={() => this.handlePiechartClick(1, "Deneme1")}
-      />
-    );
-    finalList.push(
-      <Piechart
-        chartID={2}
-        // isSelected={2 === this.selectedChart}
-        name={"Deneme2"}
-        data={data2}
-        onClick={() => this.handlePiechartClick(2, "Deneme2")}
-      />
-    );
-    finalList.push(
-      <Piechart
-        chartID={3}
-        // isSelected={2 === this.selectedChart}
-        name={"Deneme3"}
-        data={data2}
-        onClick={() => this.handlePiechartClick(3, "Deneme3")}
-      />
-    );
-    finalList.push(
-      <Piechart
-        chartID={4}
-        // isSelected={2 === this.selectedChart}
-        name={"Deneme4"}
-        data={data3}
-        onClick={() => this.handlePiechartClick(4, "Deneme4")}
-      />
-    );
+    // finalList.push(
+    //   <Piechart
+    //     chartID={1}
+    //     // isSelected={1 === this.selectedChart}
+    //     name={"Deneme1"}
+    //     data={data}
+    //     onClick={() => this.handlePiechartClick(1, "Deneme1")}
+    //   />
+    // );
+    // finalList.push(
+    //   <Piechart
+    //     chartID={2}
+    //     // isSelected={2 === this.selectedChart}
+    //     name={"Deneme2"}
+    //     data={data2}
+    //     onClick={() => this.handlePiechartClick(2, "Deneme2")}
+    //   />
+    // );
+    // finalList.push(
+    //   <Piechart
+    //     chartID={3}
+    //     // isSelected={2 === this.selectedChart}
+    //     name={"Deneme3"}
+    //     data={data2}
+    //     onClick={() => this.handlePiechartClick(3, "Deneme3")}
+    //   />
+    // );
+    // finalList.push(
+    //   <Piechart
+    //     chartID={4}
+    //     // isSelected={2 === this.selectedChart}
+    //     name={"Deneme4"}
+    //     data={data3}
+    //     onClick={() => this.handlePiechartClick(4, "Deneme4")}
+    //   />
+    // );
 
     // for (var i = 0; i < finalList.length; i++) {
     //   if (finalList[i].isHighlited === true) {
     //     this.state.highlitedKey = finalList[i].key;
     //   }
     // }
-    this.setState({ piecharts: finalList });
   }
 }
 
