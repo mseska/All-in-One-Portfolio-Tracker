@@ -36,6 +36,9 @@ def get_assets_with_user_id(id):
     userAssetIds = my_custom_sql("SELECT distinct(asset_information.name), asset_information.current_value FROM comp491.user_asset_ownership,comp491.asset_information WHERE user_asset_ownership.asset_id = asset_information.asset_id and user_id = {};".format(id),connection)
     return(userAssetIds)
 
+def get_asset_value_with_asset_id(asset_id):
+    assetName = my_custom_sql("SELECT current_value FROM comp491.asset_information WHERE asset_information.asset_id ={};".format(asset_id),connection)
+    return(assetName[0][0])
 
 
 def get_daily_change(asset_name,current_value):

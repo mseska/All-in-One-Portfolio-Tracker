@@ -551,13 +551,17 @@ def get_portfolios(request):
         
         name = get_portfolio_name_with_portfolio_id(get_portfolios[index])
         
-        data = {}
+        data = []
         #print(asset_ids)
         for asset_id in asset_ids:
             amount = get_total_amount_of_an_asset(asset_id,get_portfolios[index])
             asset_name = get_asset_name_with_asset_id(asset_id)
+            current_value = get_asset_value_with_asset_id(asset_id)
             #print(name,amount,get_portfolios[index])
-            data[asset_name] = amount
+            currentAsset = []
+            currentAsset.append(asset_name)
+            currentAsset.append(amount*float(current_value))
+            data.append(currentAsset)
 
         returnDict[index]["name"] = name
         returnDict[index]["id"] = get_portfolios[index]
