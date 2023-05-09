@@ -6,6 +6,7 @@ class PiechartHolder extends Component {
   state = {
     piecharts: [],
     selectedChart: null,
+    selectedChartName: "",
     count: 0,
   };
 
@@ -63,14 +64,15 @@ class PiechartHolder extends Component {
         let piechartList = JSON.parse(localStorage.getItem("piecharts"));
         let finalList = [];
         for (var i = 0; i < length; i++) {
-          console.log(piechartList[i].id);
+          console.log(piechartList[i].name);
           let id = piechartList[i].id;
+          let chartName = piechartList[i].name;
           finalList.push(
             <Piechart
               chartID={piechartList[i].id}
               name={piechartList[i].name}
               data={piechartList[i].data}
-              onClick={() => this.handlePiechartClick(id)}
+              onClick={() => this.handlePiechartClick(id, chartName)}
             />
           );
         }
