@@ -28,14 +28,15 @@ def get_asset_information_with_ids(user_asset_ids):
     Assets = my_custom_sql("SELECT * FROM comp491.asset_information WHERE asset_information.asset_id IN (" + ",".join(str(id) for id in user_asset_ids) + ")",connection)
     return(Assets)
 
+def get_asset_name_with_asset_id(asset_id):
+    assetName = my_custom_sql("SELECT name FROM comp491.asset_information WHERE asset_information.asset_id ={};".format(asset_id),connection)
+    return(assetName[0][0])
+
 def get_assets_with_user_id(id):
     userAssetIds = my_custom_sql("SELECT distinct(asset_information.name), asset_information.current_value FROM comp491.user_asset_ownership,comp491.asset_information WHERE user_asset_ownership.asset_id = asset_information.asset_id and user_id = {};".format(id),connection)
     return(userAssetIds)
 
-def get_portfolios_with_user_id(id):
-    # portfolios = my_custom_sql("SELECT asset_information.name,asset_information.current_value,user_asset_ownership.portfolio_id,user_asset_ownership.asset_id,user_asset_ownership.amount FROM comp491.user_asset_ownership,comp491.asset_information WHERE user_asset_ownership.asset_id = asset_information.asset_id and user_asset_ownership.user_id={};".format(id),connection)
-    portfolios = my_custom_sql("SELECT asset_information.name, asset_information.current_value, user_asset_ownership.portfolio_id, user_asset_ownership.asset_id, user_asset_ownership.amount, portfolio.name FROM comp491.user_asset_ownership, comp491.asset_information,  comp491.portfolio WHERE user_asset_ownership.asset_id = asset_information.asset_id and user_asset_ownership.user_id={};".format(id),connection)
-    return(portfolios)
+
 
 def get_daily_change(asset_name,current_value):
     current_value = float(current_value)
@@ -45,3 +46,21 @@ def get_daily_change(asset_name,current_value):
     change = round(change,2)
     #print(current_value,last_value,change,"change",r,"r")
     return(change)
+
+def get_portfolio_ids_with_user_id(id):
+    portfolioIds = my_custom_sql("SELECT distinct(portfolio_id) FROM comp491.user_asset_ownership where user_id = {};".format(id),connection)
+    portfolioIds = [row[0] for row in portfolioIds]
+    return(portfolioIds)
+
+def get_portfolio_name_with_portfolio_id(portfolio_id):
+    portfolio_name = my_custom_sql("SELECT name FROM comp491.portfolio where id={};".format(portfolio_id),connection)
+    return(portfolio_name[0][0])
+
+def get_asset_ids_with_portfolio_id(portfolio_id):
+    assetIds = my_custom_sql("SELECT distinct(asset_id) FROM comp491.user_asset_ownership where portfolio_id = {};".format(portfolio_id),connection)
+    assetIds = [row[0] for row in assetIds]
+    return(assetIds)
+
+def get_total_amount_of_an_asset(asset_id,portfolio_id):
+    totalAmount = my_custom_sql("SELECT sum(amount) FROM comp491.user_asset_ownership where asset_id={} and portfolio_id = {};".format(asset_id,portfolio_id),connection)
+    return(totalAmount[0][0])

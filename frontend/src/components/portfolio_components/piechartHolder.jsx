@@ -57,7 +57,7 @@ class PiechartHolder extends Component {
         params: { token: localStorage.getItem("userToken") },
       })
       .then((res) => {
-        // let piechartList2 = res.data.portfplios;
+        // let piechartList2 = res.data.portfolios;
         // localStorage.setItem("piecharts", JSON.stringify(piechartList2));
         // let piechartList = JSON.parse(localStorage.getItem("piechart"));
         // let finalList = [];

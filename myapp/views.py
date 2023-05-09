@@ -537,39 +537,37 @@ def get_user_info(request):
 
 @api_view(['GET'])
 def get_portfolios(request):
+    
+    
     print("GET METHOD WORKS - in get portfolios")
     
     token  = request.GET.get("token")
     id = get_id_with_token(token)
-    get_portfolios = get_portfolios_with_user_id(id)
-    print(get_portfolios)
-    returnList = []
-    # print(list,"databaseden gelen veri")
+    get_portfolios = get_portfolio_ids_with_user_id(id)
+    returnDict = {}
+    for index in range(len(get_portfolios)):
+        asset_ids = get_asset_ids_with_portfolio_id(get_portfolios[index])
+        returnDict[index] = {}
+        
+        name = get_portfolio_name_with_portfolio_id(get_portfolios[index])
+        
+        data = {}
+        #print(asset_ids)
+        for asset_id in asset_ids:
+            amount = get_total_amount_of_an_asset(asset_id,get_portfolios[index])
+            asset_name = get_asset_name_with_asset_id(asset_id)
+            #print(name,amount,get_portfolios[index])
+            data[asset_name] = amount
+
+        returnDict[index]["name"] = name
+        returnDict[index]["id"] = get_portfolios[index]
+        returnDict[index]["data"] = data
     
-    #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
-    # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
-    # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
-    for stock in get_portfolios:
-    #for stock in list:
-        #print(type(asset))
-        newAsset = Stock2()
-        # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[0]
-        newAsset.price = stock[1]*stock[4]
-        newAsset.change = "deneme"
-        print(stock[1])
-        print(stock[2])
-        print(stock[3])
-        # print(newAsset.symbol,"newAsset.symbol")
-        # print(newAsset.price,"newAsset.price")
-        # print(newAsset.change,"newAsset.change")
-        # print(newAsset,"newAsset")
-        returnList.append(newAsset)
-    #print(returnList,"liste databaseden alındı")
-    
-    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
-    print(serialized_objects, "serialized")
-    return JsonResponse(serialized_objects, safe=False)
+    print(returnDict)
+        
+    #serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    #print(serialized_objects, "serialized")
+    return JsonResponse(returnDict, safe=False)
 
 
 
