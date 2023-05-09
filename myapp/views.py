@@ -545,6 +545,7 @@ def get_portfolios(request):
     id = get_id_with_token(token)
     get_portfolios = get_portfolio_ids_with_user_id(id)
     returnDict = {}
+    returnDict["length"] = len(get_portfolios)
     for index in range(len(get_portfolios)):
         asset_ids = get_asset_ids_with_portfolio_id(get_portfolios[index])
         returnDict[index] = {}
@@ -558,14 +559,14 @@ def get_portfolios(request):
             asset_name = get_asset_name_with_asset_id(asset_id)
             current_value = get_asset_value_with_asset_id(asset_id)
             #print(name,amount,get_portfolios[index])
-            currentAsset = []
-            currentAsset.append(asset_name)
-            currentAsset.append(amount*float(current_value))
+            currentAsset = {}
+            currentAsset["name"] = asset_name
+            currentAsset ["value"] = amount*float(current_value)
             data.append(currentAsset)
 
         returnDict[index]["name"] = name
         returnDict[index]["id"] = get_portfolios[index]
-        returnDict[index]["data"] = data
+        returnDict[index]["data"] = data    
     
     print(returnDict)
         
