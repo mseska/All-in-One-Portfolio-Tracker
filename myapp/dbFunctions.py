@@ -62,8 +62,17 @@ def get_portfolio_name_with_portfolio_id(portfolio_id):
 def get_asset_ids_with_portfolio_id(portfolio_id):
     assetIds = my_custom_sql("SELECT distinct(asset_id) FROM comp491.user_asset_ownership where portfolio_id = {};".format(portfolio_id),connection)
     assetIds = [row[0] for row in assetIds]
+    if 0 in assetIds:
+        assetIds.remove(0)
     return(assetIds)
 
 def get_total_amount_of_an_asset(asset_id,portfolio_id):
     totalAmount = my_custom_sql("SELECT sum(amount) FROM comp491.user_asset_ownership where asset_id={} and portfolio_id = {};".format(asset_id,portfolio_id),connection)
     return(totalAmount[0][0])
+
+def create_portfolio(portfolio_name,token):
+    id = get_id_with_token(token)
+    my_custom_sql("INSERT INTO `comp491`.`portfolio` (`name`) VALUES ('{}');".format(portfolio_name),connection)
+    portfolio_id = my_custom_sql("SELECT id FROM comp491.portfolio WHERE name ='{}';".format(portfolio_name),connection)
+    my_custom_sql("INSERT INTO `comp491`.`user_asset_ownership` (`user_asset_id`, `user_id`, `asset_id`, `purchase_date`, `amount`, `portfolio_id`) VALUES ('', '{}', '0', '2005-05-20 20:00:00', '0', '{}');".format(id,portfolio_name),connection)
+

@@ -396,7 +396,7 @@ def news_api(request):
     return JsonResponse(data, safe=False)
 
 
-@api_view(['POST'])           
+@api_view(['POST','OPTIONS'])           
 def login_generate_token(request):
     print("POST METHOD WORKS - in login generate token")
     email = request.data.get('eMail') 

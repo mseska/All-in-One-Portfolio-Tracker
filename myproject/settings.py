@@ -157,7 +157,8 @@ CORS_ALLOW_ORIGINS = [
 ]
 CORS_ALLOW_HEADERS = [
     'Authorization',  # Add the required headers
-    'portfolio',      # Add the custom header
+    'portfolio',    # Add the custom header
+    'Content-Type',
 ]
 
 
