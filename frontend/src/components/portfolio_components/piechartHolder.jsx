@@ -29,7 +29,7 @@ class PiechartHolder extends Component {
     localStorage.setItem("selectedChartName", chartName);
 
     axios
-      .get("http://localhost:8000/api/portfolio-data", {
+      .get("http://localhost:8000/api/portfolio-data/", {
         headers: {
           Authorization: `${token}`,
           portfolio: `${selectedPortfolio}`,
@@ -37,6 +37,8 @@ class PiechartHolder extends Component {
       })
       .then((response) => {
         localStorage.setItem("portfolioData", response.data);
+        console.log("hello");
+        console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
