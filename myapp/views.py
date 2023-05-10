@@ -597,6 +597,26 @@ def get_portfolio_data(request):
     return JsonResponse(returnDict, safe=False)
 
 
+@api_view(['POST'])           
+def create_portfolio(request):
+    print("POST METHOD WORKS - create token")
+    name = request.data.get('name') 
+    usertoken = request.data.get('token')
+    create_port(name,usertoken)
+    return JsonResponse({}, status=201)
+
+
+@api_view(['GET'])
+def all_symbols(request):
+    print("GET METHOD WORKS - in all symbols")
+    symbols = allSymbols()
+    print(symbols)
+    ret = {}
+    ret['data'] = symbols
+    return JsonResponse(ret, safe=False)
+
+
+
 
 
 

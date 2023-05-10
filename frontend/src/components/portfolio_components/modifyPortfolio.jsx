@@ -217,6 +217,7 @@ class ModifyPortfolio extends Component {
       .then((response) => {
         localStorage.setItem("allSymbols", response.data);
         this.setState({ searchResults: response.data });
+        console.log(response.data.data);
         // this.searchResults = response.data;
       })
       .catch((error) => {

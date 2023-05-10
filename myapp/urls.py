@@ -18,4 +18,6 @@ urlpatterns = [
     path('activate/<uidb64>/<token>', views.activate, name='activate'),
     path('api/get_portfolios/', views.get_portfolios, name='get_portfolios'),
     path('api/portfolio-data/', views.get_portfolio_data , name='get_portfolio_data'),
+    path('api/create-portfolio', views.create_portfolio , name='create_portfolio'),
+    path('api/all-symbols', views.all_symbols , name='all-symbols'),
 ]
