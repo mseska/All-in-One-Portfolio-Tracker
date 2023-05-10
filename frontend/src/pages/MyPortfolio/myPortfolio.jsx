@@ -137,7 +137,7 @@ export default function MyPortfolio() {
             <thead>
               <tr>
                 <th scope="col">Symbol</th>
-                <th scope="col">Price</th>
+                <th scope="col">Value</th>
               </tr>
             </thead>
             <tbody>
