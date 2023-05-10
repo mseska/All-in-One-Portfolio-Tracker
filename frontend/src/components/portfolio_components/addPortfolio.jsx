@@ -26,6 +26,7 @@ class AddPortfolio extends Component {
       .then(function (response) {
         if (response.status === 201) {
           alert("Portfolio Created");
+          window.location.reload(true);
         }
       })
       .catch(function (error) {
