@@ -5,7 +5,6 @@ import axios from "axios";
 class AddPortfolio extends Component {
   state = {
     name: "",
-    currency: "",
   };
 
   handleNameChange = (event) => {
@@ -17,11 +16,12 @@ class AddPortfolio extends Component {
   };
 
   handleSubmit = (event) => {
+    const token = localStorage.getItem("userToken");
     event.preventDefault();
     axios
       .post("http://localhost:8000/api/create-portfolio", {
+        usertoken: token,
         name: this.state.name,
-        currency: this.state.currency,
       })
       .then(function (response) {
         if (response.status === 201) {
@@ -49,14 +49,7 @@ class AddPortfolio extends Component {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="currency-input">Currency:</label>
-            <input
-              type="text"
-              id="currency-input"
-              value={this.state.currency}
-              onChange={this.handleCurrencyChange}
-              required
-            />
+            
           </div>
           <button type="submit" className="submit-button">
             Add Portfolio
