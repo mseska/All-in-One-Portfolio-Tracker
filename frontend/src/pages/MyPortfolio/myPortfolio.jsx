@@ -56,14 +56,15 @@ export default function MyPortfolio() {
     const token = localStorage.getItem("userToken");
     const selectedPortfolio = localStorage.getItem("selectedPortfolio");
     axios
-      .get("http://localhost:8000/api/portfolio-data", {
+      .get("http://localhost:8000/api/portfolio-data/", {
         headers: {
           Authorization: `${token}`,
           portfolio: `${selectedPortfolio}`,
         },
       })
       .then((response) => {
-        setportfolioData(response.data);
+        setportfolioData(response.data.data);
+        console.log(response.data.data)
         localStorage.setItem("portfolioData", response.data);
       })
       .catch((error) => {

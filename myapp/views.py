@@ -568,11 +568,35 @@ def get_portfolios(request):
         returnDict[index]["id"] = get_portfolios[index]
         returnDict[index]["data"] = data    
     
-    print(returnDict)
+    #print(returnDict)
         
     #serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     #print(serialized_objects, "serialized")
     return JsonResponse(returnDict, safe=False)
+
+@api_view(['GET'])
+def get_portfolio_data(request):
+    print("GET METHOD WORKS - in get portfolio data")
+    token = request.headers.get('Authorization')
+    selected_portfolio = request.headers.get('portfolio')
+
+    asset_ids = get_asset_ids_with_portfolio_id(selected_portfolio)
+    data = []
+    for asset_id in asset_ids:
+        amount = get_total_amount_of_an_asset(asset_id,selected_portfolio)
+        asset_name = get_asset_name_with_asset_id(asset_id)
+        current_value = get_asset_value_with_asset_id(asset_id)
+        currentAsset = {}
+        currentAsset["name"] = asset_name
+        currentAsset ["value"] = round(amount*float(current_value),2)
+        data.append(currentAsset)
+    
+    print(data, "DAAAATAAAAA")
+    returnDict = {}
+    returnDict["data"] = data
+    return JsonResponse(returnDict, safe=False)
+
+
 
 
 
