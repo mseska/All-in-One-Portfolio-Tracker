@@ -12,14 +12,13 @@ import styled from "styled-components";
 export default function MyPortfolio() {
   const [selectedPortfolio, setselectedPortfolio] = useState([]);
   const [portfolioData, setportfolioData] = useState([]);
+  // let portfolioData = [];
+
   const [showAddPortfolio, setshowAddPortfolio] = useState(false);
   const [showModifyPortfolio, setshowModifyPortfolio] = useState(false);
 
   function handleClick() {
-    
     setselectedPortfolio(localStorage.getItem("selectedPortfolio"));
-
-    
   }
 
   function handleClickAddPortfolio() {
@@ -40,19 +39,7 @@ export default function MyPortfolio() {
     setshowModifyPortfolio(false);
   }
 
-  function getClassNameForPrice(change) {
-    if (change > 0) {
-      return "green";
-    } else if (change < 0) {
-      return "red";
-    } else {
-      return "";
-    }
-  }
-
-  useEffect(() => {
-    setselectedPortfolio(1);
-    // localStorage.setItem("selectedPortfolio", 1);
+  function getPortfolioData() {
     const token = localStorage.getItem("userToken");
     const selectedPortfolio = localStorage.getItem("selectedPortfolio");
     axios
@@ -64,19 +51,45 @@ export default function MyPortfolio() {
       })
       .then((response) => {
         setportfolioData(response.data.data);
-        console.log(response.data.data)
-        localStorage.setItem("portfolioData", response.data);
+        // console.log(response.data)
+        localStorage.setItem("portfolioData", response.data.data);
+        // console.log();
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  useEffect(() => {
+    setselectedPortfolio(1);
+    // localStorage.setItem("selectedPortfolio", 1);
+    const token = localStorage.getItem("userToken");
+    const selectedPortfolio = localStorage.getItem("selectedPortfolio");
+    // portfolioData = localStorage.getItem("portfolioData");
+    // axios
+    //   .get("http://localhost:8000/api/portfolio-data/", {
+    //     headers: {
+    //       Authorization: `${token}`,
+    //       portfolio: `${selectedPortfolio}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setportfolioData(response.data.data);
+    //     // console.log(response.data)
+    //     localStorage.setItem("portfolioData", response.data.data);
+    //     // console.log();
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // setportfolioData(localStorage.getItem("portfolioData"));
   }, []);
 
   return (
     <div>
       <NavBar></NavBar>
       <div className="MainPortfolioDiv" onClick={handleClick}>
-        <div className="First">
+        <div className="First" onClick={getPortfolioData}>
           <div className="AddModifyButtonDiv">
             {showAddPortfolio && <AddPortfolio></AddPortfolio>}
             {showModifyPortfolio && <ModifyPortfolio></ModifyPortfolio>}
@@ -125,19 +138,14 @@ export default function MyPortfolio() {
               <tr>
                 <th scope="col">Symbol</th>
                 <th scope="col">Price</th>
-                <th scope="col">Change</th>
               </tr>
             </thead>
             <tbody>
-              {selectedPortfolio}
+              {/* {selectedPortfolio} */}
               {portfolioData.map((stock, index) => (
-                <tr key={index}>
-                  <td>{stock.symbol}</td>
-                  <td>{stock.price}</td>
-                  <td className={getClassNameForPrice(stock.change)}>
-                    {" "}
-                    %{stock.change}
-                  </td>
+                <tr>
+                  <td>{stock.name}</td>
+                  <td>{stock.value}</td>
                 </tr>
               ))}
             </tbody>
