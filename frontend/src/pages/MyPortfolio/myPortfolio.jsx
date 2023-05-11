@@ -143,7 +143,7 @@ export default function MyPortfolio() {
             <tbody>
               {/* {selectedPortfolio} */}
               {portfolioData.map((stock, index) => (
-                <tr>
+                <tr key={index}>
                   <td>{stock.name}</td>
                   <td>{stock.value}</td>
                 </tr>

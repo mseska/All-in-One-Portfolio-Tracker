@@ -84,6 +84,8 @@ class ModifyPortfolio extends Component {
     event.preventDefault();
     const token = localStorage.getItem("userToken");
     const portfolioId = localStorage.getItem("selectedPortfolio");
+    const symb = this.state.selectedSymbol;
+    localStorage.setItem("selectedSymbol", symb);
     axios
       .post("http://localhost:8000/api/add-to-portfolio", {
         Token: token,
@@ -93,7 +95,8 @@ class ModifyPortfolio extends Component {
       })
       .then(function (response) {
         if (response.status === 201) {
-          alert(localStorage.getItem("selectedSymbol") + "added to portfolio");
+          alert(symb + " added to portfolio");
+          window.location.reload(true);
         }
       })
       .catch(function (error) {
@@ -212,11 +215,13 @@ class ModifyPortfolio extends Component {
   componentWillMount() {
     const selectedPortfolio = localStorage.getItem("selectedPortfolio");
     const token = localStorage.getItem("userToken");
+    console.log("hello");
+    console.log(selectedPortfolio);
     axios
       .get("http://localhost:8000/api/all-symbols", {})
       .then((response) => {
-        localStorage.setItem("allSymbols", response.data);
-        this.setState({ searchResults: response.data });
+        localStorage.setItem("allSymbols", response.data.data);
+        this.setState({ searchResults: response.data.data });
         console.log(response.data.data);
         // this.searchResults = response.data;
       })
