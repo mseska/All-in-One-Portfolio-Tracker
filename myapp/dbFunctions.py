@@ -83,3 +83,42 @@ def allSymbols():
     symbols = my_custom_sql("SELECT name FROM comp491.asset_information where asset_id>0;",connection)
     symbols = [row[0] for row in symbols]
     return(symbols)
+
+def symbols_in_portfolio(token, portfolio_id):
+    symbols = my_custom_sql("SELECT DISTINCT comp491.asset_information.name FROM comp491.asset_information INNER JOIN comp491.user_asset_ownership ON asset_information.asset_id = user_asset_ownership.asset_id WHERE user_asset_ownership.portfolio_id = {};".format(portfolio_id),connection)
+    symbols = [row[0] for row in symbols]
+    return(symbols)
+
+def add_asset(token, portfolio_id, symbol, amount):
+    #find asset_id of the given symbol:
+    print("this is the symbol to be added", symbol)
+    asset_id= my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
+    print(asset_id)
+    asset_id_value = asset_id[0][0]
+    print("--------------->this is the asset_id: ", asset_id_value)
+    #find user_id corresponds to the given token:
+    user_id = my_custom_sql("SELECT user_id FROM comp491.authtoken_token WHERE comp491.authtoken_token.key='{}';".format(token),connection)
+    user_id_value = user_id[0][0]
+    print(user_id_value, "here is the user id")
+
+    user_asset_id = my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
+    print(user_asset_id) #((29,),)
+    user_asset_id_value = user_asset_id[0][0]
+    user_asset_id_value += 1
+
+    print("AMOUNT: ", amount)
+    print("this is the value", user_asset_id_value)
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id_value,user_id_value, asset_id_value, amount, portfolio_id),connection)
+    
+
+# #token,portfolio_id,amount,symbol 
+# def increase_amount(token, portfolio_id, amount, symbol):
+#     #take current amount:
+
+#     #add the amount to current amount:
+
+#    
+#     #UPDATE comp491.user_asset_ownership SET amount = 5 WHERE user_id = 13 AND asset_id=34;
+
+# def decrease_amount(token, portfolio_id, amount, symbol):
+
