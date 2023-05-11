@@ -643,7 +643,7 @@ def get_symbols_of_portfolio(request):
     ret['name'] = symbols   
 
     print("here is all the symbols in the selected portfolio: ", ret)
-    return JsonResponse(ret, safe=False)
+    return JsonResponse(ret, status=201)
 
 @api_view(['POST'])   
 def add_to_portfolio(request):
