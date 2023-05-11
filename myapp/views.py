@@ -630,7 +630,13 @@ def get_symbols_of_portfolio(request):
     print("------------------------------------------------------")
 
     ret = {}
-    ret['name'] = symbols[1:]   
+    print(symbols[0], "this is the first")
+    if symbols[0] == 'database':
+        ret['name'] = symbols[1:]   
+        print("inside if------------------")
+    else:
+        ret['name'] = symbols 
+        print("inside else----------------")
 
     print("here is all the symbols in the selected portfolio: ", ret)
     return JsonResponse(ret, status=201)
