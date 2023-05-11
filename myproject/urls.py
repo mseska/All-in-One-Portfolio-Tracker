@@ -40,8 +40,8 @@ urlpatterns = [
     path('api/all-symbols', all_symbols , name='all_symbols'),
     path('api/symbols-of-portfolio', get_symbols_of_portfolio, name='get_symbols_of_portfolio'),
     path('api/add-to-portfolio', add_to_portfolio, name='add_to_portfolio'),
-    # path('api/increase-in-portfolio', increase_in_portfolio, name='increase_in_portfolio'),
-    # path('api/decrease-in-portfolio', decrease_in_portfolio, name='decrease_in_portfolio'),
+    path('api/increase-in-portfolio', increase_in_portfolio, name='increase_in_portfolio'),
+    path('api/decrease-in-portfolio', decrease_in_portfolio, name='decrease_in_portfolio'),
 
 
 ]
