@@ -22,7 +22,7 @@ urlpatterns = [
     path('api/all-symbols', views.all_symbols , name='all-symbols'),
     path('api/symbols-of-portfolio', views.get_symbols_of_portfolio, name='get_symbols_of_portfolio'),
     path('api/add-to-portfolio', views.add_to_portfolio, name='add_to_portfolio'),
-    # path('api/increase-in-portfolio', views.increase_in_portfolio, name='increase_in_portfolio'),
-    # path('api/decrease-in-portfolio', views.decrease_in_portfolio, name='decrease_in_portfolio'),
+    path('api/increase-in-portfolio', views.increase_in_portfolio, name='increase_in_portfolio'),
+    path('api/decrease-in-portfolio', views.decrease_in_portfolio, name='decrease_in_portfolio'),
     
 ]

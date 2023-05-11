@@ -613,6 +613,7 @@ def all_symbols(request):
     print(symbols)
     ret = {}
     ret['data'] = symbols
+    print("insdie all symbols:\n",ret)
     return JsonResponse(ret, status=201)
 
 
@@ -620,13 +621,15 @@ def all_symbols(request):
 def get_symbols_of_portfolio(request):
     print("inside get_symbols_of_portfolio")
     token = request.data.get('Authorization') 
-    portfolio_id = request.data.get('Portfolio')
+    #portfolio_id = request.data.get('Portfolio')
+    portfolio_id = request.headers.get('Portfolio')
     # portfolio_id= request.headers.get('portfolio')
 
-    print(" portfolio_id", portfolio_id)
+    print("-------------->portfolio_id", portfolio_id)
+    #print("-------------->selected: ", selected_portfolio)
 
     ################# porfolio_id is set manually #######################
-    portfolio_id = 1 
+    #portfolio_id = 1 
     ################# porfolio_id is set manually #######################
 
     symbols = symbols_in_portfolio(token, portfolio_id)
@@ -636,12 +639,11 @@ def get_symbols_of_portfolio(request):
     print("------------------------------------------------------")
 
     
-    ret = []
-    for symbol in symbols:
-        ret.append({'name': symbol})
+    ret = {}
+    ret['name'] = symbols   
 
     print("here is all the symbols in the selected portfolio: ", ret)
-    return JsonResponse(ret, status=201)
+    return JsonResponse(ret, safe=False)
 
 @api_view(['POST'])   
 def add_to_portfolio(request):
@@ -659,31 +661,41 @@ def add_to_portfolio(request):
 
     return JsonResponse({}, status=201) 
 
-# @api_view(['POST'])  
-# def increase_in_portfolio(request):
-#     token = request.data.get('Token') 
-#     portfolio_id = request.data.get('PortfolioId')
-#     symbol = request.data.get('Symbol')
-#     amount = request.data.get('amount')
+@api_view(['POST'])  
+def increase_in_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('Symbol')
+    amount = request.data.get('amount')
+
+    print("----------------increase_in_portfolio-------------------")
+    print("token: ", token)
+    print("portfolio_id: ", portfolio_id)
+    print("amount: ", amount)
+    print("----------------increase_in_portfolio-------------------")
+
+    result = increase_amount(token, portfolio_id, amount, symbol)
+
+    return JsonResponse({}, status=201) 
 
 
-#     result = increase_amount(token, portfolio_id, amount, symbol)
 
-#     return JsonResponse({}, status=201) 
+@api_view(['POST'])  
+def decrease_in_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('Symbol')
+    amount = request.data.get('amount')
 
+    print("----------------decrease-in-portfolio-------------------")
+    print("token: ", token)
+    print("portfolio_id: ", portfolio_id)
+    print("amount: ", amount)
+    print("----------------decrease-in-portfolio-------------------")
 
+    result = increase_amount(token, portfolio_id, amount, symbol)
 
-# @api_view(['POST'])  
-# def decrease_in_portfolio(request):
-#     token = request.data.get('Token') 
-#     portfolio_id = request.data.get('PortfolioId')
-#     symbol = request.data.get('Symbol')
-#     amount = request.data.get('amount')
-
-
-#     result = decrease_amount(token, portfolio_id, amount, symbol)
-
-#     return JsonResponse({}, status=201) 
+    return JsonResponse({}, status=201) 
 
 
 

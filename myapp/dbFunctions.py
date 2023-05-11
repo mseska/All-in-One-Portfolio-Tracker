@@ -84,6 +84,11 @@ def allSymbols():
     symbols = [row[0] for row in symbols]
     return(symbols)
 
+def get_asset_id(symbol):
+    asset_id = my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
+    asset_id_value = asset_id[0][0]
+    return(asset_id_value)
+
 def symbols_in_portfolio(token, portfolio_id):
     symbols = my_custom_sql("SELECT DISTINCT comp491.asset_information.name FROM comp491.asset_information INNER JOIN comp491.user_asset_ownership ON asset_information.asset_id = user_asset_ownership.asset_id WHERE user_asset_ownership.portfolio_id = {};".format(portfolio_id),connection)
     symbols = [row[0] for row in symbols]
@@ -92,14 +97,17 @@ def symbols_in_portfolio(token, portfolio_id):
 def add_asset(token, portfolio_id, symbol, amount):
     #find asset_id of the given symbol:
     print("this is the symbol to be added", symbol)
-    asset_id= my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
+    asset_id = get_asset_id(symbol)
+    # my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
     print(asset_id)
-    asset_id_value = asset_id[0][0]
-    print("--------------->this is the asset_id: ", asset_id_value)
+    #asset_id_value = asset_id[0][0]
+    #print("--------------->this is the asset_id: ", asset_id_value)
+
     #find user_id corresponds to the given token:
-    user_id = my_custom_sql("SELECT user_id FROM comp491.authtoken_token WHERE comp491.authtoken_token.key='{}';".format(token),connection)
-    user_id_value = user_id[0][0]
-    print(user_id_value, "here is the user id")
+    user_id = get_id_with_token(token)
+
+    # user_id_value = user_id[0][0]
+    print(user_id, "----------------here is the user id")
 
     user_asset_id = my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
     print(user_asset_id) #((29,),)
@@ -111,14 +119,28 @@ def add_asset(token, portfolio_id, symbol, amount):
     result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id_value,user_id_value, asset_id_value, amount, portfolio_id),connection)
     
 
-# #token,portfolio_id,amount,symbol 
-# def increase_amount(token, portfolio_id, amount, symbol):
-#     #take current amount:
+def increase_amount(token, portfolio_id, amount, symbol):
+    #symbol='TSLA'
+    asset_id= get_asset_id(symbol)
+    #my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
+    print("------------------------------>here is thr asset_id: ",asset_id)
+    # asset_id_value = asset_id[0][0]
+    # print("asset id value inside dbFunctions: ", asset_id_value)
+    user_id = get_id_with_token(token)
 
-#     #add the amount to current amount:
+    #take current amount:
+    # current_amount = my_custom_sql("SELECT amount FROM comp491.user_asset_ownership WHERE asset_id = {} AND user_id = {};".format(asset_id, user_id),connection)
+    # current_amount_value = current_amount[0][0]
 
-#    
-#     #UPDATE comp491.user_asset_ownership SET amount = 5 WHERE user_id = 13 AND asset_id=34;
+    update = my_custom_sql("UPDATE comp491.user_asset_ownership SET amount = {} WHERE user_id = {} AND asset_id={};".format(amount, user_id, asset_id),connection)
 
-# def decrease_amount(token, portfolio_id, amount, symbol):
+def decrease_amount(token, portfolio_id, amount, symbol):
+    #symbol='TSLA'
+    asset_id= get_asset_id(symbol)
+    #my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
+    print("------------------------------>here is thr asset_id: ",asset_id)
+    # asset_id_value = asset_id[0][0]
+    # print("asset id value inside dbFunctions: ", asset_id_value)
+    user_id = get_id_with_token(token)
 
+    update = my_custom_sql("UPDATE comp491.user_asset_ownership SET amount = {} WHERE user_id = {} AND asset_id={};".format(amount, user_id, asset_id),connection)
