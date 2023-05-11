@@ -116,7 +116,7 @@ def add_asset(token, portfolio_id, symbol, amount):
 
     print("AMOUNT: ", amount)
     print("this is the value", user_asset_id_value)
-    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id_value,user_id_value, asset_id_value, amount, portfolio_id),connection)
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id_value,user_id, asset_id, amount, portfolio_id),connection)
     
 
 def modify_amount(token, portfolio_id, amount, symbol):
