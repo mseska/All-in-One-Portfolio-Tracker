@@ -108,17 +108,12 @@ class ModifyPortfolio extends Component {
   };
 
   render() {
-    const possibleItems = [
-      { name: "TSLA" },
-      { name: "MSLA" },
-      { name: "TSLB" },
-      { name: "TSGA" },
-    ];
+    let possibleItems = this.state.searchResults;
 
     let filteredItems = possibleItems;
     if (this.state.searchTerm) {
       filteredItems = possibleItems.filter((item) =>
-        item.name.toLowerCase().startsWith(this.state.searchTerm.toLowerCase())
+        item.toLowerCase().startsWith(this.state.searchTerm.toLowerCase())
       );
     }
     return (
@@ -145,18 +140,19 @@ class ModifyPortfolio extends Component {
                     style={{
                       border: "1px",
                       marginRight: "1px",
+                      marginBottom: "1px",
                       borderRadius: "10px",
                       color: "white",
                       backgroundColor: "#7498da",
                     }}
                     onClick={(event) => {
                       event.preventDefault();
-                      this.setState({ selectedSymbol: item.name });
+                      this.setState({ selectedSymbol: item });
                       // localStorage.setItem("selectedSymbol",item.name);
-                      this.setState({ searchTerm: item.name });
+                      this.setState({ searchTerm: item });
                     }}
                   >
-                    {item.name}
+                    {item}
                   </button>
                 ))}
             </form>
@@ -183,8 +179,8 @@ class ModifyPortfolio extends Component {
               onChange={this.handleSymbol2Change}
             >
               {this.state.portfolioSymbols.map((item) => (
-                <option key={item.name} value={item.name}>
-                  {item.name}
+                <option key={item} value={item}>
+                  {item}
                 </option>
               ))}
             </select>
