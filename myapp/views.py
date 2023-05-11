@@ -613,8 +613,77 @@ def all_symbols(request):
     print(symbols)
     ret = {}
     ret['data'] = symbols
-    return JsonResponse(ret, safe=False)
+    return JsonResponse(ret, status=201)
 
+
+@api_view(['GET'])
+def get_symbols_of_portfolio(request):
+    print("inside get_symbols_of_portfolio")
+    token = request.data.get('Authorization') 
+    portfolio_id = request.data.get('Portfolio')
+    # portfolio_id= request.headers.get('portfolio')
+
+    print(" portfolio_id", portfolio_id)
+
+    ################# porfolio_id is set manually #######################
+    portfolio_id = 1 
+    ################# porfolio_id is set manually #######################
+
+    symbols = symbols_in_portfolio(token, portfolio_id)
+
+    print("------------------------------------------------------")
+    print(symbols)
+    print("------------------------------------------------------")
+
+    
+    ret = []
+    for symbol in symbols:
+        ret.append({'name': symbol})
+
+    print("here is all the symbols in the selected portfolio: ", ret)
+    return JsonResponse(ret, status=201)
+
+@api_view(['POST'])   
+def add_to_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('symbol')
+    amount = request.data.get('amount')
+
+    print("----------------inside add_to_portfolio-------------------")
+    print("token: "+ token+ "\nportfolio_id"+ portfolio_id)
+    print("symbol: "+ symbol+ "\namount: "+ amount)
+    print("----------------inside add_to_portfolio-------------------")
+
+    result = add_asset(token, portfolio_id, symbol, amount)
+
+    return JsonResponse({}, status=201) 
+
+# @api_view(['POST'])  
+# def increase_in_portfolio(request):
+#     token = request.data.get('Token') 
+#     portfolio_id = request.data.get('PortfolioId')
+#     symbol = request.data.get('Symbol')
+#     amount = request.data.get('amount')
+
+
+#     result = increase_amount(token, portfolio_id, amount, symbol)
+
+#     return JsonResponse({}, status=201) 
+
+
+
+# @api_view(['POST'])  
+# def decrease_in_portfolio(request):
+#     token = request.data.get('Token') 
+#     portfolio_id = request.data.get('PortfolioId')
+#     symbol = request.data.get('Symbol')
+#     amount = request.data.get('amount')
+
+
+#     result = decrease_amount(token, portfolio_id, amount, symbol)
+
+#     return JsonResponse({}, status=201) 
 
 
 
