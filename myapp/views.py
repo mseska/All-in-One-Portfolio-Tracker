@@ -109,9 +109,10 @@ def get_myasset_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[0]
-        newAsset.price = stock[1]
-        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
+        if stock[0] != 'database':
+            newAsset.symbol = stock[0]
+            newAsset.price = stock[1]
+            newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         #print(stock[1])
         #print(stock[2])
         #print(stock[3])
@@ -119,7 +120,7 @@ def get_myasset_list(request):
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
-        returnList.append(newAsset)
+            returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
     
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
@@ -646,12 +647,20 @@ def add_to_portfolio(request):
     symbol = request.data.get('symbol')
     amount = request.data.get('amount')
 
+    amount_float = float(amount)
+    print("-------------------------------------")
+    print(amount_float)
+
     # print("----------------inside add_to_portfolio-------------------")
     # print("token: "+ token+ "\nportfolio_id"+ portfolio_id)
     # print("symbol: "+ symbol+ "\namount: "+ amount)
     # print("----------------inside add_to_portfolio-------------------")
 
-    result = add_asset(token, portfolio_id, symbol, amount)
+    current_datetime = datetime.datetime.now()
+    current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(current_datetime_formatted)
+
+    result = add_asset(token, portfolio_id, symbol, amount_float, current_datetime_formatted)
 
     return JsonResponse({}, status=201) 
 
@@ -661,6 +670,10 @@ def increase_in_portfolio(request):
     portfolio_id = request.data.get('PortfolioId')
     symbol = request.data.get('Symbol')
     amount = request.data.get('amount')
+
+    amount_float = float(amount)
+    print("-------------------------------------")
+    print(amount_float)
 
     # print("----------------increase_in_portfolio-------------------")
     # print("token: ", token)
@@ -674,7 +687,7 @@ def increase_in_portfolio(request):
     print(current_datetime_formatted)
 
     operation = 'increase'
-    result = modify_amount(token, portfolio_id, amount, symbol, operation, current_datetime_formatted)
+    result = modify_amount(token, portfolio_id, amount_float, symbol, operation, current_datetime_formatted)
 
     return JsonResponse({}, status=201) 
 
@@ -684,6 +697,10 @@ def decrease_in_portfolio(request):
     portfolio_id = request.data.get('PortfolioId')
     symbol = request.data.get('Symbol')
     amount = request.data.get('amount')
+
+    amount_float = float(amount)
+    print("-------------------------------------")
+    print(amount_float)
 
     # print("----------------decrease-in-portfolio-------------------")
     # print("token: ", token)
@@ -697,11 +714,9 @@ def decrease_in_portfolio(request):
     print(current_datetime_formatted)
 
     operation = 'decrease'
-    result = modify_amount(token, portfolio_id, amount, symbol, operation, current_datetime_formatted)
+    result = modify_amount(token, portfolio_id, amount_float, symbol, operation, current_datetime_formatted)
 
     return JsonResponse({}, status=201) 
-
-#myportfolio'da $ cinsinden olduğunu bi yere belirtmeli miyiz + portfolionun total degeri?
 
 
 

@@ -100,7 +100,7 @@ def symbols_in_portfolio(token, portfolio_id):
     symbols = [row[0] for row in symbols]
     return(symbols)
 
-def add_asset(token, portfolio_id, symbol, amount):
+def add_asset(token, portfolio_id, symbol, amount, current_date):
     #find asset_id of the given symbol:
     print("this is the symbol to be added", symbol)
     asset_id = get_asset_id(symbol)
@@ -114,19 +114,17 @@ def add_asset(token, portfolio_id, symbol, amount):
 
     print("AMOUNT: ", amount)
     print("this is the value", user_asset_id)
-    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, amount, portfolio_id),connection)
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'{}',{}, {});".format(user_asset_id, user_id, asset_id, current_date, amount, portfolio_id),connection)
 
 def modify_amount(token, portfolio_id, amount, symbol, operation, current_date):
     asset_id= get_asset_id(symbol)
     user_id = get_id_with_token(token)
-    user_asset_id = get_user_asset_id()
+    user_asset_id = get_user_asset_id() 
 
-    amount_float = float(amount)
-    print(amount_float)
     if operation == 'decrease':
-        updated_amount = amount_float * -1
+        updated_amount = amount * -1
     else: 
-        updated_amount = amount_float
+        updated_amount = amount
 
     print("helloooo this amount should be negative", updated_amount)
 
