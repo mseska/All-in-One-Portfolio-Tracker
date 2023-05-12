@@ -40,7 +40,18 @@ def get_portfolios_with_user_id(id):
 def get_daily_change(asset_name,current_value):
     current_value = float(current_value)
     r=random.uniform(0,2)
-    last_value = current_value/r  #Fuat aga sadece bunun değişmesi lazım, gerçek dünkü kapanış lazım bize 
+    #last_value = current_value/r  #Fuat aga sadece bunun değişmesi lazım, gerçek dünkü kapanış lazım bize
+
+
+    query = "SELECT value FROM `comp491`.`asset_history` WHERE asset_name=%s AND DATE(date) = DATE(DATE_SUB(NOW(), INTERVAL %s DAY))  "
+
+    result = my_custom_news_sql(query, (asset_name,1))
+    if len(result) == 0:
+        last_value=16
+    else:
+        last_value = result[0][0]
+
+
     change = 100*(current_value/last_value -1)
     change = round(change,2)
     #print(current_value,last_value,change,"change",r,"r")
