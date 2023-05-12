@@ -89,6 +89,13 @@ def get_asset_id(symbol):
     asset_id_value = asset_id[0][0]
     return(asset_id_value)
 
+def get_user_asset_id():
+    user_asset_id = my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
+    # print(user_asset_id) #((29,),)
+    user_asset_id_value = user_asset_id[0][0]
+    user_asset_id_value += 1
+    return(user_asset_id_value)
+
 def symbols_in_portfolio(token, portfolio_id):
     symbols = my_custom_sql("SELECT DISTINCT comp491.asset_information.name FROM comp491.asset_information INNER JOIN comp491.user_asset_ownership ON asset_information.asset_id = user_asset_ownership.asset_id WHERE user_asset_ownership.portfolio_id = {};".format(portfolio_id),connection)
     symbols = [row[0] for row in symbols]
@@ -99,7 +106,7 @@ def add_asset(token, portfolio_id, symbol, amount):
     print("this is the symbol to be added", symbol)
     asset_id = get_asset_id(symbol)
     # my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
-    print(asset_id)
+    print("hellooooooooooooooooo", asset_id)
     #asset_id_value = asset_id[0][0]
     #print("--------------->this is the asset_id: ", asset_id_value)
 
@@ -109,35 +116,35 @@ def add_asset(token, portfolio_id, symbol, amount):
     # user_id_value = user_id[0][0]
     print(user_id, "----------------here is the user id")
 
-    user_asset_id = my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
-    print(user_asset_id) #((29,),)
-    user_asset_id_value = user_asset_id[0][0]
-    user_asset_id_value += 1
+    user_asset_id = get_user_asset_id()
+    # my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
+    # print(user_asset_id) #((29,),)
+    # user_asset_id_value = user_asset_id[0][0]
+    # user_asset_id_value += 1
 
     print("AMOUNT: ", amount)
-    print("this is the value", user_asset_id_value)
-    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id_value,user_id, asset_id, amount, portfolio_id),connection)
+    print("this is the value", user_asset_id)
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, amount, portfolio_id),connection)
     
 
-def modify_amount(token, portfolio_id, amount, symbol):
-
+def increase_amount(token, portfolio_id, amount, symbol):
     asset_id= get_asset_id(symbol)
     user_id = get_id_with_token(token)
+    user_asset_id = get_user_asset_id()
 
-    #take current amount?
-    # current_amount = my_custom_sql("SELECT amount FROM comp491.user_asset_ownership WHERE asset_id = {} AND user_id = {};".format(asset_id, user_id),connection)
-    # current_amount_value = current_amount[0][0]
+    #TODO: date degismeli
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2023-05-11 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, amount, portfolio_id),connection)
 
-    #TODO: date değiştirilmeli
-    update = my_custom_sql("UPDATE comp491.user_asset_ownership SET amount = {} WHERE user_id = {} AND asset_id={};".format(amount, user_id, asset_id),connection)
+#TODO:bunu increase ile birlestir -> bi parametre: +/- 
+def decrease_amount(token, portfolio_id, amount, symbol):
+    asset_id= get_asset_id(symbol)
+    user_id = get_id_with_token(token)
+    user_asset_id = get_user_asset_id()
 
-# def decrease_amount(token, portfolio_id, amount, symbol):
-#     #symbol='TSLA'
-#     asset_id= get_asset_id(symbol)
-#     #my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
-#     print("------------------------------>here is thr asset_id: ",asset_id)
-#     # asset_id_value = asset_id[0][0]
-#     # print("asset id value inside dbFunctions: ", asset_id_value)
-#     user_id = get_id_with_token(token)
+    amount_float = float(amount)
+    print(amount_float)
+    negative_amount = amount_float * -1
 
-#     update = my_custom_sql("UPDATE comp491.user_asset_ownership SET amount = {} WHERE user_id = {} AND asset_id={};".format(amount, user_id, asset_id),connection)
+    print("helloooo this amount should be negative", negative_amount)
+
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2023-05-11 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, negative_amount, portfolio_id),connection)
