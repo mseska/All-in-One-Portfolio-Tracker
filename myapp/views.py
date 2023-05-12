@@ -84,7 +84,7 @@ def get_myasset_list(request):
     print(token,"hop alo token")
     id = get_id_with_token(token)
     print(id,"hop alo id")
-    user_asset_ids =  get_user_asset_ids_with_user_id(id)
+    
     Assets = get_assets_with_user_id(id)   
     print(Assets)
     

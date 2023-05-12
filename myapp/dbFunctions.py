@@ -33,7 +33,7 @@ def get_asset_name_with_asset_id(asset_id):
     return(assetName[0][0])
 
 def get_assets_with_user_id(id):
-    userAssetIds = my_custom_sql("SELECT distinct(asset_information.name), asset_information.current_value FROM comp491.user_asset_ownership,comp491.asset_information WHERE user_asset_ownership.asset_id = asset_information.asset_id and user_id = {};".format(id),connection)
+    userAssetIds = my_custom_sql("SELECT distinct(asset_information.name), asset_information.current_value FROM comp491.user_asset_ownership,comp491.asset_information WHERE user_asset_ownership.asset_id = asset_information.asset_id and asset_information.asset_id>0 and user_id = {};".format(id),connection)
     return(userAssetIds)
 
 def get_asset_value_with_asset_id(asset_id):
@@ -43,9 +43,12 @@ def get_asset_value_with_asset_id(asset_id):
 
 def get_daily_change(asset_name,current_value):
     current_value = float(current_value)
-    r=random.uniform(0,2)
+    r=random.uniform(0.1,2)
+    
     last_value = current_value/r  #Fuat aga sadece bunun değişmesi lazım, gerçek dünkü kapanış lazım bize 
+
     change = 100*(current_value/last_value -1)
+    
     change = round(change,2)
     #print(current_value,last_value,change,"change",r,"r")
     return(change)
