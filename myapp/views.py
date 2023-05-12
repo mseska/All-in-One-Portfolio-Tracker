@@ -658,7 +658,7 @@ def add_to_portfolio(request):
     return JsonResponse({}, status=201) 
 
 @api_view(['POST'])  
-def modify_portfolio(request):
+def increase_in_portfolio(request):
     token = request.data.get('Token') 
     portfolio_id = request.data.get('PortfolioId')
     symbol = request.data.get('Symbol')
@@ -668,30 +668,32 @@ def modify_portfolio(request):
     print("token: ", token)
     print("portfolio_id: ", portfolio_id)
     print("amount: ", amount)
+    print("symbol: ", symbol)
     print("----------------increase_in_portfolio-------------------")
 
-    result = modify_amount(token, portfolio_id, amount, symbol)
+    result = increase_amount(token, portfolio_id, amount, symbol)
 
     return JsonResponse({}, status=201) 
 
-# @api_view(['POST'])  
-# def decrease_in_portfolio(request):
-#     token = request.data.get('Token') 
-#     portfolio_id = request.data.get('PortfolioId')
-#     symbol = request.data.get('Symbol')
-#     amount = request.data.get('amount')
+@api_view(['POST'])  
+def decrease_in_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('Symbol')
+    amount = request.data.get('amount')
 
-#     print("----------------decrease-in-portfolio-------------------")
-#     print("token: ", token)
-#     print("portfolio_id: ", portfolio_id)
-#     print("amount: ", amount)
-#     print("----------------decrease-in-portfolio-------------------")
+    print("----------------decrease-in-portfolio-------------------")
+    print("token: ", token)
+    print("portfolio_id: ", portfolio_id)
+    print("amount: ", amount)
+    print("symbol: ", symbol)
+    print("----------------decrease-in-portfolio-------------------")
 
-#     result = increase_amount(token, portfolio_id, amount, symbol)
+    result = decrease_amount(token, portfolio_id, amount, symbol)
 
-#     return JsonResponse({}, status=201) 
+    return JsonResponse({}, status=201) 
 
-
+#myportfolio'da $ cinsinden olduğunu bi yere belirtmeli miyiz + portfolionun total degeri?
 
 
 
