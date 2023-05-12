@@ -625,18 +625,16 @@ def get_symbols_of_portfolio(request):
 
     symbols = symbols_in_portfolio(token, portfolio_id)
 
-    print("------------------------------------------------------")
-    print(symbols)
-    print("------------------------------------------------------")
+    # print("------------------------------------------------------")
+    # print(symbols)
+    # print("------------------------------------------------------")
 
     ret = {}
     print(symbols[0], "this is the first")
     if symbols[0] == 'database':
         ret['name'] = symbols[1:]   
-        print("inside if------------------")
     else:
         ret['name'] = symbols 
-        print("inside else----------------")
 
     print("here is all the symbols in the selected portfolio: ", ret)
     return JsonResponse(ret, status=201)
@@ -648,10 +646,10 @@ def add_to_portfolio(request):
     symbol = request.data.get('symbol')
     amount = request.data.get('amount')
 
-    print("----------------inside add_to_portfolio-------------------")
-    print("token: "+ token+ "\nportfolio_id"+ portfolio_id)
-    print("symbol: "+ symbol+ "\namount: "+ amount)
-    print("----------------inside add_to_portfolio-------------------")
+    # print("----------------inside add_to_portfolio-------------------")
+    # print("token: "+ token+ "\nportfolio_id"+ portfolio_id)
+    # print("symbol: "+ symbol+ "\namount: "+ amount)
+    # print("----------------inside add_to_portfolio-------------------")
 
     result = add_asset(token, portfolio_id, symbol, amount)
 
@@ -664,14 +662,19 @@ def increase_in_portfolio(request):
     symbol = request.data.get('Symbol')
     amount = request.data.get('amount')
 
-    print("----------------increase_in_portfolio-------------------")
-    print("token: ", token)
-    print("portfolio_id: ", portfolio_id)
-    print("amount: ", amount)
-    print("symbol: ", symbol)
-    print("----------------increase_in_portfolio-------------------")
+    # print("----------------increase_in_portfolio-------------------")
+    # print("token: ", token)
+    # print("portfolio_id: ", portfolio_id)
+    # print("amount: ", amount)
+    # print("symbol: ", symbol)
+    # print("----------------increase_in_portfolio-------------------")
+    
+    current_datetime = datetime.datetime.now()
+    current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(current_datetime_formatted)
 
-    result = increase_amount(token, portfolio_id, amount, symbol)
+    operation = 'increase'
+    result = modify_amount(token, portfolio_id, amount, symbol, operation, current_datetime_formatted)
 
     return JsonResponse({}, status=201) 
 
@@ -682,14 +685,19 @@ def decrease_in_portfolio(request):
     symbol = request.data.get('Symbol')
     amount = request.data.get('amount')
 
-    print("----------------decrease-in-portfolio-------------------")
-    print("token: ", token)
-    print("portfolio_id: ", portfolio_id)
-    print("amount: ", amount)
-    print("symbol: ", symbol)
-    print("----------------decrease-in-portfolio-------------------")
+    # print("----------------decrease-in-portfolio-------------------")
+    # print("token: ", token)
+    # print("portfolio_id: ", portfolio_id)
+    # print("amount: ", amount)
+    # print("symbol: ", symbol)
+    # print("----------------decrease-in-portfolio-------------------")
 
-    result = decrease_amount(token, portfolio_id, amount, symbol)
+    current_datetime = datetime.datetime.now()
+    current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(current_datetime_formatted)
+
+    operation = 'decrease'
+    result = modify_amount(token, portfolio_id, amount, symbol, operation, current_datetime_formatted)
 
     return JsonResponse({}, status=201) 
 

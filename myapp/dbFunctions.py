@@ -91,7 +91,6 @@ def get_asset_id(symbol):
 
 def get_user_asset_id():
     user_asset_id = my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
-    # print(user_asset_id) #((29,),)
     user_asset_id_value = user_asset_id[0][0]
     user_asset_id_value += 1
     return(user_asset_id_value)
@@ -105,46 +104,32 @@ def add_asset(token, portfolio_id, symbol, amount):
     #find asset_id of the given symbol:
     print("this is the symbol to be added", symbol)
     asset_id = get_asset_id(symbol)
-    # my_custom_sql("SELECT asset_id FROM comp491.asset_information WHERE comp491.asset_information.name='{}';".format(symbol),connection)
-    print("hellooooooooooooooooo", asset_id)
-    #asset_id_value = asset_id[0][0]
-    #print("--------------->this is the asset_id: ", asset_id_value)
 
     #find user_id corresponds to the given token:
     user_id = get_id_with_token(token)
 
-    # user_id_value = user_id[0][0]
     print(user_id, "----------------here is the user id")
 
     user_asset_id = get_user_asset_id()
-    # my_custom_sql("SELECT max(user_asset_id) FROM comp491.user_asset_ownership;",connection)
-    # print(user_asset_id) #((29,),)
-    # user_asset_id_value = user_asset_id[0][0]
-    # user_asset_id_value += 1
 
     print("AMOUNT: ", amount)
     print("this is the value", user_asset_id)
     result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2003-05-20 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, amount, portfolio_id),connection)
-    
 
-def increase_amount(token, portfolio_id, amount, symbol):
-    asset_id= get_asset_id(symbol)
-    user_id = get_id_with_token(token)
-    user_asset_id = get_user_asset_id()
-
-    #TODO: date degismeli
-    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2023-05-11 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, amount, portfolio_id),connection)
-
-#TODO:bunu increase ile birlestir -> bi parametre: +/- 
-def decrease_amount(token, portfolio_id, amount, symbol):
+def modify_amount(token, portfolio_id, amount, symbol, operation, current_date):
     asset_id= get_asset_id(symbol)
     user_id = get_id_with_token(token)
     user_asset_id = get_user_asset_id()
 
     amount_float = float(amount)
     print(amount_float)
-    negative_amount = amount_float * -1
+    if operation == 'decrease':
+        updated_amount = amount_float * -1
+    else: 
+        updated_amount = amount_float
 
-    print("helloooo this amount should be negative", negative_amount)
+    print("helloooo this amount should be negative", updated_amount)
 
-    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'2023-05-11 23:00:00',{}, {});".format(user_asset_id,user_id, asset_id, negative_amount, portfolio_id),connection)
+    result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'{}',{}, {});".format(user_asset_id,user_id, asset_id, current_date, updated_amount, portfolio_id),connection)
+
+
