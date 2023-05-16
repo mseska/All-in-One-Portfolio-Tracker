@@ -2,6 +2,7 @@ import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from .models import   Stock2
 from django.db import connection
 from .dbFunctions import * 
@@ -45,6 +46,8 @@ from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect
 from .tokens import account_activation_token
+
+from django.contrib.auth.tokens import default_token_generator
 
 
 
@@ -420,26 +423,29 @@ def login_generate_token(request):
 
 def activate(request, uidb64, token):
     print("entered activate(), confirming the email...")
-    #User = get_user_model()
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
+        print(user.email, "------------------------------- of")
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
+    if user is not None:
+    #and account_activation_token.check_token(user, token):
+        user.is_active = 1
         user.save()
+        print("before the mail is sent: ", user.is_active)
         print("email confirmed!")
         messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
-        return redirect('http://localhost:3000') #TODO
+        return HttpResponseRedirect('http://localhost:3000')
+        # return redirect('http://localhost:3000') #TODO
         #return JsonResponse({'token': token.key}, status=201)
     else:
         print("sorry could not confirmed the email")
         messages.error(request, 'Activation link is invalid!')
 
 
-def send_verification_email(request, user, name):
+def send_verification_email(request, user, name, token):
     print("activating the email confirmation...") 
 
     mail_subject = 'Activate Your Account'
@@ -448,9 +454,11 @@ def send_verification_email(request, user, name):
         'user': name, 
         'domain': get_current_site(request).domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
+        'token': token,
+        #account_activation_token.make_token(user),
         'protocol': 'https' if request.is_secure() else 'http'
     })
+    print(user.is_active, "inside send-verification--------------------")
     return EmailMessage(mail_subject, message, to=[user.username])
 
 @api_view(['POST'])           
@@ -473,19 +481,19 @@ def signup_generate_token(request):
 
     #create a user:
     user = User.objects.create_user(username=email, email=email, password=password)
-    user.first_name = name
-    user.last_name = surname
-    user.save()
+    # user.is_active = False
 
     #to check whether the user is empty or not:
     print(user.email, "hello")
     print(user.password)
 
     user = authenticate(request, username=email, password=password)
-
+    user.first_name = name
+    user.last_name = surname
+    user.is_active = 0
+    user.save()
     print(user, "after authenticate")
 
-    # print(user.email, "After authenticate()")
     # print(user.password)
    
     if user is not None:
@@ -493,12 +501,14 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
+        # uidb64 = urlsafe_base64_encode(force_bytes(user.id))
         #activate(request, uidb64, token)
-        # verification_mail = send_verification_email(request, user, name)
-        # if verification_mail.send():
-            # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
+        verification_mail = send_verification_email(request, user, name, token)
+        if verification_mail.send():
+            print(user.is_active, "------------------ sent the email")
+            messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
             # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
-        print("email sent değil!!!!!!!")
+            print("email sent !!!!!!!")
         return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
