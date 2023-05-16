@@ -172,9 +172,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #email verification:
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_FROM = 'aioptracker@gmail.com'
-EMAIL_HOST_USER = 'aioptracker@gmail.com'
-EMAIL_HOST_PASSWORD = 'jkpoinvcbxaxirfs'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
