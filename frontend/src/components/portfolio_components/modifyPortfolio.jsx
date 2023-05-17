@@ -44,12 +44,12 @@ class ModifyPortfolio extends Component {
       })
       .then(function (response) {
         if (response.status === 201) {
-          alert(selectedSymbolToAdjust + "added" + amountToAdjust);
+          alert(selectedSymbolToAdjust + " added " + amountToAdjust);
           window.location.reload(true);
         }
       })
       .catch(function (error) {
-        alert(selectedSymbolToAdjust + "added" + amountToAdjust);
+        alert(selectedSymbolToAdjust + " added " + amountToAdjust);
         // alert("Could not create potfolio please check your inputs");
       })
       .finally((response) => {});
@@ -71,12 +71,12 @@ class ModifyPortfolio extends Component {
       })
       .then(function (response) {
         if (response.status === 201) {
-          alert(selectedSymbolToAdjust + "decreased" + amountToAdjust);
+          alert(selectedSymbolToAdjust + " decreased " + amountToAdjust);
           window.location.reload(true);
         }
       })
       .catch(function (error) {
-        alert(selectedSymbolToAdjust + "decreased" + amountToAdjust);
+        alert(selectedSymbolToAdjust + "d ecreased " + amountToAdjust);
         // alert("Could not create potfolio please check your inputs");
       })
       .finally((response) => {});
@@ -239,6 +239,7 @@ class ModifyPortfolio extends Component {
           console.log(response.data);
           this.setState({ portfolioSymbols: response.data.name });
           localStorage.setItem("portfolioSymbols", response.data.name);
+          this.setState({selectedSymbol2:response.data.name[0]});
         }
       })
       .catch((error) => {
