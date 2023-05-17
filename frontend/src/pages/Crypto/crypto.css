@@ -12,16 +12,18 @@
   
   .left-column,
   .right-column {
+    align-content: center;
     flex: 1;
     padding: 10px;
   }
   
   .timeline-select {
-    width: 100%;
+    width: 80%;
     margin-bottom: 10px;
   }
   
   .line-chart {
+    margin-left: 40px;
     height: 300px;
     margin-bottom: 10px;
   }
@@ -35,5 +37,12 @@
   /* Additional styling for the right column */
   .right-column {
     /* background-color: lightgray; */
+  }
+
+  .vertical-line {
+    border-left:  0.5vw solid rgb(82, 30, 113);
+    margin-right: 4vw;
+    height: 150vh;
+    /* margin: 0 20px; Adjust the margin value as needed */
   }
   
