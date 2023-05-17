@@ -34,22 +34,100 @@ from django.contrib.auth.models import User
 
 #from django.http import JsonResponse
 
-# email verification
+
+class ReactView(APIView):
+    def get(self,request):
+        output = [{'employee':output.employee,'department':output.department} for output in React.objects.all()]
+        return Response(output)
+
+    def post(self,request):
+        serializer = ReactSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+# Create your views here.
+def index(request):
+    print("deneöe")
+    #return HttpResponse('<h1>Hey, Welcome</h1>')
+    name = 'Mert'
+    #feature1 = Feature()
+    #feature1.id = 0
+    #feature1.name = 'Fast'
+    #feature1.description = 'Our service is fast'
+    news_update_thread = threading.Thread(target=update_news_periodically)
+    news_update_thread.start()
+
+    prices_update_thread = threading.Thread(target=update_prices_periodically)
+    prices_update_thread.start()
+    return render(request,'a.html',{'name':name})
+
+def input(request):
+    print("deneöe")
+
+    return render(request,'input.html')
+
+def inputCheck(request):
+    with open('output.json') as json_file:
+        data = json.load(json_file)
+
+        # Print the type of data variable
+        #print("Type:", type(data))
+
+        # Print the data of dictionary
+        #print("\nPeople1:", data['people1'])
+        #print("\nPeople2:", data['people2'])
+
+    inputGet = request.POST['inputText']
+    currency = data["chart"]["result"][0]["meta"]["currency"]
+    symbol = data["chart"]["result"][0]["meta"]["symbol"]
+    #timestamp = data["chart"]["result"][0]["timestamp"]
+    #high = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["high"]
+    #low = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["low"]
+    #open = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["open"]
+    #close = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["close"]
+    #volume = data["chart"]["result"][0]["timestamp"]["indicators"]["quote"][0]["volume"]
+
+    #my_custom_sql("INSERT INTO `comp491`.`asset_history` (`keysforassets`, `currency`, `asset_name`) VALUES ('"+inputGet+"', '"+currency+"', '"+symbol+"')",connection)
+    output = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    print(output)
+    return render(request,'inputCheck.html',{'inputText':inputGet,'wordCount':output})
+
+def static(request):
+    return render(request,'static.html')
+
+def my_custom_sql(query,connection):
+    with connection.cursor() as cursor:
+        cursor.execute(query)
+        #cursor.execute("SELECT foo FROM bar WHERE baz = %s", [self.baz])
+
+        row = cursor.fetchall()
+
+    return row
 
 
-from django.contrib import messages #email confirmation - is not used
+def my_custom_news_sql(query, params=None):
+    with connection.cursor() as cursor:
+        cursor.execute(query, params)
+        result = cursor.fetchall()
+    return result
 
-from django.template.loader import render_to_string
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_str
-from django.core.mail import EmailMessage
-from django.shortcuts import redirect
-from .tokens import account_activation_token
+def list(request):
+    list = my_custom_sql("SELECT * FROM `comp491`.`asset_history`",connection)
+    returnList = []
+    #print(list)
+
+    for asset in list:
+        #print(type(asset))
+        newAsset = Assets()
+        newAsset.AssetName = asset[2]
+        newAsset.value = asset[3]
+        returnList.append(newAsset)
 
 from django.contrib.auth.tokens import default_token_generator
 
 
+    return render(request,'list.html',{'list':returnList})
 
 @api_view(['POST'])
 #@api_view(['GET'])
@@ -196,7 +274,7 @@ def get_commodity_list(request):
 
     #TODO delete after development phase of news data retrieval
     tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
-    update_news_data(tickersList)
+    #update_news_data(tickersList)
     update_prices()
 
     news_update_thread = threading.Thread(target=update_news_periodically)
@@ -308,18 +386,45 @@ def update_news_data(tickersList):
 
     pass
 def update_prices():
-    tickers = ["TSLA", "GLD", "ASELS.IS", "ETH-USD", "CEEK-USD"]
+    #tickers = ["TSLA"]
+
+    tickers =  [
+    "ASELS.IS", "CEEK-USD","TSLA",
+
+  "GARAN.IS", "AKBNK.IS", "KCHOL.IS", "SISE.IS", "ULKER.IS",
+  "ISCTR.IS", "TCELL.IS", "BIMAS.IS", "YKBNK.IS", "VAKBN.IS",
+
+
+  "AAPL", "MSFT", "AMZN", "GOOGL",
+  "BRK-B", "V", "JNJ", "WMT", "NVDA",
+
+
+  "GLD", "SLV", "USO", "UNG", "DBC",
+  "DBA", "DBB", "DBE",
+
+
+  "BTC-USD", "ETH-USD", "BNB-USD", "ADA-USD", "XRP-USD",
+   "DOGE-USD", "AVAX-USD",
+
+
+  "KO", "PEP", "MCD", "INTC", "DIS",
+  "ENJSA.IS", "VESTL.IS", "ARCLK.IS", "CRFSA.IS", "TUPRS.IS"
+]
+
 
     start_date = "2022-04-02"
     end_date = "2022-04-04"
 
-    url = f"https://query1.finance.yahoo.com/v7/finance/chart/{{}}?range=1d&interval=1d&indicators=quote&includeTimestamps=true"
+    url = f"https://query1.finance.yahoo.com/v7/finance/chart/{{}}?range=0d&interval=1d&indicators=quote&includeTimestamps=true"
 
     data_dict = {}
+    index =0
 
     # Loop through the tickers and retrieve data from Yahoo Finance API
     for ticker in tickers:
         current_url = url.format(ticker)
+
+        index+=1
 
         response = requests.get(current_url, headers={
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'})
@@ -327,18 +432,21 @@ def update_prices():
         data = response.json()
 
         # Extract the data for the specified date range
+        typeOfasset = data["chart"]["result"][0]["meta"]["instrumentType"]
         timestamps = data["chart"]["result"][0]["timestamp"]
         prices = data["chart"]["result"][0]["indicators"]["quote"][0]
-        data_dict[ticker] = {"Timestamp": timestamps, "Open": prices["open"], "High": prices["high"],
+        data_dict[ticker] = {"Timestamp": timestamps, "Type": typeOfasset, "Open": prices["open"],
+                             "High": prices["high"],
                              "Low": prices["low"],
                              "Close": prices["close"], "Volume": prices["volume"]}
+
 
     with open("price_data.json", "w") as f:
         json.dump(data_dict, f)
 
     print("dbupdating\n\n\n\n")
-    delete_query = "DELETE FROM `comp491`.`prices` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
-    my_custom_news_sql(delete_query)
+    #delete_query = "DELETE FROM `comp491`.`prices` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
+    #my_custom_news_sql(delete_query)
 
     with open('price_data.json') as f2:
         price_data = json.load(f2)
@@ -347,27 +455,110 @@ def update_prices():
     for ticker, price_item in price_data.items():
 
 
+
         timestamp = price_item['Timestamp'][0]
         openn = price_item['Open'][0]
         high = price_item['High'][0]
         low = price_item['Low'][0]
         close = price_item['Close'][0]
         volume = price_item['Volume'][0]
+        description = price_item['Type']
         asset = ticker
 
-        # Check if the news already exists in the database
-        query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
-        result = my_custom_news_sql(query, (asset))
+        name = asset
+        current_value = close
+        check_query = "SELECT asset_id FROM `comp491`.asset_information WHERE name = %s"
+        insert_query = "INSERT INTO `comp491`.asset_information (name, current_value, description) VALUES (%s, %s, %s)"
+        find_max_query = "SELECT MAX(keysforassets) FROM `comp491`.asset_history"
+        insert_query_for_historical = "INSERT INTO `comp491`.asset_history (keysforassets,currency, asset_name, value,date) VALUES (%s, %s,%s, %s,NOW())"
+        update_query = "UPDATE `comp491`.asset_information SET current_value = %s WHERE name = %s"
 
-        if len(result) > 0:
-            # The news already exists in the database, so skip inserting it
-            print(f"already exists in the database")
+        # query = "SELECT * FROM `comp491`.`asset_information` WHERE name=%s AND DATE(addDate) = DATE(NOW()) "
+        result = my_custom_news_sql(check_query, (asset))
+        maxInd = my_custom_news_sql(find_max_query, params=None)
+
+        if result == 0:
+            # Item does not exist, so insert a new row
+            my_custom_news_sql(insert_query, (name, current_value, description))
         else:
-            # Insert the news into the database
-            query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
-            my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
-            print(f"Inserted prices  into the database")
+            # Item already exists, so update its current value
+            newind = maxInd[0][0] + 1
+            my_custom_news_sql(insert_query_for_historical, (newind, 'USD', name, current_value))
+            my_custom_news_sql(update_query, (current_value, name))
 
+        # print(f"Inserted prices  into the database")
+
+    '''
+
+        # Check if the news already exists in the database
+        # query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
+        # result = my_custom_news_sql(query, (asset))
+
+        # if len(result) > 0:
+        # The news already exists in the database, so skip inserting it
+        #   print(f"already exists in the database")
+        #:else:
+        # Insert the news into the database
+        # query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+        # my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+        # print(f"Inserted prices  into the database")
+
+
+    ''''''  THE CODE BELOW CAN BE USED TO POPULATE SO WE MAY CONSIDER NOT DELETING
+        for i in range(len(price_item['Close'])):
+
+
+            timestamp = price_item['Timestamp'][i]
+            openn = price_item['Open'][i]
+            high = price_item['High'][i]
+            low = price_item['Low'][i]
+            close = price_item['Close'][i]
+            volume = price_item['Volume'][i]
+            description = price_item['Type']
+            asset = ticker
+
+            name = asset
+            current_value = close
+            check_query = "SELECT asset_id FROM `comp491`.asset_information WHERE name = %s"
+            insert_query = "INSERT INTO `comp491`.asset_information (name, current_value, description) VALUES (%s, %s, %s)"
+            find_max_query ="SELECT MAX(keysforassets) FROM `comp491`.asset_history"
+            insert_query_for_historical="INSERT INTO `comp491`.asset_history (keysforassets,currency, asset_name, value,date) VALUES (%s, %s,%s, %s,DATE_SUB(NOW(), INTERVAL %s DAY))"
+            update_query = "UPDATE `comp491`.asset_information SET current_value = %s WHERE name = %s"
+
+            # query = "SELECT * FROM `comp491`.`asset_information` WHERE name=%s AND DATE(addDate) = DATE(NOW()) "
+            result = my_custom_news_sql(check_query, (asset))
+            maxInd=my_custom_news_sql(find_max_query,params=None)
+
+
+
+
+
+            if result == 0:
+                # Item does not exist, so insert a new row
+                my_custom_news_sql(insert_query, (name, current_value, description))
+            else:
+                # Item already exists, so update its current value
+                newind=maxInd[0][0]+1
+                my_custom_news_sql(insert_query_for_historical, (newind,'USD', name, current_value,(29-i)))
+                my_custom_news_sql(update_query, (current_value, name))
+
+            # print(f"Inserted prices  into the database")
+
+            # Check if the news already exists in the database
+            #query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
+            #result = my_custom_news_sql(query, (asset))
+
+            #if len(result) > 0:
+                # The news already exists in the database, so skip inserting it
+             #   print(f"already exists in the database")
+            #:else:
+                # Insert the news into the database
+                #query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+                #my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+                #print(f"Inserted prices  into the database")
+
+
+    '''
     print("dbupdated\n\n\n\n")
 
     pass
