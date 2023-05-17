@@ -58,7 +58,7 @@ def get_daily_change(asset_name,current_value):
 
 
 
-    change = 100*(current_value/last_value -1)
+    change = 100*(current_value/last_value)
     
     change = round(change,2)
     #print(current_value,last_value,change,"change",r,"r")

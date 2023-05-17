@@ -124,7 +124,7 @@ def list(request):
         newAsset.value = asset[3]
         returnList.append(newAsset)
 
-from django.contrib.auth.tokens import default_token_generator
+    from django.contrib.auth.tokens import default_token_generator
 
 
     return render(request,'list.html',{'list':returnList})
@@ -567,7 +567,7 @@ def update_prices():
 
 def update_news_periodically():
     while True:
-        now = datetime.datetime.now()
+        now = datetime.now()
         if now.second == 0 and now.minute== 0:  # Run update_news_data() once per hour at the start of the hour
             tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
             update_news_data(tickersList)
@@ -577,7 +577,7 @@ def update_news_periodically():
 
 def update_prices_periodically():
     while True:
-        now = datetime.datetime.now()
+        now = datetime.now()
         if now.second == 0 and now.minute == 0:  # Run update_news_data() once per hour at the start of the hour
             update_prices()
         time.sleep(1)
