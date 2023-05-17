@@ -133,4 +133,39 @@ def modify_amount(token, portfolio_id, amount, symbol, operation, current_date):
 
     result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'{}',{}, {});".format(user_asset_id,user_id, asset_id, current_date, updated_amount, portfolio_id),connection)
 
+from datetime import datetime, timedelta
 
+def get_asset_values_week_in_portfolio(portfolio_id):
+    dict = {}
+    asset_list = get_asset_ids_with_portfolio_id(portfolio_id)
+
+    end_time = datetime.now()
+    start_time = end_time - timedelta(days=7)
+    
+    for asset_id in asset_list:
+        valueList = []
+        asset_values = get_asset_values_week(start_time,end_time,asset_id)
+        asset_amounts = get_asset_amounts_week(start_time,end_time,asset_id,portfolio_id)
+        for i in range(len(asset_values)):
+            valueList.append(asset_values[i]*asset_amounts[i])
+        dict[asset_id] = valueList
+
+    return dict
+
+def get_total_value_week_in_portfolio(portfolio_id):
+    dict = get_asset_values_week_in_portfolio(portfolio_id)
+    keys = list(dict.keys())
+    total_value_list = []
+    for i in range(len(dict[keys[0]])):
+        total_value = 0
+        for key in keys:
+            total_value += dict[key][i]
+        total_value_list.append(total_value)
+    return total_value_list
+
+
+def get_asset_values_week(start_date,end_date,asset_id):
+    return []
+
+def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id):
+    return []
