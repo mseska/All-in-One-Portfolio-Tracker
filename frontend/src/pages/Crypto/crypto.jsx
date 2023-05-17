@@ -21,6 +21,12 @@ function PortfolioTimeline() {
   const [weeklyData, setWeeklyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [yearlyData, setYearlyData] = useState([]);
+
+  const [assetNames, setAssetNames] = useState([]);
+  const [weeklyAssetData, setWeeklyAssetData] = useState([]);
+  const [monthlyAssetData, setMonthlAssetData] = useState([]);
+  const [yearlyAssetData, setYearlyAssetData] = useState([]);
+
   const [selectedPortfolio, setSelectedPortfolio] = useState([]);
 
   function selectChange1(event) {
@@ -102,6 +108,20 @@ function PortfolioTimeline() {
       })
       .catch((error) => {
         setPortfolioNames(["aa", "bb"]);
+        console.log(error);
+      });
+    axios
+      .get("http://localhost:8000/api/get-asset-names", {
+        headers: {
+          Authorization: `${token}`,
+        },
+      })
+      .then((response) => {
+        setAssetNames(["A1", "A2"]);
+        // setAssetNames(response.data);
+      })
+      .catch((error) => {
+        setAssetNames(["A1", "A2"]);
         console.log(error);
       });
 
@@ -230,13 +250,8 @@ function PortfolioTimeline() {
           <p style={{ color: "purple", fontWeight: "bolder", fontSize: "3vh" }}>
             Assets Timeline
           </p>
-          <select
-            className="timeline-select"
-            name=""
-            id=""
-            onChange={selectChange1}
-          >
-            {portfolioNames.map((item) => (
+          <select className="timeline-select" name="" id="">
+            {assetNames.map((item) => (
               <option key={item} value={item}>
                 {item}
               </option>
