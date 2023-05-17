@@ -1,0 +1,39 @@
+.timeline-page {
+    display: flex;
+    flex-direction: column;
+    /* height: 100vh; */
+  }
+  
+  .timeline-container {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .left-column,
+  .right-column {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .timeline-select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .line-chart {
+    height: 300px;
+    margin-bottom: 10px;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  /* Additional styling for the right column */
+  .right-column {
+    /* background-color: lightgray; */
+  }
+  
