@@ -176,7 +176,13 @@ def get_total_value_week_in_portfolio(portfolio_id):
 
 
 def get_asset_values_week(start_date,end_date,asset_id):
-    return []
+    #get the name of the asset:
+    asset_name =  my_custom_sql("SELECT name FROM comp491.asset_information WHERE asset_id = {};".format(asset_id),connection)
+    name = asset_name[0][0]
+    
+    asset_values =  my_custom_sql("SELECT close FROM comp491.prices WHERE asset='{}' AND STR_TO_DATE(addDate, '%Y-%m-%d %H:%i:%s') >= STR_TO_DATE('{}', '%Y-%m-%d %H:%i:%s') AND STR_TO_DATE(addDate, '%Y-%m-%d %H:%i:%s') <= STR_TO_DATE('{}', '%Y-%m-%d %H:%i:%s');".format(name, start_date, end_date),connection)
+    asset_values = [row[0] for row in asset_values]
+    return(asset_values)
 
 def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id):
     return []
