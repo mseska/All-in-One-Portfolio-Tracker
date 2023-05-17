@@ -180,6 +180,68 @@ function PortfolioTimeline() {
               </option>
             ))}
           </select>
+          <p
+            style={{
+              color: "purple",
+              fontWeight: "bolder",
+              alignItems: "center",
+            }}
+          >
+            Weekly:
+          </p>
+
+          <div className="line-chart">
+            <LineChart width={400} height={300} data={weeklyData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <CartesianGrid stroke="#eee" />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              <Tooltip />
+              <Legend />
+            </LineChart>
+          </div>
+          <p style={{ color: "purple", fontWeight: "bolder" }}>Monthly:</p>
+
+          <div className="line-chart">
+            <LineChart width={400} height={300} data={monthlyData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <CartesianGrid stroke="#eee" />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              <Tooltip />
+              <Legend />
+            </LineChart>
+          </div>
+          <p style={{ color: "purple", fontWeight: "bolder" }}>Yearly:</p>
+
+          <div className="line-chart">
+            <LineChart width={400} height={300} data={yearlyData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <CartesianGrid stroke="#eee" />
+              <Line type="monotone" dataKey="value" stroke="#8884d8" />
+              <Tooltip />
+              <Legend />
+            </LineChart>
+          </div>
+        </div>
+        <hr className="vertical-line"></hr>
+        <div className="right-column">
+          <p style={{ color: "purple", fontWeight: "bolder", fontSize: "3vh" }}>
+            Assets Timeline
+          </p>
+          <select
+            className="timeline-select"
+            name=""
+            id=""
+            onChange={selectChange1}
+          >
+            {portfolioNames.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
           <p style={{ color: "purple", fontWeight: "bolder" }}>Weekly:</p>
 
           <div className="line-chart">
@@ -216,17 +278,6 @@ function PortfolioTimeline() {
               <Legend />
             </LineChart>
           </div>
-          <div className="buttons">{/* buttons */}</div>
-        </div>
-        <div className="right-column">
-          <p style={{ color: "purple", fontWeight: "bolder", fontSize: "3vh" }}>
-            Assets Timeline
-          </p>
-          <select className="timeline-select">
-            {/* options for select */}
-          </select>
-          <div className="line-chart">{/* line chart component */}</div>
-          <div className="buttons">{/* buttons */}</div>
         </div>
       </div>
     </div>
