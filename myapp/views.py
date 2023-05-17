@@ -2,6 +2,7 @@ import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from .models import   Stock2
 from django.db import connection
 from .dbFunctions import * 
@@ -123,6 +124,8 @@ def list(request):
         newAsset.value = asset[3]
         returnList.append(newAsset)
 
+from django.contrib.auth.tokens import default_token_generator
+
 
     return render(request,'list.html',{'list':returnList})
 
@@ -162,7 +165,7 @@ def get_myasset_list(request):
     print(token,"hop alo token")
     id = get_id_with_token(token)
     print(id,"hop alo id")
-    user_asset_ids =  get_user_asset_ids_with_user_id(id)
+    
     Assets = get_assets_with_user_id(id)   
     print(Assets)
     
@@ -187,9 +190,10 @@ def get_myasset_list(request):
         #print(type(asset))
         newAsset = Stock2()
         # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[0]
-        newAsset.price = stock[1]
-        newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
+        if stock[0] != 'database':
+            newAsset.symbol = stock[0]
+            newAsset.price = stock[1]
+            newAsset.change = get_daily_change(newAsset.symbol, newAsset.price)
         #print(stock[1])
         #print(stock[2])
         #print(stock[3])
@@ -197,7 +201,7 @@ def get_myasset_list(request):
         # print(newAsset.price,"newAsset.price")
         # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
-        returnList.append(newAsset)
+            returnList.append(newAsset)
     #print(returnList,"liste databaseden alındı")
     
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
@@ -587,7 +591,7 @@ def news_api(request):
     return JsonResponse(data, safe=False)
 
 
-@api_view(['POST'])           
+@api_view(['POST','OPTIONS'])           
 def login_generate_token(request):
     print("POST METHOD WORKS - in login generate token")
     email = request.data.get('eMail') 
@@ -610,26 +614,29 @@ def login_generate_token(request):
 
 def activate(request, uidb64, token):
     print("entered activate(), confirming the email...")
-    #User = get_user_model()
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
+        print(user.email, "------------------------------- of")
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
+    if user is not None:
+    #and account_activation_token.check_token(user, token):
+        user.is_active = 1
         user.save()
+        print("before the mail is sent: ", user.is_active)
         print("email confirmed!")
         messages.success(request, 'Thank you for your email confirmation. Now you can login your account.')
-        return redirect('http://localhost:3000') #TODO
+        return HttpResponseRedirect('http://localhost:3000')
+        # return redirect('http://localhost:3000') #TODO
         #return JsonResponse({'token': token.key}, status=201)
     else:
         print("sorry could not confirmed the email")
         messages.error(request, 'Activation link is invalid!')
 
 
-def send_verification_email(request, user, name):
+def send_verification_email(request, user, name, token):
     print("activating the email confirmation...") 
 
     mail_subject = 'Activate Your Account'
@@ -638,9 +645,11 @@ def send_verification_email(request, user, name):
         'user': name, 
         'domain': get_current_site(request).domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
+        'token': token,
+        #account_activation_token.make_token(user),
         'protocol': 'https' if request.is_secure() else 'http'
     })
+    print(user.is_active, "inside send-verification--------------------")
     return EmailMessage(mail_subject, message, to=[user.username])
 
 @api_view(['POST'])           
@@ -663,19 +672,19 @@ def signup_generate_token(request):
 
     #create a user:
     user = User.objects.create_user(username=email, email=email, password=password)
-    user.first_name = name
-    user.last_name = surname
-    user.save()
+    # user.is_active = False
 
     #to check whether the user is empty or not:
     print(user.email, "hello")
     print(user.password)
 
     user = authenticate(request, username=email, password=password)
-
+    user.first_name = name
+    user.last_name = surname
+    user.is_active = 0
+    user.save()
     print(user, "after authenticate")
 
-    # print(user.email, "After authenticate()")
     # print(user.password)
    
     if user is not None:
@@ -683,12 +692,14 @@ def signup_generate_token(request):
         #login(request, user)
         token, created = Token.objects.get_or_create(user=user)
         print(token)
+        # uidb64 = urlsafe_base64_encode(force_bytes(user.id))
         #activate(request, uidb64, token)
-        # verification_mail = send_verification_email(request, user, name)
-        # if verification_mail.send():
-            # messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
+        verification_mail = send_verification_email(request, user, name, token)
+        if verification_mail.send():
+            print(user.is_active, "------------------ sent the email")
+            messages.success(request, f'Dear <b>{name}</b>, please go to you email <b>{email}</b> inbox and click on \
             # received activation link to confirm and complete the registration. <b>Note:</b> Check your spam folder.')
-        print("email sent değil!!!!!!!")
+            print("email sent !!!!!!!")
         return JsonResponse({'token': token.key, 'id' : user.id}, status=201)
     else:
         print("user is not created sorry")
@@ -728,39 +739,185 @@ def get_user_info(request):
 
 @api_view(['GET'])
 def get_portfolios(request):
+    
+    
     print("GET METHOD WORKS - in get portfolios")
     
     token  = request.GET.get("token")
     id = get_id_with_token(token)
-    get_portfolios = get_portfolios_with_user_id(id)
-    print(get_portfolios)
-    returnList = []
-    # print(list,"databaseden gelen veri")
+    get_portfolios = get_portfolio_ids_with_user_id(id)
+    returnDict = {}
+    returnDict["length"] = len(get_portfolios)
+    for index in range(len(get_portfolios)):
+        asset_ids = get_asset_ids_with_portfolio_id(get_portfolios[index])
+        returnDict[index] = {}
+        
+        name = get_portfolio_name_with_portfolio_id(get_portfolios[index])
+        
+        data = []
+        #print(asset_ids)
+        for asset_id in asset_ids:
+            amount = get_total_amount_of_an_asset(asset_id,get_portfolios[index])
+            asset_name = get_asset_name_with_asset_id(asset_id)
+            current_value = get_asset_value_with_asset_id(asset_id)
+            #print(name,amount,get_portfolios[index])
+            currentAsset = {}
+            currentAsset["name"] = asset_name
+            currentAsset ["value"] = round(amount*float(current_value),2)
+            data.append(currentAsset)
+
+        returnDict[index]["name"] = name
+        returnDict[index]["id"] = get_portfolios[index]
+        returnDict[index]["data"] = data    
     
-    #Bunu uncomment etmeden önce databasein düzenlenmesi lazım. 
-    # 1-auth_user artık user information tutucu ona göre foreign keyler tutulmalı
-    # 2-user information, asset information ve asset_user_ownership birbiriyle uyumlu veri içermeli
-    for stock in get_portfolios:
-    #for stock in list:
-        #print(type(asset))
-        newAsset = Stock2()
-        # print(newAsset,"newAsset daha oluştu")
-        newAsset.symbol = stock[0]
-        newAsset.price = stock[1]*stock[4]
-        newAsset.change = "deneme"
-        print(stock[1])
-        print(stock[2])
-        print(stock[3])
-        # print(newAsset.symbol,"newAsset.symbol")
-        # print(newAsset.price,"newAsset.price")
-        # print(newAsset.change,"newAsset.change")
-        # print(newAsset,"newAsset")
-        returnList.append(newAsset)
-    #print(returnList,"liste databaseden alındı")
+    #print(returnDict)
+        
+    #serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
+    #print(serialized_objects, "serialized")
+    return JsonResponse(returnDict, safe=False)
+
+@api_view(['GET'])
+def get_portfolio_data(request):
+    print("GET METHOD WORKS - in get portfolio data")
+    token = request.headers.get('Authorization')
+    selected_portfolio = request.headers.get('portfolio')
+
+    asset_ids = get_asset_ids_with_portfolio_id(selected_portfolio)
+    data = []
+    for asset_id in asset_ids:
+        amount = get_total_amount_of_an_asset(asset_id,selected_portfolio)
+        asset_name = get_asset_name_with_asset_id(asset_id)
+        current_value = get_asset_value_with_asset_id(asset_id)
+        currentAsset = {}
+        currentAsset["name"] = asset_name
+        currentAsset ["value"] = round(amount*float(current_value),2)
+        data.append(currentAsset)
     
-    serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
-    print(serialized_objects, "serialized")
-    return JsonResponse(serialized_objects, safe=False)
+    print(data, "DAAAATAAAAA")
+    returnDict = {}
+    returnDict["data"] = data
+    return JsonResponse(returnDict, safe=False)
+
+
+@api_view(['POST'])           
+def create_portfolio(request):
+    print("POST METHOD WORKS - create token")
+    name = request.data.get('name') 
+    usertoken = request.data.get('token')
+    create_port(name,usertoken)
+    return JsonResponse({}, status=201)
+
+
+@api_view(['GET'])
+def all_symbols(request):
+    print("GET METHOD WORKS - in all symbols")
+    symbols = allSymbols()
+    print(symbols)
+    ret = {}
+    ret['data'] = symbols
+    print("insdie all symbols:\n",ret)
+    return JsonResponse(ret, status=201)
+
+
+@api_view(['GET'])
+def get_symbols_of_portfolio(request):
+    print("inside get_symbols_of_portfolio")
+    token = request.data.get('Authorization') 
+    portfolio_id = request.headers.get('Portfolio')
+
+    symbols = symbols_in_portfolio(token, portfolio_id)
+
+    # print("------------------------------------------------------")
+    # print(symbols)
+    # print("------------------------------------------------------")
+
+    ret = {}
+    print(symbols[0], "this is the first")
+    if symbols[0] == 'database':
+        ret['name'] = symbols[1:]   
+    else:
+        ret['name'] = symbols 
+
+    print("here is all the symbols in the selected portfolio: ", ret)
+    return JsonResponse(ret, status=201)
+
+@api_view(['POST'])   
+def add_to_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('symbol')
+    amount = request.data.get('amount')
+
+    amount_float = float(amount)
+    print("-------------------------------------")
+    print(amount_float)
+
+    # print("----------------inside add_to_portfolio-------------------")
+    # print("token: "+ token+ "\nportfolio_id"+ portfolio_id)
+    # print("symbol: "+ symbol+ "\namount: "+ amount)
+    # print("----------------inside add_to_portfolio-------------------")
+
+    current_datetime = datetime.datetime.now()
+    current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(current_datetime_formatted)
+
+    result = add_asset(token, portfolio_id, symbol, amount_float, current_datetime_formatted)
+
+    return JsonResponse({}, status=201) 
+
+@api_view(['POST'])  
+def increase_in_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('Symbol')
+    amount = request.data.get('amount')
+
+    amount_float = float(amount)
+    print("-------------------------------------")
+    print(amount_float)
+
+    # print("----------------increase_in_portfolio-------------------")
+    # print("token: ", token)
+    # print("portfolio_id: ", portfolio_id)
+    # print("amount: ", amount)
+    # print("symbol: ", symbol)
+    # print("----------------increase_in_portfolio-------------------")
+    
+    current_datetime = datetime.datetime.now()
+    current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(current_datetime_formatted)
+
+    operation = 'increase'
+    result = modify_amount(token, portfolio_id, amount_float, symbol, operation, current_datetime_formatted)
+
+    return JsonResponse({}, status=201) 
+
+@api_view(['POST'])  
+def decrease_in_portfolio(request):
+    token = request.data.get('Token') 
+    portfolio_id = request.data.get('PortfolioId')
+    symbol = request.data.get('Symbol')
+    amount = request.data.get('amount')
+
+    amount_float = float(amount)
+    print("-------------------------------------")
+    print(amount_float)
+
+    # print("----------------decrease-in-portfolio-------------------")
+    # print("token: ", token)
+    # print("portfolio_id: ", portfolio_id)
+    # print("amount: ", amount)
+    # print("symbol: ", symbol)
+    # print("----------------decrease-in-portfolio-------------------")
+
+    current_datetime = datetime.datetime.now()
+    current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+    print(current_datetime_formatted)
+
+    operation = 'decrease'
+    result = modify_amount(token, portfolio_id, amount_float, symbol, operation, current_datetime_formatted)
+
+    return JsonResponse({}, status=201) 
 
 
 

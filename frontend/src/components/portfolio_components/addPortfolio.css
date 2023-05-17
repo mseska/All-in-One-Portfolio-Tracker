@@ -1,6 +1,6 @@
 .add-portfolio-container {
     width: 400px;
-    height: 250px;
+    height: 20vh;
     background-color: #ffffff;
     border: 1px solid #cccccc;
     border-radius: 4px;
@@ -10,8 +10,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50%;
-    height: 50%;
+    width: 30%;
+    height: 25%;
     background-color: white;
     z-index: 2;
   }
@@ -19,7 +19,7 @@
   .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 3vh;
+    /* margin-bottom: 3vh; */
   }
   
   label {

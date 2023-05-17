@@ -25,9 +25,9 @@ function Home() {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
+    const token = localStorage.getItem("userToken");
     axios
-      .get("http://localhost:8000/api/myasset-price",{
+      .get("http://localhost:8000/api/myasset-price", {
         headers: {
           Authorization: `${token}`,
         },
@@ -53,7 +53,7 @@ function Home() {
     axios
       .get("http://localhost:8000/api/stock-price")
       .then((response) => {
-        setStockData(response.data);    
+        setStockData(response.data);
         // console.log("response get as", response.data);
         // console.log("currencyData", currencyData);
       })
@@ -64,7 +64,7 @@ function Home() {
       .get("http://localhost:8000/api/commodity-price")
       .then((response) => {
         console.log("response get as", response.data);
-        setCommodityData(response.data);  
+        setCommodityData(response.data);
         console.log("commodityData", commodityData);
       })
       .catch((error) => {
@@ -107,8 +107,11 @@ function Home() {
                         {stock.symbol}
                       </a>
                     </td>
-                    <td >{stock.price}</td>
-                    <td className={getClassNameForPrice(stock.change)}> % {stock.change}</td>
+                    <td>{stock.price}</td>
+                    <td className={getClassNameForPrice(stock.change)}>
+                      {" "}
+                      % {stock.change}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -127,9 +130,25 @@ function Home() {
               <tbody>
                 {cryptoData.map((crypto, index) => (
                   <tr key={index}>
-                    <td>{crypto.symbol}</td>
+                    <td>
+                      <a
+                        className="HomePageStockNames"
+                        href=""
+                        onClick={() =>
+                          window.open(
+                            `https://www.google.com/search?q=${crypto.symbol}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {crypto.symbol}
+                      </a>
+                    </td>
                     <td>{crypto.price}</td>
-                    <td className={getClassNameForPrice(crypto.change)}> % {crypto.change}</td>
+                    <td className={getClassNameForPrice(crypto.change)}>
+                      {" "}
+                      % {crypto.change}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -148,9 +167,25 @@ function Home() {
               <tbody>
                 {stockData.map((stock, index) => (
                   <tr key={index}>
-                    <td>{stock.symbol}</td>
+                    <td>
+                      <a
+                        className="HomePageStockNames"
+                        href=""
+                        onClick={() =>
+                          window.open(
+                            `https://www.google.com/search?q=${stock.symbol}`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {stock.symbol}
+                      </a>
+                    </td>
                     <td>{stock.price}</td>
-                    <td className={getClassNameForPrice(stock.change)}> % {stock.change}</td>
+                    <td className={getClassNameForPrice(stock.change)}>
+                      {" "}
+                      % {stock.change}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -169,9 +204,25 @@ function Home() {
               <tbody>
                 {commodityData.map((commodity, index) => (
                   <tr key={index}>
-                    <td>{commodity.symbol}</td>
+                    <td>
+                      <a
+                        className="HomePageStockNames"
+                        href=""
+                        onClick={() =>
+                          window.open(
+                            `https://www.google.com/search?q=${commodity.symbol} +price`,
+                            "_blank"
+                          )
+                        }
+                      >
+                        {commodity.symbol}
+                      </a>
+                    </td>
                     <td>{commodity.price}</td>
-                    <td className={getClassNameForPrice(commodity.change)}> % {commodity.change}</td>
+                    <td className={getClassNameForPrice(commodity.change)}>
+                      {" "}
+                      % {commodity.change}
+                    </td>
                   </tr>
                 ))}
               </tbody>
