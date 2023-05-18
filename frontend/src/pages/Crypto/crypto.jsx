@@ -29,6 +29,53 @@ function PortfolioTimeline() {
 
   const [selectedPortfolio, setSelectedPortfolio] = useState([]);
 
+  function selectChange2(event) {
+    const token = localStorage.getItem("userToken");
+    const assetName = event.target.value;
+
+    axios
+      .get("http://localhost:8000/api/get-weekly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          assetName: `${assetName}`,
+        },
+      })
+      .then((response) => {
+        setWeeklyAssetData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios
+      .get("http://localhost:8000/api/get-monthly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          assetName: `${assetName}`,
+        },
+      })
+      .then((response) => {
+        setMonthlAssetData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios
+      .get("http://localhost:8000/api/get-yearly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          assetName: `${assetName}`,
+        },
+      })
+      .then((response) => {
+        setYearlyAssetData(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   function selectChange1(event) {
     const portfolioName = event.target.value;
     const token = localStorage.getItem("userToken");
@@ -178,6 +225,51 @@ function PortfolioTimeline() {
       .catch((error) => {
         console.log(error);
       });
+
+    axios
+      .get("http://localhost:8000/api/get-weekly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          AssetName: `${assetNames[0]}`,
+        },
+      })
+      .then((response) => {
+        setWeeklyAssetData(response.data);
+        // setAssetNames(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios
+      .get("http://localhost:8000/api/get-monthly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          AssetName: `${assetNames[0]}`,
+        },
+      })
+      .then((response) => {
+        setMonthlAssetData(response.data);
+        // setAssetNames(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios
+      .get("http://localhost:8000/api/get-yearly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          AssetName: `${assetNames[0]}`,
+        },
+      })
+      .then((response) => {
+        setYearlyAssetData(response.data);
+        // setAssetNames(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (
@@ -250,7 +342,12 @@ function PortfolioTimeline() {
           <p style={{ color: "purple", fontWeight: "bolder", fontSize: "3vh" }}>
             Assets Timeline
           </p>
-          <select className="timeline-select" name="" id="">
+          <select
+            className="timeline-select"
+            name=""
+            id=""
+            onChange={selectChange2}
+          >
             {assetNames.map((item) => (
               <option key={item} value={item}>
                 {item}
@@ -260,7 +357,7 @@ function PortfolioTimeline() {
           <p style={{ color: "purple", fontWeight: "bolder" }}>Weekly:</p>
 
           <div className="line-chart">
-            <LineChart width={400} height={300} data={weeklyData}>
+            <LineChart width={400} height={300} data={weeklyAssetData}>
               <XAxis dataKey="name" />
               <YAxis />
               <CartesianGrid stroke="#eee" />
@@ -272,7 +369,7 @@ function PortfolioTimeline() {
           <p style={{ color: "purple", fontWeight: "bolder" }}>Monthly:</p>
 
           <div className="line-chart">
-            <LineChart width={400} height={300} data={monthlyData}>
+            <LineChart width={400} height={300} data={monthlyAssetData}>
               <XAxis dataKey="name" />
               <YAxis />
               <CartesianGrid stroke="#eee" />
@@ -284,7 +381,7 @@ function PortfolioTimeline() {
           <p style={{ color: "purple", fontWeight: "bolder" }}>Yearly:</p>
 
           <div className="line-chart">
-            <LineChart width={400} height={300} data={yearlyData}>
+            <LineChart width={400} height={300} data={yearlyAssetData}>
               <XAxis dataKey="name" />
               <YAxis />
               <CartesianGrid stroke="#eee" />

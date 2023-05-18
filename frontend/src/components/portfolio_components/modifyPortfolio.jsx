@@ -49,8 +49,8 @@ class ModifyPortfolio extends Component {
         }
       })
       .catch(function (error) {
-        alert(selectedSymbolToAdjust + " added " + amountToAdjust);
-        // alert("Could not create potfolio please check your inputs");
+        // alert(selectedSymbolToAdjust + " added " + amountToAdjust);
+        alert("Could not create potfolio please check your inputs");
       })
       .finally((response) => {});
   };
@@ -76,8 +76,8 @@ class ModifyPortfolio extends Component {
         }
       })
       .catch(function (error) {
-        alert(selectedSymbolToAdjust + "d ecreased " + amountToAdjust);
-        // alert("Could not create potfolio please check your inputs");
+        // alert(selectedSymbolToAdjust + "decreased " + amountToAdjust);
+        alert("Could not create potfolio please check your inputs");
       })
       .finally((response) => {});
   };
