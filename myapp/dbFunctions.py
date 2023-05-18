@@ -49,16 +49,17 @@ def get_daily_change(asset_name,current_value):
 
 
     query = "SELECT value FROM `comp491`.`asset_history` WHERE asset_name=%s AND DATE(date) = DATE(DATE_SUB(NOW(), INTERVAL %s DAY))  "
+    query = "SELECT value FROM `comp491`.`asset_history` WHERE asset_name = %s AND DATE(date) < DATE(NOW()) ORDER BY DATE(date) DESC LIMIT 1;  "
 
-    result = my_custom_news_sql(query, (asset_name,1))
+    result = my_custom_news_sql(query, (asset_name))
     if len(result) == 0:
-        last_value=16
+        last_value=current_value
     else:
         last_value = result[0][0]
 
 
 
-    change = 100*(current_value/last_value)
+    change = 100*((current_value/last_value)-1)
     
     change = round(change,2)
     #print(current_value,last_value,change,"change",r,"r")
@@ -185,4 +186,36 @@ def get_asset_values_week(start_date,end_date,asset_id):
     return(asset_values)
 
 def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id):
-    return []
+
+    query = """SELECT
+        DATE(ua.purchase_date) AS date,
+        (
+            SELECT SUM(ua2.amount)
+            FROM user_asset_ownership AS ua2
+            WHERE ua2.asset_id = a.asset_id
+            AND ua2.portfolio_id = ua.portfolio_id
+            AND DATE(ua2.purchase_date) <= DATE(ua.purchase_date)
+        ) AS total_balance
+    FROM
+        user_asset_ownership AS ua
+        JOIN asset_information AS a ON ua.asset_id = a.asset_id
+    WHERE
+
+        DATE(ua.purchase_date) >= %s
+        AND DATE(ua.purchase_date) <= %s
+        AND a.asset_id = %s
+        AND ua.portfolio_id = %s
+    GROUP BY
+        a.name,
+        DATE(ua.purchase_date),
+        ua.portfolio_id
+    ORDER BY
+        a.name,
+        DATE(ua.purchase_date) ASC;
+    """
+    result = my_custom_news_sql(query, (start_date, end_date, asset_id, portfolio_id))
+    print(result)
+    # ((datetime.date(2023, 5, 12), 1.0), (datetime.date(2023, 5, 20), 10.0))
+    # şeşka aga sonuç böyle dönüyo,tarihten de bakabilirsin yok dersen kırp kullan böyle kolaylaştırabilir diye düşündüm ya da 1 0 0 0 0 0 0 10 gibi bi array istersen time a göre iterate edebiliriz
+    arr_ = [item[1] for item in result]
+    return arr_

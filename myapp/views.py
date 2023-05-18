@@ -267,6 +267,9 @@ def get_stock_list(request):
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
 
+
+
+
 @api_view(['GET'])
 def get_commodity_list(request):
     # print("GET METHOD WORKS")
@@ -275,7 +278,10 @@ def get_commodity_list(request):
     #TODO delete after development phase of news data retrieval
     tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
     #update_news_data(tickersList)
-    update_prices()
+    #update_prices()
+    #fill_db_for_long_term(30)
+
+
 
     news_update_thread = threading.Thread(target=update_news_periodically)
     news_update_thread.start()
@@ -385,6 +391,186 @@ def update_news_data(tickersList):
     print("dbupdated\n\n\n\n")
 
     pass
+
+def fill_db_for_long_term(howmanydays):
+    tickers = ["UNG"]
+
+    tickers = [
+        "ASELS.IS", "CEEK-USD", "TSLA",
+
+        "GARAN.IS", "AKBNK.IS", "KCHOL.IS", "SISE.IS", "ULKER.IS",
+        "ISCTR.IS", "TCELL.IS", "BIMAS.IS", "YKBNK.IS", "VAKBN.IS",
+
+        "AAPL", "MSFT", "AMZN", "GOOGL",
+        "BRK-B", "V", "JNJ", "WMT", "NVDA",
+
+        "GLD", "SLV", "USO", "UNG", "DBC",
+        "DBA", "DBB", "DBE",
+
+        "BTC-USD", "ETH-USD", "BNB-USD", "ADA-USD", "XRP-USD",
+        "DOGE-USD", "AVAX-USD",
+
+        "KO", "PEP", "MCD", "INTC", "DIS",
+        "ENJSA.IS", "VESTL.IS", "ARCLK.IS", "CRFSA.IS", "TUPRS.IS"
+    ]
+    tickers = ["UNG"]
+
+
+    start_date = "2022-04-02"
+    end_date = "2022-04-04"
+
+    url = f"https://query1.finance.yahoo.com/v7/finance/chart/{{}}?range="+str(howmanydays)+"d&interval=1d&indicators=quote&includeTimestamps=true"
+
+    data_dict = {}
+    index = 0
+
+    # Loop through the tickers and retrieve data from Yahoo Finance API
+    for ticker in tickers:
+        current_url = url.format(ticker)
+
+        index += 1
+
+        response = requests.get(current_url, headers={
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'})
+
+        data = response.json()
+
+        # Extract the data for the specified date range
+        typeOfasset = data["chart"]["result"][0]["meta"]["instrumentType"]
+        timestamps = data["chart"]["result"][0]["timestamp"]
+        prices = data["chart"]["result"][0]["indicators"]["quote"][0]
+        data_dict[ticker] = {"Timestamp": timestamps, "Type": typeOfasset, "Open": prices["open"],
+                             "High": prices["high"],
+                             "Low": prices["low"],
+                             "Close": prices["close"], "Volume": prices["volume"]}
+
+    with open("price_data.json", "w") as f:
+        json.dump(data_dict, f)
+
+    print("dbupdating\n\n\n\n")
+    # delete_query = "DELETE FROM `comp491`.`prices` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
+    # my_custom_news_sql(delete_query)
+
+    with open('price_data.json') as f2:
+        price_data = json.load(f2)
+
+    # Loop through the news items and insert them into the MySQL database if they don't already exist
+    for ticker, price_item in price_data.items():
+
+        for i in range(len(price_item['Close'])):
+
+            timestamp = price_item['Timestamp'][i]
+            openn = price_item['Open'][i]
+            high = price_item['High'][i]
+            low = price_item['Low'][i]
+            close = price_item['Close'][i]
+            volume = price_item['Volume'][i]
+            description = price_item['Type']
+            asset = ticker
+
+            name = asset
+            current_value = close
+            date=datetime.fromtimestamp(timestamp)
+            check_query = "SELECT asset_id FROM `comp491`.asset_information WHERE name = %s"
+            insert_query = "INSERT INTO `comp491`.asset_information (name, current_value, description) VALUES (%s, %s, %s)"
+            find_max_query = "SELECT MAX(keysforassets) FROM `comp491`.asset_history"
+            insert_query_for_historical = "INSERT INTO `comp491`.asset_history (keysforassets,currency, asset_name, value,date) VALUES (%s, %s,%s, %s,%s)"
+
+
+            # query = "SELECT * FROM `comp491`.`asset_information` WHERE name=%s AND DATE(addDate) = DATE(NOW()) "
+            #result = my_custom_news_sql(check_query, (asset))
+            maxInd = my_custom_news_sql(find_max_query, params=None)
+
+
+                # Item does not exist, so insert a new row
+                #my_custom_news_sql(insert_query, (name, current_value, description))
+
+                # Item already exists, so update its current value
+
+
+            newind = maxInd[0][0] + 1
+
+            my_custom_news_sql(insert_query_for_historical,(newind, 'USD', name, current_value, date))
+            print("Inserted "+str(name)+" -> "+str(date))
+
+
+        # print(f"Inserted prices  into the database")
+
+    '''
+
+        # Check if the news already exists in the database
+        # query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
+        # result = my_custom_news_sql(query, (asset))
+
+        # if len(result) > 0:
+        # The news already exists in the database, so skip inserting it
+        #   print(f"already exists in the database")
+        #:else:
+        # Insert the news into the database
+        # query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+        # my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+        # print(f"Inserted prices  into the database")
+
+
+    ''''''  THE CODE BELOW CAN BE USED TO POPULATE SO WE MAY CONSIDER NOT DELETING
+            for i in range(len(price_item['Close'])):
+
+
+                timestamp = price_item['Timestamp'][i]
+                openn = price_item['Open'][i]
+                high = price_item['High'][i]
+                low = price_item['Low'][i]
+                close = price_item['Close'][i]
+                volume = price_item['Volume'][i]
+                description = price_item['Type']
+                asset = ticker
+
+                name = asset
+                current_value = close
+                check_query = "SELECT asset_id FROM `comp491`.asset_information WHERE name = %s"
+                insert_query = "INSERT INTO `comp491`.asset_information (name, current_value, description) VALUES (%s, %s, %s)"
+                find_max_query ="SELECT MAX(keysforassets) FROM `comp491`.asset_history"
+                insert_query_for_historical="INSERT INTO `comp491`.asset_history (keysforassets,currency, asset_name, value,date) VALUES (%s, %s,%s, %s,DATE_SUB(NOW(), INTERVAL %s DAY))"
+                update_query = "UPDATE `comp491`.asset_information SET current_value = %s WHERE name = %s"
+
+                # query = "SELECT * FROM `comp491`.`asset_information` WHERE name=%s AND DATE(addDate) = DATE(NOW()) "
+                result = my_custom_news_sql(check_query, (asset))
+                maxInd=my_custom_news_sql(find_max_query,params=None)
+
+
+
+
+
+                if result == 0:
+                    # Item does not exist, so insert a new row
+                    my_custom_news_sql(insert_query, (name, current_value, description))
+                else:
+                    # Item already exists, so update its current value
+                    newind=maxInd[0][0]+1
+                    my_custom_news_sql(insert_query_for_historical, (newind,'USD', name, current_value,(29-i)))
+                    my_custom_news_sql(update_query, (current_value, name))
+
+                # print(f"Inserted prices  into the database")
+
+                # Check if the news already exists in the database
+                #query = "SELECT * FROM `comp491`.`prices` WHERE asset=%s AND DATE(addDate) = DATE(NOW()) "
+                #result = my_custom_news_sql(query, (asset))
+
+                #if len(result) > 0:
+                    # The news already exists in the database, so skip inserting it
+                 #   print(f"already exists in the database")
+                #:else:
+                    # Insert the news into the database
+                    #query = "INSERT INTO `comp491`.`prices` (timestamp, open, high, low, close,volume, asset, addDate) VALUES (%s,%s,%s, %s, %s, %s, %s, NOW())"
+                    #my_custom_news_sql(query, (timestamp, openn, high, low, close, volume, asset))
+                    #print(f"Inserted prices  into the database")
+
+
+        '''
+    print("dbupdated\n\n\n\n")
+
+    pass
+
 def update_prices():
     #tickers = ["TSLA"]
 
@@ -423,6 +609,9 @@ def update_prices():
     # Loop through the tickers and retrieve data from Yahoo Finance API
     for ticker in tickers:
         current_url = url.format(ticker)
+        #example url provided by api
+        #https://query1.finance.yahoo.com/v7/finance/chart/AVAX-USD?range=0d&interval=1d&indicators=quote&includeTimestamps=true
+
 
         index+=1
 
@@ -470,7 +659,7 @@ def update_prices():
         check_query = "SELECT asset_id FROM `comp491`.asset_information WHERE name = %s"
         insert_query = "INSERT INTO `comp491`.asset_information (name, current_value, description) VALUES (%s, %s, %s)"
         find_max_query = "SELECT MAX(keysforassets) FROM `comp491`.asset_history"
-        insert_query_for_historical = "INSERT INTO `comp491`.asset_history (keysforassets,currency, asset_name, value,date) VALUES (%s, %s,%s, %s,NOW())"
+        insert_query_for_historical = "INSERT INTO `comp491`.asset_history (keysforassets,currency, asset_name, value,date) VALUES (%s, %s,%s, %s,%s)"
         update_query = "UPDATE `comp491`.asset_information SET current_value = %s WHERE name = %s"
 
         # query = "SELECT * FROM `comp491`.`asset_information` WHERE name=%s AND DATE(addDate) = DATE(NOW()) "
@@ -483,7 +672,7 @@ def update_prices():
         else:
             # Item already exists, so update its current value
             newind = maxInd[0][0] + 1
-            my_custom_news_sql(insert_query_for_historical, (newind, 'USD', name, current_value))
+            my_custom_news_sql(insert_query_for_historical, (newind, 'USD', name, current_value,datetime.fromtimestamp(timestamp)))
             my_custom_news_sql(update_query, (current_value, name))
 
         # print(f"Inserted prices  into the database")
