@@ -1046,7 +1046,7 @@ def add_to_portfolio(request):
     # print("symbol: "+ symbol+ "\namount: "+ amount)
     # print("----------------inside add_to_portfolio-------------------")
 
-    current_datetime = datetime.datetime.now()
+    current_datetime = datetime.now()
     current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
     print(current_datetime_formatted)
 
@@ -1072,7 +1072,7 @@ def increase_in_portfolio(request):
     # print("symbol: ", symbol)
     # print("----------------increase_in_portfolio-------------------")
     
-    current_datetime = datetime.datetime.now()
+    current_datetime = datetime.now()
     current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
     print(current_datetime_formatted)
 
@@ -1099,7 +1099,7 @@ def decrease_in_portfolio(request):
     # print("symbol: ", symbol)
     # print("----------------decrease-in-portfolio-------------------")
 
-    current_datetime = datetime.datetime.now()
+    current_datetime = datetime.now()
     current_datetime_formatted = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
     print(current_datetime_formatted)
 
