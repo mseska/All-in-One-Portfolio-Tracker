@@ -42,6 +42,9 @@ urlpatterns = [
     path('api/add-to-portfolio', add_to_portfolio, name='add_to_portfolio'),
     path('api/increase-in-portfolio', increase_in_portfolio, name='increase_in_portfolio'),
     path('api/decrease-in-portfolio', decrease_in_portfolio, name='decrease_in_portfolio'),
+    path('api/get-portfolio-names', get_portfolio_names, name='get_portfolio_names'),
+    path('api/get-asset-names', get_asset_names, name='get_asset_names'),
+    path('api/get-weekly-data-portfolio', get_weekly_data_portfolio, name='get_weekly_data_portfolio'),
 
 
 ]

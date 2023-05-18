@@ -161,6 +161,7 @@ CORS_ALLOW_HEADERS = [
     'Content-Type',
     'usertoken',
     'name',
+
 ]
 
 

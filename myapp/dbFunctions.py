@@ -40,6 +40,11 @@ def get_asset_value_with_asset_id(asset_id):
     assetName = my_custom_sql("SELECT current_value FROM comp491.asset_information WHERE asset_information.asset_id ={};".format(asset_id),connection)
     return(assetName[0][0])
 
+def get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name,user_id):
+    print(portfolio_name,user_id,"portfo denemeeeeeee hop alo şşşşş")
+    portfolio_id = my_custom_sql("SELECT distinct(portfolio_id) FROM comp491.portfolio,comp491.user_asset_ownership where user_asset_ownership.portfolio_id = portfolio.id and portfolio.name = '{}' and user_asset_ownership.user_id = {};".format(portfolio_name,user_id),connection)
+    print(portfolio_id,"portfo hataaaa")
+    return(portfolio_id[0][0])
 
 def get_daily_change(asset_name,current_value):
     current_value = float(current_value)

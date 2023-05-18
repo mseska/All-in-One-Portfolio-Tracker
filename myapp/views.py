@@ -1108,6 +1108,61 @@ def decrease_in_portfolio(request):
 
     return JsonResponse({}, status=201) 
 
+@api_view(['GET'])
+def get_portfolio_names(request):
+    print("inside get_portfolio_names")
+    token = request.headers.get('Authorization') 
+    id = get_id_with_token(token)
+    get_portfolios = get_portfolio_ids_with_user_id(id)
+    portfolio_names =[]
+    for id in get_portfolios:
+        portfolio_names.append(get_portfolio_name_with_portfolio_id(id))
+    dict = {}
+    dict['names'] = portfolio_names
+    
+    #ret['data'] = portfolio_names
+    #print("insdie get_portfolio_names:\n",ret)
+    
+    return JsonResponse(dict, status=201)
+
+def get_asset_names(request):
+    print("inside get_asset_names")
+    token = request.headers.get('Authorization')
+    user_id = get_id_with_token(token)
+    asset_ids = get_assets_with_user_id(user_id)
+    asset_names = []
+    for (name,value) in asset_ids:
+        asset_names.append(name)
+    dict = {}
+    dict['names'] = asset_names
+
+
+    return JsonResponse(dict, status=201)
+
+
+def get_weekly_data_portfolio(request):
+    print("inside get_weekly_data_portfolio")
+    print(request.headers,"rquesttttt")
+    token = request.headers.get('Authorization')
+    portfolio_name = request.headers.get('Portfolio')
+    user_id = get_id_with_token(token)
+    portfolio_id = get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name, user_id)
+    print("GET WEEKLY FALAN FİLAN portfolio_id: ", portfolio_id)
+    
+    
+    
+    # [
+    #       { name: "Mon", value: 10 },
+    #       { name: "Tu", value: 15 },
+    #       { name: "Wen", value: 8 },
+    #       { name: "Thu", value: 8 },
+    #       { name: "Fri", value: 8 },
+    #       { name: "Sat", value: 8 },
+    #       { name: "sunn", value: 8 },
+    #]
+
+
+    return JsonResponse({}, status=201)
 
 
 

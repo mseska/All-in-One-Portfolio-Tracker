@@ -150,8 +150,8 @@ function PortfolioTimeline() {
         },
       })
       .then((response) => {
-        setPortfolioNames(["aa", "bb"]);
-        // setPortfolioNames(response.data);
+        //setPortfolioNames(["aa", "bb"]);
+        setPortfolioNames(response.data.names);
       })
       .catch((error) => {
         setPortfolioNames(["aa", "bb"]);
@@ -164,8 +164,8 @@ function PortfolioTimeline() {
         },
       })
       .then((response) => {
-        setAssetNames(["A1", "A2"]);
-        // setAssetNames(response.data);
+        //setAssetNames(["A1", "A2"]);
+        setAssetNames(response.data.names);
       })
       .catch((error) => {
         setAssetNames(["A1", "A2"]);
@@ -176,7 +176,7 @@ function PortfolioTimeline() {
       .get("http://localhost:8000/api/get-weekly-data-portfolio", {
         headers: {
           Authorization: `${token}`,
-          PorfolioName: `${portfolioNames[0]}`,
+          Portfolio: `${portfolioNames[0]}`,
         },
       })
       .then((response) => {
