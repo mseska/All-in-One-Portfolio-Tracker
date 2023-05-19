@@ -176,11 +176,14 @@ def get_total_value_week_in_portfolio(portfolio_id):
     dict = get_asset_values_week_in_portfolio(portfolio_id)
     keys = list(dict.keys())
     total_value_list = []
-    for i in range(len(dict[keys[0]])):
-        total_value = 0
-        for key in keys:
-            total_value += dict[key][i][1]
-        total_value_list.append({"name":dict[key][i][0],"value":total_value})
+    if len(keys) != 0:
+        for i in range(len(dict[keys[0]])):
+            total_value = 0
+            for key in keys:
+                total_value += dict[key][i][1]
+            total_value_list.append({"name":dict[key][i][0],"value":total_value})
+    else:
+        total_value_list.append({"name":date.today().strftime('%a'),"value":0})
     return total_value_list
 
 
@@ -228,8 +231,12 @@ def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id):
     """
 
     inital_value = my_custom_news_sql(initial_query,(start_date,asset_id,portfolio_id))
+    print(asset_id)
+    print(portfolio_id)
+    print(inital_value, "inital_value")
     for i in range(difference_in_days+1):
-        result2[i] = (result2[i][0],inital_value[0][1])
+        if inital_value !=():
+            result2[i] = (result2[i][0],inital_value[0][1])
     query = """SELECT
         DATE(ua.purchase_date) AS date,
         (
