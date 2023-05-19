@@ -45,6 +45,6 @@ urlpatterns = [
     path('api/get-portfolio-names', get_portfolio_names, name='get_portfolio_names'),
     path('api/get-asset-names', get_asset_names, name='get_asset_names'),
     path('api/get-weekly-data-portfolio', get_weekly_data_portfolio, name='get_weekly_data_portfolio'),
-
+    path('api/get-weekly-data-asset', get_weekly_data_asset, name='get_weekly_data_asset'),
 
 ]

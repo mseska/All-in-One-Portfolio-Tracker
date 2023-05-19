@@ -1159,6 +1159,35 @@ def get_weekly_data_portfolio(request):
 
     return JsonResponse(retDict, status=201)
 
+from datetime import datetime, timedelta,date
+
+@api_view(['GET','OPTIONS'])
+def get_weekly_data_asset(request):
+    #print(request.headers)
+
+    #asset_name = request.headers.get('AssetName')
+    asset_name = "TSLA"
+    asset_id = get_asset_id(asset_name)
+    
+
+    end_time = date.today()
+    start_time = end_time - timedelta(days=6)
+
+    asset_values = get_asset_values_week(start_time, end_time, asset_id)
+    #print(asset_values,"YENİ HOP ALO ŞŞŞŞ")
+    difference_in_days = 6
+    result2 = []
+    for i in range(difference_in_days+1):
+        dateq = start_time + timedelta(days=i)
+        result2.append({"name":dateq.strftime('%a'),"value":asset_values[i]})
+
+    retDict = {}
+    retDict["data"] = result2
+
+    print(retDict)
+
+    return JsonResponse(retDict, status=201)
+
 
 
 
