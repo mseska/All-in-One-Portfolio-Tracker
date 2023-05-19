@@ -158,11 +158,12 @@ def get_asset_values_week_in_portfolio(portfolio_id):
 
     end_time = datetime.now()
     start_time = end_time - timedelta(days=7)
-    
+    print(start_time,end_time,asset_list, "fonksiyon içi argümanlar")
     for asset_id in asset_list:
         valueList = []
         asset_values = get_asset_values_week(start_time,end_time,asset_id)
         asset_amounts = get_asset_amounts_week(start_time,end_time,asset_id,portfolio_id)
+        print(asset_values,asset_amounts,asset_id, "fonksiyon iç içi  değerler")
         for i in range(len(asset_values)):
             valueList.append(asset_values[i]*asset_amounts[i])
         dict[asset_id] = valueList

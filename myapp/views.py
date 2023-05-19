@@ -1141,14 +1141,15 @@ def get_asset_names(request):
 
 
 def get_weekly_data_portfolio(request):
-    print("inside get_weekly_data_portfolio")
-    print(request.headers,"rquesttttt")
+    print("--------------------------------------------------------")
     token = request.headers.get('Authorization')
-    portfolio_name = request.headers.get('Portfolio')
+    #portfolio_name = request.headers.get('Portfolio')
+    portfolio_name = "agaOlArtıkBe"
     user_id = get_id_with_token(token)
     portfolio_id = get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name, user_id)
-    print("GET WEEKLY FALAN FİLAN portfolio_id: ", portfolio_id)
-    
+    asset_values = get_asset_values_week_in_portfolio(portfolio_id)
+    print(asset_values)
+    print("--------------------------------------------------------")
     
     
     # [
