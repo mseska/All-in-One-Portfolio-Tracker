@@ -1108,7 +1108,7 @@ def decrease_in_portfolio(request):
 
     return JsonResponse({}, status=201) 
 
-@api_view(['GET'])
+@api_view(['GET','OPTIONS'])
 def get_portfolio_names(request):
     print("inside get_portfolio_names")
     token = request.headers.get('Authorization') 
@@ -1125,6 +1125,7 @@ def get_portfolio_names(request):
     
     return JsonResponse(dict, status=201)
 
+@api_view(['GET','OPTIONS'])
 def get_asset_names(request):
     print("inside get_asset_names")
     token = request.headers.get('Authorization')
@@ -1139,31 +1140,24 @@ def get_asset_names(request):
 
     return JsonResponse(dict, status=201)
 
-
+@api_view(['GET','OPTIONS'])
 def get_weekly_data_portfolio(request):
     print("--------------------------------------------------------")
     token = request.headers.get('Authorization')
-    #portfolio_name = request.headers.get('Portfolio')
-    portfolio_name = "agaOlArtıkBe"
+    portfolio_name = request.headers.get('Portfolio')
+    print("portfolio_name: ", portfolio_name)
+    #portfolio_name = "agaOlArtıkBe"
     user_id = get_id_with_token(token)
     portfolio_id = get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name, user_id)
-    asset_values = get_asset_values_week_in_portfolio(portfolio_id)
+    asset_values = get_total_value_week_in_portfolio(portfolio_id)
     print(asset_values)
     print("--------------------------------------------------------")
+    retDict={}
+    retDict['data'] = asset_values
     
     
-    # [
-    #       { name: "Mon", value: 10 },
-    #       { name: "Tu", value: 15 },
-    #       { name: "Wen", value: 8 },
-    #       { name: "Thu", value: 8 },
-    #       { name: "Fri", value: 8 },
-    #       { name: "Sat", value: 8 },
-    #       { name: "sunn", value: 8 },
-    #]
 
-
-    return JsonResponse({}, status=201)
+    return JsonResponse(retDict, status=201)
 
 
 

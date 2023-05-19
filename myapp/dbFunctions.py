@@ -150,24 +150,26 @@ def modify_amount(token, portfolio_id, amount, symbol, operation, current_date):
 
     result = my_custom_sql("INSERT INTO comp491.user_asset_ownership (user_asset_id, user_id, asset_id, purchase_date, amount, portfolio_id) VALUES ({}, {}, {},'{}',{}, {});".format(user_asset_id,user_id, asset_id, current_date, updated_amount, portfolio_id),connection)
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 
 def get_asset_values_week_in_portfolio(portfolio_id):
     dict = {}
     asset_list = get_asset_ids_with_portfolio_id(portfolio_id)
 
-    end_time = datetime.now()
-    start_time = end_time - timedelta(days=7)
-    print(start_time,end_time,asset_list, "fonksiyon içi argümanlar")
+    end_time = date.today()
+    start_time = end_time - timedelta(days=6)
+    #print(start_time,end_time,asset_list, "fonksiyon içi argümanlar")
     for asset_id in asset_list:
         valueList = []
         asset_values = get_asset_values_week(start_time,end_time,asset_id)
+        #print(asset_values, "fonksiyon içi asset_values")
         asset_amounts = get_asset_amounts_week(start_time,end_time,asset_id,portfolio_id)
-        print(asset_values,asset_amounts,asset_id, "fonksiyon iç içi  değerler")
-        for i in range(len(asset_values)):
-            valueList.append(asset_values[i]*asset_amounts[i])
+        #print(asset_amounts, "fonksiyon içi asset_amounts")
+        #print(asset_values,asset_amounts,asset_id, "fonksiyon iç içi  değerler")
+        for i in range(len(asset_amounts)):
+            valueList.append((asset_amounts[i][0].strftime('%a'),asset_values[i]*asset_amounts[i][1]))
         dict[asset_id] = valueList
-
+        #print(dict, "fonksiyon içi dict")
     return dict
 
 def get_total_value_week_in_portfolio(portfolio_id):
@@ -177,8 +179,8 @@ def get_total_value_week_in_portfolio(portfolio_id):
     for i in range(len(dict[keys[0]])):
         total_value = 0
         for key in keys:
-            total_value += dict[key][i]
-        total_value_list.append(total_value)
+            total_value += dict[key][i][1]
+        total_value_list.append({"name":dict[key][i][0],"value":total_value})
     return total_value_list
 
 
@@ -192,7 +194,42 @@ def get_asset_values_week(start_date,end_date,asset_id):
     return(asset_values)
 
 def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id):
+    time_difference = end_date - start_date
+    difference_in_days = time_difference.days
+    result2 = []
+    for i in range(difference_in_days+1):
+        date = start_date + timedelta(days=i)
+        result2.append((date,0))
+    
+    initial_query = """SELECT
+        DATE(ua.purchase_date) AS date,
+        (
+            SELECT SUM(ua2.amount)
+            FROM user_asset_ownership AS ua2
+            WHERE ua2.asset_id = a.asset_id
+            AND ua2.portfolio_id = ua.portfolio_id
+            AND DATE(ua2.purchase_date) <= DATE(ua.purchase_date)
+        ) AS total_balance
+    FROM
+        user_asset_ownership AS ua
+        JOIN asset_information AS a ON ua.asset_id = a.asset_id
+    WHERE
+        DATE(ua.purchase_date) <= %s
+        AND a.asset_id = %s
+        AND ua.portfolio_id = %s
+        
+    GROUP BY
+        a.name,
+        DATE(ua.purchase_date),
+        ua.portfolio_id
+    ORDER BY
+        a.name,
+        DATE(ua.purchase_date) DESC;
+    """
 
+    inital_value = my_custom_news_sql(initial_query,(start_date,asset_id,portfolio_id))
+    for i in range(difference_in_days+1):
+        result2[i] = (result2[i][0],inital_value[0][1])
     query = """SELECT
         DATE(ua.purchase_date) AS date,
         (
@@ -220,8 +257,11 @@ def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id):
         DATE(ua.purchase_date) ASC;
     """
     result = my_custom_news_sql(query, (start_date, end_date, asset_id, portfolio_id))
-    print(result)
+    for new_item in result:
+        for initial in range(len(result2)):
+            if new_item[0] <= result2[initial][0]:
+                result2[initial] = (result2[initial][0],new_item[1])
     # ((datetime.date(2023, 5, 12), 1.0), (datetime.date(2023, 5, 20), 10.0))
     # şeşka aga sonuç böyle dönüyo,tarihten de bakabilirsin yok dersen kırp kullan böyle kolaylaştırabilir diye düşündüm ya da 1 0 0 0 0 0 0 10 gibi bi array istersen time a göre iterate edebiliriz
-    arr_ = [item[1] for item in result]
-    return arr_
+
+    return result2

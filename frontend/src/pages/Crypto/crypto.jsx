@@ -84,12 +84,12 @@ function PortfolioTimeline() {
       .get("http://localhost:8000/api/get-weekly-data-portfolio", {
         headers: {
           Authorization: `${token}`,
-          PortfolioName: `${portfolioName}`,
+          Portfolio: `${portfolioName}`,
         },
       })
       .then((response) => {
-        console.log("qqqq");
-        setWeeklyData(response.data);
+        console.log(response.data, "response.data totaaaaallllll");
+        setWeeklyData(response.data.data);
       })
       .catch((error) => {
         console.log("bb");
