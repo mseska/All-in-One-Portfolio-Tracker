@@ -1,6 +1,6 @@
 .NavBar {
   display: block;
-  height: 25vh;
+  height: 18vh;
   /* width: 100vw; */
   justify-content: space-between;
   align-items: center;
@@ -19,7 +19,7 @@
   /* margin-left: 25px; */
   /* height: 10vh; */
   margin-left: 2.4vw;
-  margin-right: 10vw;
+  margin-right: 1vw;
   margin-bottom: 1.5vh;
 }
 
@@ -28,13 +28,16 @@
 }
 
 .NavBarIcon {
-  margin-right: 2vw;
+  margin-left: 5vw;
+  margin-top: 5vh;
+  /* margin-right: 2vw; */
   height: 5vh;
   width: 2.3vw;
   color: rgb(66, 73, 73);
 }
 
 .NavBar1 {
+  /* margin-top: 2vh; */
   display: flex;
   box-shadow: 0 14px 28px rgba(114, 56, 56, 0.25),
     0 10px 10px rgba(0, 0, 0, 0.22);
@@ -45,7 +48,7 @@
   width: 10vw;
   margin-right: 3vw;
   height: 5vh;
-  margin-left: 5vw;
+  margin-left: 6vw;
   display: inline;
 }
 
@@ -89,10 +92,10 @@
   font-weight: bold;
   border-color: rgb(203, 209, 209);
   background-color: rgb(203, 209, 209);
-  margin-left: 8vw;
+  margin-left: 5vw;
   margin-right: 4vw;
-  font-size: 1.3vw;
+  font-size: 1.7vw;
   color: rgb(43, 18, 133);
-  margin-top: -0.6vh;
+  margin-top: 6vh;
   height: 5.5vh;
 }
