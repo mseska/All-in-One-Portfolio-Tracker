@@ -1165,8 +1165,8 @@ from datetime import datetime, timedelta,date
 def get_weekly_data_asset(request):
     #print(request.headers)
 
-    #asset_name = request.headers.get('AssetName')
-    asset_name = "TSLA"
+    asset_name = request.headers.get('AssetName')
+    # asset_name = "TSLA"
     asset_id = get_asset_id(asset_name)
     
 
