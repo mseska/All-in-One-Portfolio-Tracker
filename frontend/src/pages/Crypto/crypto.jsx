@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.css";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import NavBar from "../../components/NavBar/navBar2.jsx";
 import "./crypto.css"; // CSS file for styling
 import axios from "axios";
@@ -16,7 +16,7 @@ import {
 } from "recharts";
 
 function PortfolioTimeline() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [portfolioNames, setPortfolioNames] = useState([]);
   const [weeklyData, setWeeklyData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
@@ -27,7 +27,7 @@ function PortfolioTimeline() {
   const [monthlyAssetData, setMonthlAssetData] = useState([]);
   const [yearlyAssetData, setYearlyAssetData] = useState([]);
 
-  const [selectedPortfolio, setSelectedPortfolio] = useState([]);
+  // const [selectedPortfolio, setSelectedPortfolio] = useState([]);
 
   function selectChange2(event) {
     const token = localStorage.getItem("userToken");
@@ -47,33 +47,35 @@ function PortfolioTimeline() {
         console.log(error);
       });
 
-    // axios
-    //   .get("http://localhost:8000/api/get-monthly-data-asset", {
-    //     headers: {
-    //       Authorization: `${token}`,
-    //       assetName: `${assetName}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setMonthlAssetData(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    axios
+    //make monthly
+      .get("http://localhost:8000/api/get-weekly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          assetName: `${assetName}`,
+        },
+      })
+      .then((response) => {
+        setMonthlAssetData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-    // axios
-    //   .get("http://localhost:8000/api/get-yearly-data-asset", {
-    //     headers: {
-    //       Authorization: `${token}`,
-    //       assetName: `${assetName}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setYearlyAssetData(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    axios
+    //make monthly
+      .get("http://localhost:8000/api/get-weekly-data-asset", {
+        headers: {
+          Authorization: `${token}`,
+          assetName: `${assetName}`,
+        },
+      })
+      .then((response) => {
+        setYearlyAssetData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function selectChange1(event) {
@@ -94,32 +96,37 @@ function PortfolioTimeline() {
       .catch((error) => {
         console.log(error);
       });
-    // axios
-    //   .get("http://localhost:8000/api/get-monthly-data-portfolio", {
-    //     headers: {
-    //       Authorization: `${token}`,
-    //       PortfolioName: `${portfolioName}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     // setMonthlyData(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // axios
-    //   .get("http://localhost:8000/api/get-yearly-data-portfolio", {
-    //     headers: {
-    //       Authorization: `${token}`,
-    //       PortfolioName: `${portfolioName}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     // setYearlyData(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+
+    axios
+    //make monthly
+      .get("http://localhost:8000/api/get-weekly-data-portfolio", {
+        headers: {
+          Authorization: `${token}`,
+          Portfolio: `${portfolioName}`,
+        },
+      })
+      .then((response) => {
+
+        setMonthlyData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    axios
+    //make yearly
+      .get("http://localhost:8000/api/get-weekly-data-portfolio", {
+        headers: {
+          Authorization: `${token}`,
+          Portfolio: `${portfolioName}`,
+        },
+      })
+      .then((response) => {
+        setYearlyData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   useEffect(() => {
@@ -144,8 +151,8 @@ function PortfolioTimeline() {
       })
       .then((response) => {
         assNames = response.data.names;
-        console.log("here");
-        console.log(assNames[0]);
+        // console.log("here");
+        // console.log(assNames[0]);
         setAssetNames(response.data.names);
         return axios.get(
           "http://localhost:8000/api/get-weekly-data-portfolio",
@@ -159,7 +166,7 @@ function PortfolioTimeline() {
       })
       .then((response) => {
         setWeeklyData(response.data.data);
-        setSelectedPortfolio(portNames[0]);
+        // setSelectedPortfolio(portNames[0]);
         return axios.get("http://localhost:8000/api/get-weekly-data-asset", {
           headers: {
             Authorization: `${token}`,
@@ -169,15 +176,52 @@ function PortfolioTimeline() {
       })
       .then((response) => {
         setWeeklyAssetData(response.data.data);
-        // return axios.get(
-        //   "http://localhost:8000/api/get-weekly-data-asset",
-        //   {
-        //     headers: {
-        //       Authorization: `${token}`,
-        //       Portfolio: `${portNames[0]}`,
-        //     },
-        //   }
-        // );
+        return axios.get(
+          //make monthly
+          "http://localhost:8000/api/get-weekly-data-portfolio",
+          {
+            headers: {
+              Authorization: `${token}`,
+              Portfolio: `${portNames[0]}`,
+            },
+          }
+        );
+      })
+      .then((response) => {
+        setMonthlyData(response.data.data);
+        //make monthly
+        return axios.get("http://localhost:8000/api/get-weekly-data-asset", {
+          headers: {
+            Authorization: `${token}`,
+            AssetName: `${assNames[0]}`,
+          },
+        });
+      })
+      .then((response) => {
+        setMonthlAssetData(response.data.data);
+        return axios.get(
+          //make yearly
+          "http://localhost:8000/api/get-weekly-data-portfolio",
+          {
+            headers: {
+              Authorization: `${token}`,
+              Portfolio: `${portNames[0]}`,
+            },
+          }
+        );
+      })
+      .then((response) => {
+        setYearlyData(response.data.data);
+        //make yearly
+        return axios.get("http://localhost:8000/api/get-weekly-data-asset", {
+          headers: {
+            Authorization: `${token}`,
+            AssetName: `${assNames[0]}`,
+          },
+        });
+      })
+      .then((response) => {
+        setYearlyAssetData(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -229,34 +273,34 @@ function PortfolioTimeline() {
     //     console.log(error);
     //   });
 
-    axios
-      .get("http://localhost:8000/api/get-monthly-data-asset", {
-        headers: {
-          Authorization: `${token}`,
-          AssetName: `${assNames[0]}`,
-        },
-      })
-      .then((response) => {
-        setMonthlAssetData(response.data.data);
-      })
-      .catch((error) => {
-        console.log("hrllloo");
-        console.log(error);
-      });
+    // axios
+    //   .get("http://localhost:8000/api/get-monthly-data-asset", {
+    //     headers: {
+    //       Authorization: `${token}`,
+    //       AssetName: `${assNames[0]}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setMonthlAssetData(response.data.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log("hrllloo");
+    //     console.log(error);
+    //   });
 
-    axios
-      .get("http://localhost:8000/api/get-yearly-data-asset", {
-        headers: {
-          Authorization: `${token}`,
-          AssetName: `${assNames[0]}`,
-        },
-      })
-      .then((response) => {
-        setYearlyAssetData(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // axios
+    //   .get("http://localhost:8000/api/get-yearly-data-asset", {
+    //     headers: {
+    //       Authorization: `${token}`,
+    //       AssetName: `${assNames[0]}`,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setYearlyAssetData(response.data.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }, []);
 
   return (

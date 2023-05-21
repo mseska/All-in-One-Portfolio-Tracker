@@ -19,13 +19,13 @@ export default function NavBar2() {
     setShowUserPopUp(false);
   }
 
-  function searchFunc() {
-    alert("You searched for something");
-  }
+  // function searchFunc() {
+  //   alert("You searched for something");
+  // }
 
   function logoFunc() {
     // alert("hola");
-    if (window.location.pathname == "/home") {
+    if (window.location.pathname === "/home") {
       navigate(0);
     }
     navigate("/home");
@@ -47,9 +47,9 @@ export default function NavBar2() {
     navigate("/crypto");
   }
 
-  function forecastButtonFunc() {
-    navigate("/forecast");
-  }
+  // function forecastButtonFunc() {
+  //   navigate("/forecast");
+  // }
 
   <link
     rel="stylesheet"

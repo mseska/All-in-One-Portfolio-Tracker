@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import axios from "axios";
+// import axios from "axios";
 import "./news.css";
-import { Navigate, useHref } from "react-router-dom";
+// import { Navigate, useHref } from "react-router-dom";
 
 class News extends Component {
   state = {
