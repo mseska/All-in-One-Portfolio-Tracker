@@ -10,7 +10,6 @@ export default function UserIcon() {
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
 
-
   useEffect(() => {
     axios
       .get("http://localhost:8000/api/get-user-info-user-icon", {
@@ -39,7 +38,7 @@ export default function UserIcon() {
   return (
     <div className="user-icon-menu">
       <div className="nameDiv">
-         {localStorage.getItem("userName")} {localStorage.getItem("email")} 
+        {localStorage.getItem("userName")} {localStorage.getItem("email")}
       </div>
       {/* <div className="signOutButtonDiv"> </div> */}
       <div
