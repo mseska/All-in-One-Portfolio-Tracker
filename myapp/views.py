@@ -232,7 +232,7 @@ def get_crypto_list(request):
         # print(newAsset.change,"newAsset.change")
         # print(newAsset,"newAsset")
         returnList.append(newAsset)
-    #print(returnList,"liste databaseden alındı")
+    # print(returnList,liste databaseden alındı")
     
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     return JsonResponse(serialized_objects, safe=False)
@@ -1016,10 +1016,6 @@ def get_symbols_of_portfolio(request):
 
     symbols = symbols_in_portfolio(token, portfolio_id)
 
-    # print("------------------------------------------------------")
-    # print(symbols)
-    # print("------------------------------------------------------")
-
     ret = {}
     print(symbols[0], "this is the first")
     if symbols[0] == 'database':
@@ -1149,17 +1145,48 @@ def get_weekly_data_portfolio(request):
     #portfolio_name = "agaOlArtıkBe"
     user_id = get_id_with_token(token)
     portfolio_id = get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name, user_id)
-    asset_values = get_total_value_week_in_portfolio(portfolio_id)
+    asset_values = get_total_value_week_in_portfolio(portfolio_id, 'week')
     print(asset_values)
     print("--------------------------------------------------------")
     retDict={}
     retDict['data'] = asset_values
-    
-    
-
     return JsonResponse(retDict, status=201)
 
+@api_view(['GET','OPTIONS'])
+def get_monthly_data_portfolio(request):
+    print("--------------------------------------------------------")
+    token = request.headers.get('Authorization')
+    portfolio_name = request.headers.get('Portfolio')
+    print("portfolio_name: ", portfolio_name)
+    #portfolio_name = "agaOlArtıkBe"
+    user_id = get_id_with_token(token)
+    portfolio_id = get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name, user_id)
+    asset_values = get_total_value_week_in_portfolio(portfolio_id, 'month')
+    print(asset_values)
+    print("--------------------------------------------------------")
+    retDict={}
+    retDict['data'] = asset_values
+    return JsonResponse(retDict, status=201)
+
+@api_view(['GET','OPTIONS'])
+def get_yearly_data_portfolio(request):
+    print("--------------------------------------------------------")
+    token = request.headers.get('Authorization')
+    portfolio_name = request.headers.get('Portfolio')
+    print("portfolio_name: ", portfolio_name)
+    #portfolio_name = "agaOlArtıkBe"
+    user_id = get_id_with_token(token)
+    portfolio_id = get_portfolio_id_with_portfolio_name_and_user_id(portfolio_name, user_id)
+    asset_values = get_total_value_week_in_portfolio(portfolio_id, 'year')
+    print(asset_values)
+    print("--------------------------------------------------------")
+    retDict={}
+    retDict['data'] = asset_values
+    return JsonResponse(retDict, status=201)
+
+
 from datetime import datetime, timedelta,date
+# from dateutil.relativedelta import relativedelta
 
 @api_view(['GET','OPTIONS'])
 def get_weekly_data_asset(request):
@@ -1180,6 +1207,66 @@ def get_weekly_data_asset(request):
     for i in range(difference_in_days+1):
         dateq = start_time + timedelta(days=i)
         result2.append({"name":dateq.strftime('%a'),"value":asset_values[i]})
+
+    retDict = {}
+    retDict["data"] = result2
+
+    print(retDict)
+
+    return JsonResponse(retDict, status=201)
+
+@api_view(['GET','OPTIONS'])
+def get_monthly_data_asset(request):
+    #print(request.headers)
+
+    asset_name = request.headers.get('AssetName')
+    # asset_name = "TSLA"
+    asset_id = get_asset_id(asset_name)
+    
+
+    end_time = date.today()
+    start_time = end_time - timedelta(days=30)
+
+    asset_values = get_asset_values_week(start_time, end_time, asset_id)
+    #print(asset_values,"YENİ HOP ALO ŞŞŞŞ")
+    difference_in_days = 30
+    result2 = []
+    for i in range(difference_in_days+1):
+        dateq = start_time + timedelta(days=i)
+        result2.append({"name":dateq.strftime('%d'),"value":asset_values[i]})
+
+    retDict = {}
+    retDict["data"] = result2
+
+    print(retDict)
+
+    return JsonResponse(retDict, status=201)
+
+from dateutil.relativedelta import relativedelta
+
+@api_view(['GET','OPTIONS'])
+def get_yearly_data_asset(request):
+    #print(request.headers)
+
+    asset_name = request.headers.get('AssetName')
+    # asset_name = "TSLA"
+    asset_id = get_asset_id(asset_name)
+    
+
+    end_time = date.today()
+    #start_time = end_time - timedelta(days=365)
+    start_time = end_time - relativedelta(months=12)
+
+    asset_values = get_asset_values_week(start_time, end_time, asset_id)
+    #print(asset_values,"YENİ HOP ALO ŞŞŞŞ")
+    difference_in_days = 11
+    result2 = []
+    for i in range(difference_in_days+1):
+        print("helllllllllllllooooooooooooo>>>>>>>>>>>>>>>>>>>>>>> ", i)
+        dateq = start_time + relativedelta(months=i)
+        current_date = dateq.strftime('%B')
+        current_month = current_date[0]
+        result2.append({"name":current_month,"value":asset_values[i]})
 
     retDict = {}
     retDict["data"] = result2
