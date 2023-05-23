@@ -49,7 +49,7 @@ function PortfolioTimeline() {
 
     axios
     //make monthly
-      .get("http://localhost:8000/api/get-weekly-data-asset", {
+      .get("http://localhost:8000/api/get-monthly-data-asset", {
         headers: {
           Authorization: `${token}`,
           assetName: `${assetName}`,
@@ -64,7 +64,7 @@ function PortfolioTimeline() {
 
     axios
     //make monthly
-      .get("http://localhost:8000/api/get-weekly-data-asset", {
+      .get("http://localhost:8000/api/get-monthly-data-asset", {
         headers: {
           Authorization: `${token}`,
           assetName: `${assetName}`,
@@ -99,7 +99,7 @@ function PortfolioTimeline() {
 
     axios
     //make monthly
-      .get("http://localhost:8000/api/get-weekly-data-portfolio", {
+      .get("http://localhost:8000/api/get-monthly-data-portfolio", {
         headers: {
           Authorization: `${token}`,
           Portfolio: `${portfolioName}`,
@@ -115,7 +115,7 @@ function PortfolioTimeline() {
 
     axios
     //make yearly
-      .get("http://localhost:8000/api/get-weekly-data-portfolio", {
+      .get("http://localhost:8000/api/get-yearly-data-portfolio", {
         headers: {
           Authorization: `${token}`,
           Portfolio: `${portfolioName}`,
@@ -178,7 +178,7 @@ function PortfolioTimeline() {
         setWeeklyAssetData(response.data.data);
         return axios.get(
           //make monthly
-          "http://localhost:8000/api/get-weekly-data-portfolio",
+          "http://localhost:8000/api/get-monthly-data-portfolio",
           {
             headers: {
               Authorization: `${token}`,
@@ -190,7 +190,7 @@ function PortfolioTimeline() {
       .then((response) => {
         setMonthlyData(response.data.data);
         //make monthly
-        return axios.get("http://localhost:8000/api/get-weekly-data-asset", {
+        return axios.get("http://localhost:8000/api/get-monthly-data-asset", {
           headers: {
             Authorization: `${token}`,
             AssetName: `${assNames[0]}`,
@@ -201,7 +201,7 @@ function PortfolioTimeline() {
         setMonthlAssetData(response.data.data);
         return axios.get(
           //make yearly
-          "http://localhost:8000/api/get-weekly-data-portfolio",
+          "http://localhost:8000/api/get-yearly-data-portfolio",
           {
             headers: {
               Authorization: `${token}`,
@@ -213,7 +213,7 @@ function PortfolioTimeline() {
       .then((response) => {
         setYearlyData(response.data.data);
         //make yearly
-        return axios.get("http://localhost:8000/api/get-weekly-data-asset", {
+        return axios.get("http://localhost:8000/api/get-yearly-data-asset", {
           headers: {
             Authorization: `${token}`,
             AssetName: `${assNames[0]}`,

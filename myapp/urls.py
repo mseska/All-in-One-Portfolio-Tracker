@@ -28,5 +28,8 @@ urlpatterns = [
     path('api/get-asset-names', views.get_asset_names, name='get_asset_names'),
     path('api/get-weekly-data-portfolio', views.get_weekly_data_portfolio, name='get_weekly_data_portfolio'),
     path('api/get-weekly-data-asset', views.get_weekly_data_asset, name='get_weekly_data_asset'),
-    
+    path('api/get-monthly-data-portfolio', views.get_monthly_data_portfolio, name='get_monthly_data_portfolio'),
+    path('api/get-monthly-data-asset', views.get_monthly_data_asset, name='get_monthly_data_asset'),
+    path('api/get-yearly-data-portfolio', views.get_yearly_data_portfolio, name='get_yearly_data_portfolio'),
+    path('api/get-yearly-data-asset', views.get_yearly_data_asset, name='get_yearly_data_asset'),
 ]
