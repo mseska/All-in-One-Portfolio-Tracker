@@ -824,6 +824,15 @@ def activate(request, uidb64, token):
         print("sorry could not confirmed the email")
         messages.error(request, 'Activation link is invalid!')
 
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import EmailMessage
+from django.shortcuts import redirect
+from .tokens import account_activation_token
+from django.contrib import messages
+
 
 def send_verification_email(request, user, name, token):
     print("activating the email confirmation...") 
