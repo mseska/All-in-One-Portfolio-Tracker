@@ -1262,9 +1262,9 @@ def get_yearly_data_asset(request):
     difference_in_days = 11
     result2 = []
     for i in range(difference_in_days+1):
-        print("helllllllllllllooooooooooooo>>>>>>>>>>>>>>>>>>>>>>> ", i)
         dateq = start_time + relativedelta(months=i)
         current_date = dateq.strftime('%B')
+        # print("--------------------------------->current_date: ", current_date)
         current_month = current_date[0]
         result2.append({"name":current_month,"value":asset_values[i]})
 

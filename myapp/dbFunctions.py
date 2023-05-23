@@ -178,14 +178,14 @@ def get_asset_values_week_in_portfolio(portfolio_id, time_interval):
         asset_values = get_asset_values_week(start_time,end_time,asset_id)
         #print(asset_values, "fonksiyon içi asset_values")
         asset_amounts = get_asset_amounts_week(start_time,end_time,asset_id,portfolio_id, time_interval)
-        print(asset_amounts, "fonksiyon içi asset_amounts")
+        # print(asset_amounts, "fonksiyon içi asset_amounts")
         #print(asset_values,asset_amounts,asset_id, "fonksiyon iç içi  değerler")
-        print("--------------------------------->", len(asset_amounts))
+        # print("--------------------------------->", len(asset_amounts))
         # for i in range(len(asset_amounts)):
         #     valueList.append((asset_amounts[i][0].strftime('%a'),asset_values[i]*asset_amounts[i][1]))
         count=0
         months=[]
-        print("***************************************************************")
+        # print("***************************************************************")
         for i in range(len(asset_amounts)):
             try:
                 # print("-------------------------------------------->>>>>>>>>>",asset_amounts[i][0])
@@ -202,14 +202,14 @@ def get_asset_values_week_in_portfolio(portfolio_id, time_interval):
                         print("this month exists in the list")
                     else: 
                         months.append(current_month)
-                        print("ilk harfi\t\t\t: ", current_month[0])
+                        # print("ilk harfi\t\t\t: ", current_month[0])
                         valueList.append((current_month[0], asset_values[i] * asset_amounts[i][1]))
             
             except IndexError:
                 break
-        print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", count)
-        print("\n\nHellooooooooooooo:\n", months)
-        print("***************************************************************")
+        # print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", count)
+        # print("\n\nHellooooooooooooo:\n", months)
+        # print("***************************************************************")
         dict[asset_id] = valueList
         #print(dict, "fonksiyon içi dict")
     return dict
@@ -217,9 +217,9 @@ def get_asset_values_week_in_portfolio(portfolio_id, time_interval):
 def get_total_value_week_in_portfolio(portfolio_id, time_interval):
     dict = get_asset_values_week_in_portfolio(portfolio_id, time_interval)
     keys = list(dict.keys())
-    print("keys-----------------------------------------------------------")
-    print(keys)
-    print("---------------------------------------------------------------")
+    # print("keys-----------------------------------------------------------")
+    # print(keys)
+    # print("---------------------------------------------------------------")
     total_value_list = []
     if len(keys) != 0:
         print("this is the lenght of the for loop: ", len(dict[keys[0]]))
@@ -228,7 +228,7 @@ def get_total_value_week_in_portfolio(portfolio_id, time_interval):
             total_value = 0
             for key in keys:
                 total_value += dict[key][i][1]
-                print("------------------------------>", dict[key][i][0])
+                # print("------------------------------>", dict[key][i][0])
             total_value_list.append({"name":dict[key][i][0],"value":total_value})
     else:
         if time_interval == 'week':
@@ -238,9 +238,9 @@ def get_total_value_week_in_portfolio(portfolio_id, time_interval):
         else: 
             total_value_list.append({"name": date.today().strftime('%B'), "value": 0})
 
-    print("/////////////////////////////////////////////////////////////")
-    print(total_value_list)
-    print("/////////////////////////////////////////////////////////////")
+    # print("/////////////////////////////////////////////////////////////")
+    # print(total_value_list)
+    # print("/////////////////////////////////////////////////////////////")
     return total_value_list
 
 
@@ -262,7 +262,7 @@ def get_asset_amounts_week(start_date,end_date,asset_id,portfolio_id, time_inter
     for i in range(difference_in_days+1):
         if time_interval == 'year':
             date = start_date + relativedelta(months=i)
-            print("---------------------------------------------------------->", date)
+            # print("---------------------------------------------------------->", date)
         else:
             date = start_date + timedelta(days=i)
         result2.append((date,0))
