@@ -27,6 +27,7 @@ import time
 import threading
 import requests
 import json
+import feedparser
 
 from django.contrib.auth import authenticate, login
 from rest_framework.authtoken.models import Token
@@ -277,7 +278,7 @@ def get_commodity_list(request):
 
     #TODO delete after development phase of news data retrieval
     tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
-    #update_news_data(tickersList)
+    update_news_data_general()
     #update_prices()
     #fill_db_for_long_term(30)
 
@@ -309,6 +310,77 @@ def get_commodity_list(request):
     serialized_objects = [obj.to_dict() for obj in returnList]  # Convert each object to a dictionary using a method 'to_dict'
     return JsonResponse(serialized_objects, safe=False)
     #return JsonResponse(json.dumps(returnListDict), safe=False)
+
+def update_news_data_general():
+    print("json is being updated\n\n\n\n")
+    # Define the list of stock tickers to retrieve news for
+    tickers = ["general"]
+
+    news_dict = {}
+    news_dict["news"] = []
+    # Loop through the tickers and retrieve news data from Yahoo Finance API
+    for ticker in tickers:
+        # Retrieve the news data for the current ticker
+        stock = yf.Ticker(ticker)
+        news = stock.news
+
+        news_list = []
+        for article in news:
+            news_dict2 = {"title": "", "publisher": "", "link": "", "thumbnail": ""}
+            if "title" in article:
+                news_dict2["title"] = article["title"]
+            if "publisher" in article:
+                news_dict2["publisher"] = article["publisher"]
+            if "link" in article:
+                news_dict2["link"] = article["link"]
+            if "thumbnail" in article:
+                if "resolutions" in article["thumbnail"] and article["thumbnail"]["resolutions"]:
+                    news_dict2["thumbnail"] = article["thumbnail"]["resolutions"][0]["url"]
+            else:
+                news_dict2[
+                    "thumbnail"] = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSriG88tNG1fjZY9tjMkWpziGZDukdu_2i2Cg&usqp=CAU"
+
+            news_list.append(news_dict2)
+
+        # Add the news data to the dictionary
+        news_dict["news"].extend(news_list)
+    random.shuffle(news_dict["news"])
+
+    with open("news_data_general.json", "w") as f:
+        json.dump(news_dict, f)
+    print("jsonupdated\n\n\n\n")
+
+    print("dbupdating\n\n\n\n")
+    delete_query = "DELETE FROM `comp491`.`news_general` WHERE TIMESTAMPDIFF(DAY, addDate, NOW()) > 7"
+    my_custom_news_sql(delete_query)
+
+    with open('news_data.json') as f2:
+        news_data = json.load(f2)
+
+    # Loop through the news items and insert them into the MySQL database if they don't already exist
+    for ticker, news_items in news_data.items():
+
+        for news_item in news_items:
+            title = news_item['title']
+            publisher = news_item['publisher']
+            link = news_item['link']
+            thumbnail = news_item['thumbnail']
+            asset = ticker
+
+            # Check if the news already exists in the database
+            query = "SELECT * FROM `comp491`.`news_general` WHERE title=%s AND publisher=%s AND link=%s"
+            result = my_custom_news_sql(query, (title, publisher, link))
+
+            if len(result) > 0:
+                # The news already exists in the database, so skip inserting it
+                print(f"News '{title}' already exists in the database")
+            else:
+                # Insert the news into the database
+                query = "INSERT INTO `comp491`.`news_general` (title, publisher, link, thumbnail, asset, addDate) VALUES (%s, %s, %s, %s, %s, NOW())"
+                my_custom_news_sql(query, (title, publisher, link, thumbnail, asset))
+                print(f"Inserted gemmneral news '{title}' into the database")
+
+    print("dbupdated\n\n\n\n")
 
 
 def update_news_data(tickersList):
@@ -760,6 +832,7 @@ def update_news_periodically():
         if now.second == 0 and now.minute== 0:  # Run update_news_data() once per hour at the start of the hour
             tickersList = ["TSLA", "GLD", "ASELS.IS", "ETH-USD","BTC-USD"]
             update_news_data(tickersList)
+            update_news_data_general()
         time.sleep(1)
 
 
